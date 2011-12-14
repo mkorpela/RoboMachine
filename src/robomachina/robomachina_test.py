@@ -19,7 +19,7 @@ Test 1
   Log  In Start State
   No Operation
   Log  In End State
-"""
+""".strip()
 
 class TestRoboMachina(unittest.TestCase):
 
