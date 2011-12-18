@@ -1,7 +1,6 @@
 import pyparsing
 from robomachina.model import RoboMachina, State, Action
 
-
 state_name = pyparsing.Word(pyparsing.alphanums+' ').setResultsName('state_name')
 robo_step = pyparsing.Word(pyparsing.alphanums+' ').setResultsName('robo_step')
 
@@ -27,4 +26,4 @@ machina = machina_header+states
 machina.setParseAction(lambda p: RoboMachina(list(p.states)))
 
 def parse(text):
-    return machina.parseString(text)[0]
+    return machina.parseString(text, parseAll=True)[0]
