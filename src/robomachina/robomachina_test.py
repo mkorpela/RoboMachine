@@ -60,6 +60,30 @@ C
   No Operation
 """
 
+_TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2 = """
+*** Test Cases ***
+Test 1
+  Foo  bar
+  Bar  foo
+  first
+  something else
+  Foo  bar
+  Bar  foo
+
+Test 2
+  Foo  bar
+  Bar  foo
+  first
+  other thing
+  No Operation
+
+Test 3
+  Foo  bar
+  Bar  foo
+  second
+  No Operation
+"""
+
 class TestParsing(unittest.TestCase):
 
     def test_parsing(self):
