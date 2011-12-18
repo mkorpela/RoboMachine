@@ -4,44 +4,25 @@ from robomachina.model import RoboMachina
 def join_all(parts):
     return ''.join(parts)
 
-state_name = pyparsing.Word(pyparsing.alphanums+' ')
-
-robo_step = pyparsing.Word(pyparsing.alphanums+' ')
-
+state_name = pyparsing.Word(pyparsing.alphanums+' ').setResultsName('state_name')
+robo_step = pyparsing.Word(pyparsing.alphanums+' ').setResultsName('robo_step')
 step = pyparsing.White(min=2)+robo_step
-step.setParseAction(join_all)
-
+step.setParseAction(lambda t: t.robo_step)
 action_header = pyparsing.White(min=2)+pyparsing.Literal('[Actions]')
-action_header.setParseAction(join_all)
-
 action = pyparsing.White(min=4)+robo_step+pyparsing.Literal('==>')+state_name
-
-def create_action(parts):
-    return [parts[1:]]
-
-action.setParseAction(create_action)
-
-actions = action_header + pyparsing.OneOrMore(action)
-
-def create_actions(parts):
-    return [action for action in parts[1:]]
-
-actions.setParseAction(create_actions)
-
-steps = pyparsing.ZeroOrMore(step)
-
-def create_steps(parts):
-    return parts or []
-
-steps.setParseAction(create_steps)
-
+action.setParseAction(lambda t: [[t.robo_step, t.state_name]])
+actions = action_header + pyparsing.OneOrMore(action).setResultsName('actions')
+actions = pyparsing.Optional(actions)
+actions.setParseAction(lambda t: t.actions)
+steps = pyparsing.ZeroOrMore(step).setResultsName('steps')
+steps.setParseAction(lambda t: [t.steps])
 state = state_name + steps +actions
 
 def create_state(parts):
     state_name = parts[0]
     steps = parts[1]
     actions = parts[2]
-    print state_name.strip(), steps.strip(), actions
+    print 'state "%s" steps "%s" actions "%s"' % (state_name.strip(), steps, actions)
     return parts
 
 state.setParseAction(create_state)
