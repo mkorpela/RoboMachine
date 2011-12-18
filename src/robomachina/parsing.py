@@ -1,27 +1,52 @@
 import pyparsing
 from robomachina.model import RoboMachina
 
-def printther(s):
-    def printaa(u):
-        print s, u
-        return u
-    return printaa
+def join_all(parts):
+    return ''.join(parts)
+
+state_name = pyparsing.Word(pyparsing.alphanums+' ')
+
+robo_step = pyparsing.Word(pyparsing.alphanums+' ')
+
+step = pyparsing.White(min=2)+robo_step
+step.setParseAction(join_all)
+
+action_header = pyparsing.White(min=2)+pyparsing.Literal('[Actions]')
+action_header.setParseAction(join_all)
+
+action = pyparsing.White(min=4)+robo_step+pyparsing.Literal('==>')+state_name
+
+def create_action(parts):
+    return [parts[1:]]
+
+action.setParseAction(create_action)
+
+actions = action_header + pyparsing.OneOrMore(action)
+
+def create_actions(parts):
+    return [action for action in parts[1:]]
+
+actions.setParseAction(create_actions)
+
+steps = pyparsing.ZeroOrMore(step)
+
+def create_steps(parts):
+    return parts or []
+
+steps.setParseAction(create_steps)
+
+state = state_name + steps +actions
+
+def create_state(parts):
+    state_name = parts[0]
+    steps = parts[1]
+    actions = parts[2]
+    print state_name.strip(), steps.strip(), actions
+    return parts
+
+state.setParseAction(create_state)
 
 machina_header = pyparsing.Literal('*** Machine ***')
-machina_header.setParseAction(printther('machina header'))
-state_name = pyparsing.Word(pyparsing.alphanums+' ')
-state_name.setParseAction(printther('state name'))
-robo_step = pyparsing.Word(pyparsing.alphanums+' ')
-step = pyparsing.White(min=2)+robo_step
-step.setParseAction(printther('step'))
-action_header = pyparsing.White(min=2)+pyparsing.Literal('[Actions]')
-action_header.setParseAction(printther('action header'))
-action = pyparsing.White(min=4)+robo_step+pyparsing.Literal('==>')+state_name
-action.setParseAction(printther('action'))
-actions = action_header + pyparsing.OneOrMore(action)
-state = state_name + pyparsing.ZeroOrMore(step)+actions
-state.setParseAction(printther('state'))
-
 machina = machina_header+pyparsing.OneOrMore(state)
 
 def parse(text):
