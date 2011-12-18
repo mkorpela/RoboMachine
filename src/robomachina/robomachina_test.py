@@ -28,18 +28,18 @@ class TestRoboMachina(unittest.TestCase):
         self.assertEqual(_TESTS, tests)
 
     def test_parse_machina_state_names(self):
-        machina = robomachina.parse(_MACHINA)
-        self.assertEqual(['Start State', 'End State'], [s.name for s in machina.states])
+        m = robomachina.parse(_MACHINA)
+        self.assertEqual(['Start State', 'End State'], [s.name for s in m.states])
 
     def test_parse_machina_state_actions(self):
-        machina = robomachina.parse(_MACHINA)
-        self.assertEqual(['No Operation'], [a.name for a in machina.states[0].actions])
-        self.assertEqual([], [a.name for a in machina.states[1].actions])
+        m = robomachina.parse(_MACHINA)
+        self.assertEqual(['No Operation'], [a.name for a in m.states[0].actions])
+        self.assertEqual([], [a.name for a in m.states[1].actions])
 
     def test_parse_machina_state_steps(self):
-        machina = robomachina.parse(_MACHINA)
-        self.assertEqual(['  Log  In Start State'], machina.states[0].steps)
-        self.assertEqual(['  Log  In End State'], machina.states[1].steps)
+        m = robomachina.parse(_MACHINA)
+        self.assertEqual(['  Log  In Start State'], m.states[0].steps)
+        self.assertEqual(['  Log  In End State'], m.states[1].steps)
 
 
 if __name__ == '__main__':
