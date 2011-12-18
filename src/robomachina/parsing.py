@@ -2,9 +2,6 @@ import pyparsing
 from robomachina.model import RoboMachina, State, Action
 
 
-def join_all(parts):
-    return ''.join(parts)
-
 state_name = pyparsing.Word(pyparsing.alphanums+' ').setResultsName('state_name')
 robo_step = pyparsing.Word(pyparsing.alphanums+' ').setResultsName('robo_step')
 
