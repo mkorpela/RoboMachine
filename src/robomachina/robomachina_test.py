@@ -42,5 +42,39 @@ class TestRoboMachina(unittest.TestCase):
         self.assertEqual(['  Log  In End State'], m.states[1].steps)
 
 
+_MACHINA2 = """
+*** Machine ***
+A
+  Foo  bar
+  Bar  foo
+  [Actions]
+    first  ==>  B
+    second  ==>  C
+
+B
+  [Actions]
+    something else  ==>  A
+    other thing     ==>  C
+
+C
+  No Operation
+"""
+
+class TestParsing(unittest.TestCase):
+
+    def test_parsing(self):
+        m = robomachina.parse(_MACHINA2)
+        self.assertEqual(m.states[0].name, 'A')
+        self.assertEqual(m.states[0].steps, ['  Foo  bar', '  Bar  foo'])
+        self.assertEqual([a.name for a in m.states[0].actions], ['first', 'second'])
+        self.assertEqual([a.next_state for a in m.states[0].actions], ['B', 'C'])
+        self.assertEqual(m.states[1].name, 'B')
+        self.assertEqual(m.states[1].steps, [])
+        self.assertEqual([a.name for a in m.states[1].actions], ['something else', 'other thing'])
+        self.assertEqual([a.next_state for a in m.states[1].actions], ['A', 'C'])
+        self.assertEqual(m.states[2].name, 'C')
+        self.assertEqual(m.states[2].steps, ['  No Operation'])
+        self.assertEqual(m.states[2].actions, [])
+
 if __name__ == '__main__':
     unittest.main()
