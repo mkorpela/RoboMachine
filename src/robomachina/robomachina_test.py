@@ -36,7 +36,7 @@ class TestRoboMachina(unittest.TestCase):
         self.assertEqual(['No Operation'], [a.name for a in machina.states[0].actions])
         self.assertEqual([], [a.name for a in machina.states[1].actions])
 
-    def test_parse_machina_state_stepst(self):
+    def test_parse_machina_state_steps(self):
         machina = robomachina.parse(_MACHINA)
         self.assertEqual(['  Log  In Start State'], machina.states[0].steps)
         self.assertEqual(['  Log  In End State'], machina.states[1].steps)
