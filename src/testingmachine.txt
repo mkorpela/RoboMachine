@@ -1,0 +1,10 @@
+*** Machine ***
+
+Starting state
+  Log  hello
+  [Actions]
+     No Operation  ==>  End State
+     Log  nothing  ==>  Starting state
+
+End State
+  Log  ending
