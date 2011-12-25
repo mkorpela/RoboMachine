@@ -1,3 +1,4 @@
+from StringIO import StringIO
 import unittest
 import robomachina
 
@@ -60,7 +61,7 @@ C
   No Operation
 """
 
-_TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2 = """
+_TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2 = """\
 *** Test Cases ***
 Test 1
   Foo  bar
@@ -91,14 +92,23 @@ class TestParsing(unittest.TestCase):
         self.assertEqual(m.states[0].name, 'A')
         self.assertEqual(m.states[0].steps, ['  Foo  bar', '  Bar  foo'])
         self.assertEqual([a.name for a in m.states[0].actions], ['first', 'second'])
-        self.assertEqual([a.next_state for a in m.states[0].actions], ['B', 'C'])
+        self.assertEqual([a.next_state.name for a in m.states[0].actions], ['B', 'C'])
         self.assertEqual(m.states[1].name, 'B')
         self.assertEqual(m.states[1].steps, [])
         self.assertEqual([a.name for a in m.states[1].actions], ['something else', 'other thing'])
-        self.assertEqual([a.next_state for a in m.states[1].actions], ['A', 'C'])
+        self.assertEqual([a.next_state.name for a in m.states[1].actions], ['A', 'C'])
         self.assertEqual(m.states[2].name, 'C')
         self.assertEqual(m.states[2].steps, ['  No Operation'])
         self.assertEqual(m.states[2].actions, [])
+
+class TestTestGeneration(unittest.TestCase):
+
+    def test_generate_all_dfs_max_actions_2(self):
+        m = robomachina.parse(_MACHINA2)
+        out = StringIO()
+        robomachina.generate_all_dfs(m, max_actions=2, output=out)
+        self.assertEqual(out.getvalue(), _TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2)
+
 
 if __name__ == '__main__':
     unittest.main()
