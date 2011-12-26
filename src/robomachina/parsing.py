@@ -27,8 +27,16 @@ step.leaveWhitespace()
 step.setParseAction(lambda t: ['  '+t.robo_step])
 
 action_header = White(min=2)+'[Actions]'
-condition = Regex('(  when  [\w\{\}\$]+ == [\w\{\}\$]+)?')
-condition.setResultsName('condition')
+condition = Regex('((  when  [\${}\w]+ == \w+( and [\${}\w]+ == \w+)*)|  otherwise)?')
+def parse_condition(cond):
+    if not cond[0]:
+        return cond
+    if cond[0].startswith('  when  '):
+        return [cond[0][8:]]
+    return ['otherwise']
+
+condition.setParseAction(parse_condition)
+condition = condition.setResultsName('condition')
 action = White(min=4)+robo_step + White(min=2) + '==>'+White(min=2) + state_name + condition + LineEnd()
 action.leaveWhitespace()
 action.setParseAction(lambda t: [Action(t.robo_step.rstrip(), t.state_name, t.condition)])
@@ -50,7 +58,7 @@ states.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
 states = states.setResultsName('states')
 variables = ZeroOrMore(variable_definition).setResultsName('variables')
 machina = machina_header+variables+states
-machina.setParseAction(lambda p: RoboMachina(list(p.states)))
+machina.setParseAction(lambda p: RoboMachina(list(p.states), list(p.variables)))
 machina.setWhitespaceChars(' ')
 
 def parse(text):

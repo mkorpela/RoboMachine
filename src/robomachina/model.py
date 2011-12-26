@@ -1,7 +1,8 @@
 class RoboMachina(object):
 
-    def __init__(self, states):
+    def __init__(self, states, variables):
         self.states = states or []
+        self.variables = variables or []
         for state in self.states:
             state.set_machine(self)
 
