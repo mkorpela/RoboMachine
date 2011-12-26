@@ -34,9 +34,10 @@ class State(object):
 
 class Action(object):
 
-    def __init__(self, name, next_state):
+    def __init__(self, name, next_state, condition):
         self.name = name
         self._next_state_name = next_state
+        self.condition = condition
 
     def set_machine(self, machine):
         self._machine = machine

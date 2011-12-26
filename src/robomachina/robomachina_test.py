@@ -1,9 +1,9 @@
 from StringIO import StringIO
 import unittest
 import robomachina
+from robomachina import parsing
 
-
-_MACHINA = """
+_MACHINA = """\
 *** Machine ***
 Start State
   Log  In Start State
@@ -43,7 +43,7 @@ class TestRoboMachina(unittest.TestCase):
         self.assertEqual(['  Log  In End State'], m.states[1].steps)
 
 
-_MACHINA2 = """
+_MACHINA2 = """\
 *** Machine ***
 A
   Foo  bar
@@ -87,6 +87,37 @@ Test 3
 
 class TestParsing(unittest.TestCase):
 
+    def test_header_parsing(self):
+        header = parsing.machina_header.parseString('*** Machine ***\n')
+        self.assertEqual('*** Machine ***', header[0])
+
+    def test_state_parsing(self):
+        state = """\
+A
+  Foo  bar
+  Bar  foo
+  [Actions]
+    first  ==>  B
+    second  ==>  C
+"""
+        state = parsing.state.parseString(state)[0]
+        self.assertEqual('A', state.name)
+        self.assertEqual(['  Foo  bar', '  Bar  foo'], state.steps)
+        self.assertEqual(['first', 'second'], [a.name for a in state.actions])
+        self.assertEqual(['B', 'C'], [a._next_state_name for a in state.actions])
+
+    def test_steps_parsing(self):
+        steps = """\
+  Foo  bar
+  Bar  foo
+"""
+        steps = parsing.steps.parseString(steps)
+        self.assertEqual(['  Foo  bar', '  Bar  foo'], list(steps.steps))
+
+    def test_step_parsing(self):
+        step = parsing.step.parseString('  Foo  bar\n')[0]
+        self.assertEqual('  Foo  bar', step)
+
     def test_parsing(self):
         m = robomachina.parse(_MACHINA2)
         self.assertEqual(m.states[0].name, 'A')
@@ -100,6 +131,7 @@ class TestParsing(unittest.TestCase):
         self.assertEqual(m.states[2].name, 'C')
         self.assertEqual(m.states[2].steps, ['  No Operation'])
         self.assertEqual(m.states[2].actions, [])
+
 
 class TestTestGeneration(unittest.TestCase):
 
