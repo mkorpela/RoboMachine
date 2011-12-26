@@ -48,3 +48,9 @@ class Action(object):
     def write_to(self, output):
         output.write('  %s\n' % self.name)
         self.next_state.write_steps_to(output)
+
+class Variable(object):
+
+    def __init__(self, name, values):
+        self.name = name
+        self.values = values
