@@ -6,7 +6,7 @@ state_name.leaveWhitespace()
 state_name.setParseAction(lambda t: ''.join(t))
 state_name = state_name.setResultsName('state_name')
 
-robo_step = Regex(r'(\w[ \w]*\w|\w)')
+robo_step = Regex(r'([\w\$\{\}][ \w\$\{\}]*[\w\}]|\w)')
 robo_step.leaveWhitespace()
 robo_step = robo_step.setResultsName('robo_step')
 

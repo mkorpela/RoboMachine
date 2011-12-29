@@ -1,10 +1,10 @@
 *** Machine ***
-
-Starting state
-  Log  hello
+${FOO}  any of  foo  bar  zoo
+Starting State
+  Log  hello ${FOO}
   [Actions]
      No Operation  ==>  End State
-     Log  nothing  ==>  Starting state
+     Log  nothing  ==>  Starting State
 
 End State
-  Log  ending
+  Log  ending ${FOO}
