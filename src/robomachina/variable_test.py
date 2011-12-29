@@ -62,25 +62,25 @@ Test 1
   Title Should Be  Welcome Page
 
 Test 2
-  Set Machina Variables  mode  mode
+  Set Machina Variables  demo  demo
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
 Test 3
-  Set Machina Variables  invalid  mode
+  Set Machina Variables  demo  invalid
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
 Test 4
-  Set Machina Variables  ${EMPTY}  mode
+  Set Machina Variables  demo  ${EMPTY}
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
 Test 5
-  Set Machina Variables  demo  demo
+  Set Machina Variables  mode  mode
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
@@ -92,25 +92,25 @@ Test 6
   Title Should Be  Error Page
 
 Test 7
-  Set Machina Variables  invalid  demo
+  Set Machina Variables  mode  invalid
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
 Test 8
-  Set Machina Variables  ${EMPTY}  demo
+  Set Machina Variables  mode  ${EMPTY}
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
 Test 9
-  Set Machina Variables  demo  invalid
+  Set Machina Variables  invalid  mode
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
 Test 10
-  Set Machina Variables  mode  invalid
+  Set Machina Variables  invalid  demo
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
@@ -122,25 +122,25 @@ Test 11
   Title Should Be  Error Page
 
 Test 12
-  Set Machina Variables  ${EMPTY}  invalid
+  Set Machina Variables  invalid  ${EMPTY}
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
 Test 13
-  Set Machina Variables  demo  ${EMPTY}
+  Set Machina Variables  ${EMPTY}  mode
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
 Test 14
-  Set Machina Variables  mode  ${EMPTY}
+  Set Machina Variables  ${EMPTY}  demo
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
 Test 15
-  Set Machina Variables  invalid  ${EMPTY}
+  Set Machina Variables  ${EMPTY}  invalid
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
@@ -166,8 +166,12 @@ class VariableMachineParsingTestCases(unittest.TestCase):
         self.assertEqual('${USERNAME}', m.variables[0].name)
         self.assertEqual('${PASSWORD}', m.variables[1].name)
         self.assertEqual(2, len(m.variables))
+        m.apply_variable_values(['demo', 'mode'])
         self.assertEqual('${USERNAME} == demo and ${PASSWORD} == mode', m.states[0].actions[0].condition)
-        self.assertEqual('otherwise', m.states[0].actions[1].condition)
+        self.assertEqual('Welcome Page', m.states[0].actions[0].next_state.name)
+        m.apply_variable_values(['invalid', 'invalid'])
+        self.assertEqual('otherwise', m.states[0].actions[0].condition)
+        self.assertEqual('Error Page', m.states[0].actions[0].next_state.name)
 
 
 class TestGenerationTestCases(unittest.TestCase):
