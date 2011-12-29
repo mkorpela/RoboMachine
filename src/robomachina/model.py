@@ -16,6 +16,12 @@ class RoboMachina(object):
                 return state
         return None
 
+    def write_variable_setter(self, output):
+        output.write('Set Machina Variables\n')
+        output.write('  [Arguments]  %s\n' % '  '.join(variable.name for variable in self.variables))
+        for variable in self.variables:
+            output.write('  Set Test Variable  \\%s\n' % variable.name)
+
 
 class State(object):
 

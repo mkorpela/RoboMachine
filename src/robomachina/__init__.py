@@ -9,6 +9,9 @@ def generate_all_dfs(machine, max_actions=None, output=None):
         for action in test:
             action.write_to(output)
         i += 1
+    if machine.variables:
+        output.write('*** Keywords ***\n')
+        machine.write_variable_setter(output)
 
 def generate_all_from(state, max_actions):
     if not max_actions:

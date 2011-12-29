@@ -1,5 +1,7 @@
+from StringIO import StringIO
 import unittest
 from robomachina import parsing
+import robomachina
 
 
 class VariableParsingTestCases(unittest.TestCase):
@@ -51,6 +53,112 @@ Error Page
   Title Should Be  Error Page
 """
 
+_LOGIN_TESTS_GENERATE_ALL_DFS = """\
+*** Test Cases ***
+Test 1
+  Set Machina Variables  demo  mode
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Welcome Page
+
+Test 2
+  Set Machina Variables  mode  mode
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 3
+  Set Machina Variables  invalid  mode
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 4
+  Set Machina Variables  ${EMPTY}  mode
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 5
+  Set Machina Variables  demo  demo
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 6
+  Set Machina Variables  mode  demo
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 7
+  Set Machina Variables  invalid  demo
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 8
+  Set Machina Variables  ${EMPTY}  demo
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 9
+  Set Machina Variables  demo  invalid
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 10
+  Set Machina Variables  mode  invalid
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 11
+  Set Machina Variables  invalid  invalid
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 12
+  Set Machina Variables  ${EMPTY}  invalid
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 13
+  Set Machina Variables  demo  ${EMPTY}
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 14
+  Set Machina Variables  mode  ${EMPTY}
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 15
+  Set Machina Variables  invalid  ${EMPTY}
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+Test 16
+  Set Machina Variables  ${EMPTY}  ${EMPTY}
+  Title Should Be  Login Page
+  Submit Credentials
+  Title Should Be  Error Page
+
+*** Keywords ***
+Set Machina Variables
+  [Arguments]  ${USERNAME}  ${PASSWORD}
+  Set Test Variable  \${USERNAME}
+  Set Test Variable  \${PASSWORD}
+"""
+
+
 class VariableMachineParsingTestCases(unittest.TestCase):
 
     def test_machine_parsing(self):
@@ -60,6 +168,15 @@ class VariableMachineParsingTestCases(unittest.TestCase):
         self.assertEqual(2, len(m.variables))
         self.assertEqual('${USERNAME} == demo and ${PASSWORD} == mode', m.states[0].actions[0].condition)
         self.assertEqual('otherwise', m.states[0].actions[1].condition)
+
+
+class TestGenerationTestCases(unittest.TestCase):
+
+    def test_generate_all_dfs(self):
+        m = parsing.parse(_LOGIN_MACHINE)
+        out = StringIO()
+        robomachina.generate_all_dfs(m, output=out)
+        self.assertEqual(out.getvalue(), _LOGIN_TESTS_GENERATE_ALL_DFS)
 
 if __name__ == '__main__':
     unittest.main()
