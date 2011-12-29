@@ -58,6 +58,8 @@ class VariableMachineParsingTestCases(unittest.TestCase):
         self.assertEqual('${USERNAME}', m.variables[0].name)
         self.assertEqual('${PASSWORD}', m.variables[1].name)
         self.assertEqual(2, len(m.variables))
+        self.assertEqual('${USERNAME} == demo and ${PASSWORD} == mode', m.states[0].actions[0].condition)
+        self.assertEqual('otherwise', m.states[0].actions[1].condition)
 
 if __name__ == '__main__':
     unittest.main()
