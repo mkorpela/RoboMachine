@@ -24,8 +24,7 @@ robo_step = Regex(r'([\w\$\{\}][ \w\$\{\}]*[\w\}]|\w)')
 robo_step.leaveWhitespace()
 robo_step = robo_step.setResultsName('robo_step')
 
-variable = Literal('${')+Word(alphanums)+'}'
-variable.setParseAction(lambda  t: '${%s}' % t[1])
+variable = Regex(r'\$\{[_A-Z][_A-Z0-9]*\}')
 
 variable_value = Word(alphanums+'${}')+ZeroOrMore(' '+Word(alphanums+'${}'))
 

@@ -16,17 +16,33 @@ from StringIO import StringIO
 import unittest
 from robomachina import parsing
 import robomachina
-
+import pyparsing
 
 class VariableParsingTestCases(unittest.TestCase):
 
     def test_variable_parsing(self):
-        v = parsing.variable.parseString('${variable}')
-        self.assertEqual('${variable}', v[0])
+        self._parse_var('${VARIABLE}')
+        self._parse_var('${VAR2}')
+        self._parse_var('${_VAR_WITH_UNDERSCORE}')
+        self._invalid_var('')
+        self._invalid_var('${foo}')
+        self._invalid_var('${1}')
+        self._invalid_var('${2FOO}')
+        self._invalid_var('${FOO BAR}')
+
+    def _parse_var(self, var_name):
+        self.assertEqual(var_name, parsing.variable.parseString(var_name)[0])
+
+    def _invalid_var(self, var_name):
+        try:
+            parsing.variable.parseString(var_name)
+            self.fail('Should not parse invalid variable name "%s"' % var_name)
+        except pyparsing.ParseException, e:
+            pass
 
     def test_variable_definition_parsing(self):
-        v = parsing.variable_definition.parseString('${abc123}  any of  one  two  123\n')[0]
-        self.assertEqual('${abc123}', v.name)
+        v = parsing.variable_definition.parseString('${ABC123}  any of  one  two  123\n')[0]
+        self.assertEqual('${ABC123}', v.name)
         self.assertEqual(['one', 'two', '123'], v.values)
 
 
