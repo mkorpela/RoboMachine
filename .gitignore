@@ -1,0 +1,5 @@
+*.pyc
+atest/*.txt
+log.html
+output.xml
+report.html
