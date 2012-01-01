@@ -8,6 +8,8 @@ Library         SeleniumLibrary
 ${USERNAME_FIELD}  username_field
 ${PASSWORD_FIELD}  password_field
 ${LOGIN_BUTTON}    login
+${VALID_USERNAME}  demo
+${VALID_PASSWORD}  mode
 
 *** Machine ***
 ${USERNAME}  any of  ${VALID_USERNAME}  ${VALID_PASSWORD}  invalid123  ${EMPTY}
