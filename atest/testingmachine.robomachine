@@ -1,5 +1,7 @@
 *** Machine ***
+
 ${FOO}  any of  foo  bar  zoo
+
 Starting State
   Log  hello ${FOO}
   [Actions]

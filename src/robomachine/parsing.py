@@ -69,7 +69,7 @@ states = state+ZeroOrMore(OneOrMore(LineEnd())+state)
 states.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
 states = states.setResultsName('states')
 variables = ZeroOrMore(variable_definition).setResultsName('variables')
-machina = machina_header+variables+ZeroOrMore(LineEnd())+states
+machina = machina_header+ZeroOrMore(LineEnd())+variables+ZeroOrMore(LineEnd())+states
 machina.setParseAction(lambda p: RoboMachina(list(p.states), list(p.variables)))
 machina.setWhitespaceChars(' ')
 
