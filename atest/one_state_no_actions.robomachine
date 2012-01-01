@@ -1,0 +1,5 @@
+*** Machine ***
+${LOG_MESSAGE}  any of  Hello World!  Hello Kitty!
+
+Data driving
+  Log  ${LOG_MESSAGE}

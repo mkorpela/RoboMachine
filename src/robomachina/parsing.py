@@ -17,7 +17,6 @@ from robomachina.model import RoboMachina, State, Action, Variable
 
 state_name = Regex(r'\w+( \w+)*')
 state_name.leaveWhitespace()
-state_name.setParseAction(lambda t: ''.join(t))
 state_name = state_name.setResultsName('state_name')
 
 robo_step = Regex('([\w\$\{\}][ \w\$\{\}]*[\w\}]|\w)')
@@ -26,7 +25,7 @@ robo_step = robo_step.setResultsName('robo_step')
 
 variable = Regex(r'\$\{[_A-Z][_A-Z0-9]*\}')
 
-variable_value = Word(alphanums+'${}')+ZeroOrMore(' '+Word(alphanums+'${}'))
+variable_value = Word(alphanums+'${}!')+ZeroOrMore(' '+Word(alphanums+'${}!'))
 
 variable_values = (variable_value+ZeroOrMore('  '+variable_value)).setResultsName('variable_values')
 variable_values.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
@@ -66,11 +65,11 @@ state.leaveWhitespace()
 state.setParseAction(lambda p: State(p.state_name, list(p.steps), list(p.actions)))
 
 machina_header = Literal('*** Machine ***')+LineEnd()
-states = state+ZeroOrMore(LineEnd()+state)
+states = state+ZeroOrMore(OneOrMore(LineEnd())+state)
 states.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
 states = states.setResultsName('states')
 variables = ZeroOrMore(variable_definition).setResultsName('variables')
-machina = machina_header+variables+states
+machina = machina_header+variables+ZeroOrMore(LineEnd())+states
 machina.setParseAction(lambda p: RoboMachina(list(p.states), list(p.variables)))
 machina.setWhitespaceChars(' ')
 
