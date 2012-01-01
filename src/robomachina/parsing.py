@@ -25,7 +25,7 @@ robo_step = robo_step.setResultsName('robo_step')
 
 variable = Regex(r'\$\{[_A-Z][_A-Z0-9]*\}')
 
-variable_value = Word(alphanums+'${}!')+ZeroOrMore(' '+Word(alphanums+'${}!'))
+variable_value = Regex(r'[\w\$\{\}!?]+( [\w\$\{\}!?]+)*')
 
 variable_values = (variable_value+ZeroOrMore('  '+variable_value)).setResultsName('variable_values')
 variable_values.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
