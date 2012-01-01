@@ -20,7 +20,7 @@ state_name.leaveWhitespace()
 state_name.setParseAction(lambda t: ''.join(t))
 state_name = state_name.setResultsName('state_name')
 
-robo_step = Regex(r'([\w\$\{\}][ \w\$\{\}]*[\w\}]|\w)')
+robo_step = Regex('([\w\$\{\}][ \w\$\{\}]*[\w\}]|\w)')
 robo_step.leaveWhitespace()
 robo_step = robo_step.setResultsName('robo_step')
 
@@ -35,9 +35,9 @@ variable_definition = variable.setResultsName('variable_name') + '  any of  ' + 
 variable_definition.leaveWhitespace()
 variable_definition.setParseAction(lambda t: [Variable(t.variable_name, list(t.variable_values))])
 
-step = White(min=2)+robo_step+LineEnd()
+step = Regex(r'  [^\n\[][^\n]*(?=\n)')+LineEnd()
 step.leaveWhitespace()
-step.setParseAction(lambda t: ['  '+t.robo_step])
+step.setParseAction(lambda t: [t[0]])
 
 action_header = White(min=2)+'[Actions]'
 condition = Regex('((  when  [\${}\w]+ == \w+( and [\${}\w]+ == \w+)*)|  otherwise)?')

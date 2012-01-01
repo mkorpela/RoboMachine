@@ -129,8 +129,13 @@ A
         self.assertEqual(['  Foo  bar', '  Bar  foo'], list(steps.steps))
 
     def test_step_parsing(self):
-        step = parsing.step.parseString('  Foo  bar\n')[0]
-        self.assertEqual('  Foo  bar', step)
+        self._should_parse_step('  Foo  bar\n')
+        self._should_parse_step('  Log  ${value}\n')
+        self._should_parse_step('  ${value}=  Set Variable  something\n')
+        self._should_parse_step('  Log  [something]\n')
+
+    def _should_parse_step(self, step):
+        self.assertEqual(step[:-1], parsing.step.parseString(step)[0])
 
     def test_parsing(self):
         m = robomachina.parse(_MACHINA2)
