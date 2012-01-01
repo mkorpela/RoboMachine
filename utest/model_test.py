@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 import unittest
-from robomachina.model import RoboMachina, Variable
+from robomachine.model import RoboMachina, Variable
 
 
 class MachinaModelTestCase(unittest.TestCase):
