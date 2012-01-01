@@ -19,22 +19,42 @@ import robomachine
 
 
 _MACHINA = """\
+*** Settings ***
+Default Tags  foo
+
+*** Variables ***
+${BAR}  zoo
+
 *** Machine ***
 Start State
   Log  In Start State
   [Actions]
-    No Operation  ==>  End State
+    Some keyword  ==>  End State
 
 End State
   Log  In End State
+
+*** Keywords ***
+Some keyword
+  No Operation
 """
 
 _TESTS = """
+*** Settings ***
+Default Tags  foo
+
+*** Variables ***
+${BAR}  zoo
+
 *** Test Cases ***
 Test 1
   Log  In Start State
-  No Operation
+  Some keyword
   Log  In End State
+
+*** Keywords ***
+Some keyword
+  No Operation
 """.strip()
 
 class TestRoboMachina(unittest.TestCase):
@@ -49,7 +69,7 @@ class TestRoboMachina(unittest.TestCase):
 
     def test_parse_machina_state_actions(self):
         m = robomachine.parse(_MACHINA)
-        self.assertEqual(['No Operation'], [a.name for a in m.states[0].actions])
+        self.assertEqual(['Some keyword'], [a.name for a in m.states[0].actions])
         self.assertEqual([], [a.name for a in m.states[1].actions])
 
     def test_parse_machina_state_steps(self):
@@ -103,7 +123,7 @@ Test 3
 class TestParsing(unittest.TestCase):
 
     def test_header_parsing(self):
-        header = parsing.machina_header.parseString('*** Machine ***\n')
+        header = parsing.machine_header.parseString('*** Machine ***\n')
         self.assertEqual('*** Machine ***', header[0])
 
     def test_state_parsing(self):
