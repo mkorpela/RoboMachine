@@ -31,13 +31,13 @@ class RoboMachina(object):
         return None
 
     def write_variable_setter(self, output):
-        output.write('Set Machina Variables\n')
+        output.write('Set Machine Variables\n')
         output.write('  [Arguments]  %s\n' % '  '.join(variable.name for variable in self.variables))
         for variable in self.variables:
             output.write('  Set Test Variable  \\%s\n' % variable.name)
 
     def write_variable_setting_step(self, values, output):
-        output.write('  Set Machina Variables  %s\n' % '  '.join(values))
+        output.write('  Set Machine Variables  %s\n' % '  '.join(values))
 
     def variable_value_sets(self):
         if not self.variables:
