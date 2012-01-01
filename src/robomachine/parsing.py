@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from pyparsing import *
-from robomachina.model import RoboMachina, State, Action, Variable
+from robomachine.model import RoboMachina, State, Action, Variable
 
 state_name = Regex(r'\w+( \w+)*')
 state_name.leaveWhitespace()

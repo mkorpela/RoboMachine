@@ -1,5 +1,5 @@
 ===========
-RoboMachina
+RoboMachine
 ===========
 
 A test data generator for Robot Framework.
