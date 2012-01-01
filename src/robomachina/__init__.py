@@ -35,6 +35,8 @@ def generate_all_dfs(machine, max_actions=None, output=None):
 def generate_all_from(state, max_actions):
     if max_actions == 0:
         return []
+    if not state.actions:
+        return [[]]
     tests = []
     for action in state.actions:
         sub_tests = generate_all_from(action.next_state, max_actions-1)
