@@ -1,0 +1,11 @@
+*** Machine ***
+Pass Or Fail
+  [Actions]
+    No Operation  ==>  Passing
+    Fail          ==>  Failing
+
+Passing
+  Log  this will be reached
+
+Failing
+  Log  this will not be reached
