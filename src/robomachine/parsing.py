@@ -46,7 +46,7 @@ step.leaveWhitespace()
 step.setParseAction(lambda t: [t[0]])
 
 action_header = White(min=2)+'[Actions]'
-condition = Regex('((  when  [\${}\w]+ == \w+( and [\${}\w]+ == \w+)*)|  otherwise)?')
+condition = Regex(r'((  when  [\${}\w]+ == \w+( and [\${}\w]+ == \w+)*)|  otherwise)?')
 def parse_condition(cond):
     if not cond[0]:
         return cond
@@ -64,6 +64,9 @@ actions = action_header + LineEnd() + OneOrMore(action).setResultsName('actions'
 actions = Optional(actions)
 actions.leaveWhitespace()
 actions.setResultsName('actions')
+
+comment = Regex(r'(^\s*\#[^\n]*\n)|(\s\s+\#[^\n]*(?=\n))')
+comment.leaveWhitespace()
 
 steps = ZeroOrMore(step).setResultsName('steps')
 
@@ -89,6 +92,7 @@ def foo(p):
                        keywords_table=p.keywords_table)
 
 machine.setParseAction(foo)
+machine.ignore(comment)
 machine.setWhitespaceChars(' ')
 
 def parse(text):

@@ -16,6 +16,7 @@ from StringIO import StringIO
 import unittest
 from robomachine import parsing
 import robomachine
+from robomachine.parsing import comment
 
 
 _MACHINA = """\
@@ -90,11 +91,11 @@ A
 
 B
   [Actions]
-    something else  ==>  A
+    something else  ==>  A  # This is also a comment
     other thing     ==>  C
 
 C
-  No Operation
+  No Operation  #This is a comment
 """
 
 _TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2 = """\
@@ -112,13 +113,13 @@ Test 2
   Bar  foo
   first
   other thing
-  No Operation
+  No Operation  #This is a comment
 
 Test 3
   Foo  bar
   Bar  foo
   second
-  No Operation
+  No Operation  #This is a comment
 """
 
 class TestParsing(unittest.TestCase):
@@ -170,7 +171,7 @@ A
         self.assertEqual([a.name for a in m.states[1].actions], ['something else', 'other thing'])
         self.assertEqual([a.next_state.name for a in m.states[1].actions], ['A', 'C'])
         self.assertEqual(m.states[2].name, 'C')
-        self.assertEqual(m.states[2].steps, ['  No Operation'])
+        self.assertEqual(m.states[2].steps, ['  No Operation  #This is a comment'])
         self.assertEqual(m.states[2].actions, [])
 
 
@@ -182,6 +183,22 @@ class TestTestGeneration(unittest.TestCase):
         robomachine.generate_all_dfs(m, max_actions=2, output=out)
         self.assertEqual(out.getvalue(), _TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2)
 
+
+class TestComment(unittest.TestCase):
+
+    def test_whole_line_comment(self):
+        self._verify_comment('#   comment\n')
+
+    def test_comment_line_with_whitespace(self):
+        self._verify_comment('          #   comment\n')
+
+    def test_content_and_comment(self):
+        self._verify_comment('  Some content  # commenting it\n',
+                             '  # commenting it')
+
+    def _verify_comment(self, line, expected=None):
+        expected = expected or line
+        self.assertEqual(expected, comment.searchString(line)[0][0])
 
 if __name__ == '__main__':
     unittest.main()
