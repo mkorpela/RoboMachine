@@ -84,14 +84,14 @@ machine = Optional(settings_table).setResultsName('settings_table')+\
           machine_header+ZeroOrMore(LineEnd())+variables+\
           ZeroOrMore(LineEnd())+states+\
           Optional(keywords_table).setResultsName('keywords_table')
-def foo(p):
+def create_robomachine(p):
     return RoboMachina(list(p.states),
                        list(p.variables),
                        settings_table=p.settings_table,
                        variables_table=p.variables_table,
                        keywords_table=p.keywords_table)
 
-machine.setParseAction(foo)
+machine.setParseAction(create_robomachine)
 machine.ignore(comment)
 machine.setWhitespaceChars(' ')
 
