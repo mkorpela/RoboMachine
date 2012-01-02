@@ -120,7 +120,7 @@ class Action(object):
         cond = self.condition
         for variable in self._machine.variables:
             cond = cond.replace(variable.name, variable.current_value)
-        cond = cond.split(' and ')
+        cond = cond.split('  and  ')
         for first, second in [c.split(' == ') for c in cond]:
             if first != second:
                 return False

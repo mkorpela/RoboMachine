@@ -42,7 +42,9 @@ variable_definition = variable.setResultsName('variable_name') + '  any of  ' + 
 variable_definition.leaveWhitespace()
 variable_definition.setParseAction(lambda t: [Variable(t.variable_name, list(t.variable_values))])
 
-rule = variable + ' == ' + variable_value+'  <==>  '+variable + ' == ' + variable_value+LineEnd()
+condition_part = variable+' == '+variable_value
+
+rule = condition_part+'  <==>  '+condition_part+LineEnd()
 rule.leaveWhitespace()
 rule.setParseAction(lambda t: [Rule(list(t))])
 
@@ -51,16 +53,17 @@ step.leaveWhitespace()
 step.setParseAction(lambda t: [t[0]])
 
 action_header = White(min=2)+'[Actions]'
-condition = Regex(r'((  when  [\${}\w]+ == \w+( and [\${}\w]+ == \w+)*)|  otherwise)?')
+
+condition = Literal('  when  ')+condition_part+ZeroOrMore('  and  '+condition_part)
+condition = condition ^ Regex(r'  +otherwise')
 def parse_condition(cond):
-    if not cond[0]:
-        return cond
-    if cond[0].startswith('  when  '):
-        return [cond[0][8:]]
+    if cond[0] == '  when  ':
+        return ''.join(cond[1:])
     return ['otherwise']
 
+condition.leaveWhitespace()
 condition.setParseAction(parse_condition)
-condition = condition.setResultsName('condition')
+condition = Optional(condition).setResultsName('condition')
 action = White(min=4)+robo_step + White(min=2) + '==>'+White(min=2) + state_name + condition + LineEnd()
 action.leaveWhitespace()
 action.setParseAction(lambda t: [Action(t.robo_step.rstrip(), t.state_name, t.condition)])
@@ -87,7 +90,8 @@ variables = ZeroOrMore(variable_definition).setResultsName('variables')
 rules = ZeroOrMore(rule).setResultsName('rules')
 machine = Optional(settings_table).setResultsName('settings_table')+\
           Optional(variables_table).setResultsName('variables_table')+\
-          machine_header+ZeroOrMore(LineEnd())+variables+rules+\
+          machine_header+ZeroOrMore(LineEnd())+variables+\
+          ZeroOrMore(LineEnd())+rules+\
           ZeroOrMore(LineEnd())+states+\
           Optional(keywords_table).setResultsName('keywords_table')
 def create_robomachine(p):

@@ -24,8 +24,7 @@ Login Page
   Input Text      ${USERNAME_FIELD}  ${USERNAME}
   Input Password  ${PASSWORD_FIELD}  ${PASSWORD}
   [Actions]
-    Click Button  ${LOGIN_BUTTON}  ==>  Welcome Page  when
-    ...  ${USERNAME} == ${VALID_USERNAME} and ${PASSWORD} == ${VALID_PASSWORD}
+    Click Button  ${LOGIN_BUTTON}  ==>  Welcome Page  when  ${USERNAME} == ${VALID_USERNAME}  and  ${PASSWORD} == ${VALID_PASSWORD}
     Click Button  ${LOGIN_BUTTON}  ==>  Error Page    otherwise
 
 Welcome Page

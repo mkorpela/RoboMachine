@@ -55,10 +55,10 @@ class ConditionActionParsingTestCases(unittest.TestCase):
         self.assertEqual('${FOO} == bar', a.condition)
 
     def test_multiconditional_action_parsing(self):
-        a = parsing.action.parseString('    My Action  ==>  End Step  when  ${BAR} == a and ${FOO} == cee\n')[0]
+        a = parsing.action.parseString('    My Action  ==>  End Step  when  ${BAR} == a  and  ${FOO} == cee\n')[0]
         self.assertEqual('My Action', a.name)
         self.assertEqual('End Step', a._next_state_name)
-        self.assertEqual('${BAR} == a and ${FOO} == cee', a.condition)
+        self.assertEqual('${BAR} == a  and  ${FOO} == cee', a.condition)
 
     def test_otherwise_conditional_action_parsing(self):
         a = parsing.action.parseString('    My Action  ==>  End Step  otherwise\n')[0]
@@ -77,11 +77,11 @@ _LOGIN_MACHINE = """\
 *** Machine ***
 ${USERNAME}  any of  demo  mode  invalid  ${EMPTY}
 ${PASSWORD}  any of  mode  demo  invalid  ${EMPTY}
-${USERNAME} == mode  <==>  ${PASSWORD} == demo
+
 Login Page
   Title Should Be  Login Page
   [Actions]
-    Submit Credentials  ==>  Welcome Page  when  ${USERNAME} == demo and ${PASSWORD} == mode
+    Submit Credentials  ==>  Welcome Page  when  ${USERNAME} == demo  and  ${PASSWORD} == mode
     Submit Credentials  ==>  Error Page  otherwise
 
 Welcome Page
@@ -204,10 +204,8 @@ class VariableMachineParsingTestCases(unittest.TestCase):
         self.assertEqual('${USERNAME}', m.variables[0].name)
         self.assertEqual('${PASSWORD}', m.variables[1].name)
         self.assertEqual(2, len(m.variables))
-        self.assertEqual(1, len(m.rules))
-        self.assertEqual('${USERNAME} == mode  <==>  ${PASSWORD} == demo', m.rules[0].text)
         m.apply_variable_values(['demo', 'mode'])
-        self.assertEqual('${USERNAME} == demo and ${PASSWORD} == mode', m.states[0].actions[0].condition)
+        self.assertEqual('${USERNAME} == demo  and  ${PASSWORD} == mode', m.states[0].actions[0].condition)
         self.assertEqual('Welcome Page', m.states[0].actions[0].next_state.name)
         m.apply_variable_values(['invalid', 'invalid'])
         self.assertEqual('otherwise', m.states[0].actions[0].condition)
