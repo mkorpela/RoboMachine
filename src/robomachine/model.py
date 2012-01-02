@@ -46,6 +46,10 @@ class RoboMachina(object):
     def write_keywords_table(self, output):
         for content in self._keywords_table:
             output.write('\n'+content)
+        if self.variables:
+            if not self._keywords_table:
+                output.write('\n*** Keywords ***\n')
+            self.write_variable_setter(output)
 
     def write_variable_setter(self, output):
         output.write('Set Machine Variables\n')

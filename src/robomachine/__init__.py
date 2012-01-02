@@ -31,11 +31,7 @@ def generate_all_dfs(machine, max_actions=None, output=None):
             for action in test:
                 action.write_to(output)
             i += 1
-    if machine.variables:
-        output.write('\n*** Keywords ***\n')
-        machine.write_variable_setter(output)
-    else:
-        machine.write_keywords_table(output)
+    machine.write_keywords_table(output)
 
 def generate_all_from(state, max_actions):
     if max_actions == 0:

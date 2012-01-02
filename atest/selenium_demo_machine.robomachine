@@ -21,14 +21,18 @@ ${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}
 
 Login Page
   Title Should Be  Login Page
-  Input Text      ${USERNAME_FIELD}  ${USERNAME}
-  Input Password  ${PASSWORD_FIELD}  ${PASSWORD}
   [Actions]
-    Click Button  ${LOGIN_BUTTON}  ==>  Welcome Page  when  ${USERNAME} == ${VALID_USERNAME}  and  ${PASSWORD} == ${VALID_PASSWORD}
-    Click Button  ${LOGIN_BUTTON}  ==>  Error Page    otherwise
+    Submit Credentials  ==>  Welcome Page  when  ${USERNAME} == ${VALID_USERNAME}  and  ${PASSWORD} == ${VALID_PASSWORD}
+    Submit Credentials  ==>  Error Page    otherwise
 
 Welcome Page
   Title Should Be  Welcome Page
 
 Error Page
   Title Should Be  Error Page
+
+*** Keywords ***
+Submit Credentials
+  Input Text      ${USERNAME_FIELD}  ${USERNAME}
+  Input Password  ${PASSWORD_FIELD}  ${PASSWORD}
+  Click Button  ${LOGIN_BUTTON}
