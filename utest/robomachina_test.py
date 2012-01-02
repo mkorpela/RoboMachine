@@ -39,7 +39,7 @@ Some keyword
   No Operation
 """
 
-_TESTS = """
+_TESTS = """\
 *** Settings ***
 Default Tags  foo
 
@@ -53,9 +53,10 @@ Test 1
   Log  In End State
 
 *** Keywords ***
+
 Some keyword
   No Operation
-""".strip()
+"""
 
 class TestRoboMachina(unittest.TestCase):
 

@@ -14,9 +14,13 @@
 
 class RoboMachina(object):
 
-    def __init__(self, states, variables):
+    def __init__(self, states, variables, settings_table=None,
+                 variables_table=None, keywords_table=None):
         self.states = states or []
         self.variables = variables or []
+        self._settings_table = settings_table or []
+        self._variables_table = variables_table or []
+        self._keywords_table = keywords_table or []
         for state in self.states:
             state.set_machine(self)
 
@@ -29,6 +33,18 @@ class RoboMachina(object):
             if state.name == name:
                 return state
         return None
+
+    def write_settings_table(self, output):
+        for content in self._settings_table:
+            output.write(content)
+
+    def write_variables_table(self, output):
+        for content in self._variables_table:
+            output.write(content)
+
+    def write_keywords_table(self, output):
+        for content in self._keywords_table:
+            output.write('\n'+content)
 
     def write_variable_setter(self, output):
         output.write('Set Machine Variables\n')

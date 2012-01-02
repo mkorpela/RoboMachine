@@ -16,8 +16,11 @@ from pyparsing import *
 from robomachine.model import RoboMachina, State, Action, Variable
 
 settings_table = Literal('*** Settings ***')+Regex(r'[^\*]+(?=\*)')
+settings_table.setParseAction(lambda t: '\n'.join(t))
 variables_table = Literal('*** Variables ***')+Regex(r'[^\*]+(?=\*)')
+variables_table.setParseAction(lambda t: '\n'.join(t))
 keywords_table = Literal('*** Keywords ***')+CharsNotIn('')+StringEnd()
+keywords_table.setParseAction(lambda t: '\n'.join(t))
 
 state_name = Regex(r'\w+( \w+)*')
 state_name.leaveWhitespace()
@@ -73,12 +76,19 @@ states = state+ZeroOrMore(OneOrMore(LineEnd())+state)
 states.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
 states = states.setResultsName('states')
 variables = ZeroOrMore(variable_definition).setResultsName('variables')
-machine = Optional(settings_table)+\
-          Optional(variables_table)+\
+machine = Optional(settings_table).setResultsName('settings_table')+\
+          Optional(variables_table).setResultsName('variables_table')+\
           machine_header+ZeroOrMore(LineEnd())+variables+\
           ZeroOrMore(LineEnd())+states+\
-          Optional(keywords_table)
-machine.setParseAction(lambda p: RoboMachina(list(p.states), list(p.variables)))
+          Optional(keywords_table).setResultsName('keywords_table')
+def foo(p):
+    return RoboMachina(list(p.states),
+                       list(p.variables),
+                       settings_table=p.settings_table,
+                       variables_table=p.variables_table,
+                       keywords_table=p.keywords_table)
+
+machine.setParseAction(foo)
 machine.setWhitespaceChars(' ')
 
 def parse(text):

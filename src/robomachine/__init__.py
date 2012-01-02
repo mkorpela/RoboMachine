@@ -11,11 +11,14 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+from StringIO import StringIO
 
 from parsing import parse
 
 def generate_all_dfs(machine, max_actions=None, output=None):
     max_actions = -1 if max_actions is None else max_actions
+    machine.write_settings_table(output)
+    machine.write_variables_table(output)
     output.write('*** Test Cases ***')
     i = 1
     for values in machine.variable_value_sets():
@@ -31,6 +34,8 @@ def generate_all_dfs(machine, max_actions=None, output=None):
     if machine.variables:
         output.write('\n*** Keywords ***\n')
         machine.write_variable_setter(output)
+    else:
+        machine.write_keywords_table(output)
 
 def generate_all_from(state, max_actions):
     if max_actions == 0:
@@ -47,9 +52,6 @@ def generate_all_from(state, max_actions):
     return tests
 
 def transform(text):
-    machine = parse(text)
-    tests = ['*** Test Cases ***', 'Test 1']
-    tests += machine.states[0].steps
-    tests += ['  '+machine.states[0].actions[0].name]
-    tests += machine.states[1].steps
-    return '\n'.join(tests)
+    output = StringIO()
+    generate_all_dfs(parse(text), output=output)
+    return output.getvalue()
