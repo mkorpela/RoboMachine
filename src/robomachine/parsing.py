@@ -13,7 +13,8 @@
 #  limitations under the License.
 
 from pyparsing import *
-from robomachine.model import RoboMachina, State, Action, Variable
+from robomachine.model import RoboMachina, State, Action, Variable, Rule
+
 
 settings_table = Literal('*** Settings ***')+Regex(r'[^\*]+(?=\*)')
 settings_table.setParseAction(lambda t: '\n'.join(t))
@@ -40,6 +41,10 @@ variable_values.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]]
 variable_definition = variable.setResultsName('variable_name') + '  any of  ' + variable_values + LineEnd()
 variable_definition.leaveWhitespace()
 variable_definition.setParseAction(lambda t: [Variable(t.variable_name, list(t.variable_values))])
+
+rule = variable + ' == ' + variable_value+'  <==>  '+variable + ' == ' + variable_value+LineEnd()
+rule.leaveWhitespace()
+rule.setParseAction(lambda t: [Rule(list(t))])
 
 step = Regex(r'  [^\n\[][^\n]*(?=\n)')+LineEnd()
 step.leaveWhitespace()
@@ -79,14 +84,16 @@ states = state+ZeroOrMore(OneOrMore(LineEnd())+state)
 states.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
 states = states.setResultsName('states')
 variables = ZeroOrMore(variable_definition).setResultsName('variables')
+rules = ZeroOrMore(rule).setResultsName('rules')
 machine = Optional(settings_table).setResultsName('settings_table')+\
           Optional(variables_table).setResultsName('variables_table')+\
-          machine_header+ZeroOrMore(LineEnd())+variables+\
+          machine_header+ZeroOrMore(LineEnd())+variables+rules+\
           ZeroOrMore(LineEnd())+states+\
           Optional(keywords_table).setResultsName('keywords_table')
 def create_robomachine(p):
     return RoboMachina(list(p.states),
                        list(p.variables),
+                       list(p.rules),
                        settings_table=p.settings_table,
                        variables_table=p.variables_table,
                        keywords_table=p.keywords_table)

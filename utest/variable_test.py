@@ -66,10 +66,18 @@ class ConditionActionParsingTestCases(unittest.TestCase):
         self.assertEqual('End Step', a._next_state_name)
         self.assertEqual('otherwise', a.condition)
 
+
+class RuleParsingTestCases(unittest.TestCase):
+
+    def test_rule_parsing(self):
+        rule = parsing.rule.parseString('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}\n')[0]
+        self.assertEqual('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}', rule.text)
+
 _LOGIN_MACHINE = """\
 *** Machine ***
 ${USERNAME}  any of  demo  mode  invalid  ${EMPTY}
 ${PASSWORD}  any of  mode  demo  invalid  ${EMPTY}
+${USERNAME} == mode  <==>  ${PASSWORD} == demo
 Login Page
   Title Should Be  Login Page
   [Actions]
@@ -196,6 +204,8 @@ class VariableMachineParsingTestCases(unittest.TestCase):
         self.assertEqual('${USERNAME}', m.variables[0].name)
         self.assertEqual('${PASSWORD}', m.variables[1].name)
         self.assertEqual(2, len(m.variables))
+        self.assertEqual(1, len(m.rules))
+        self.assertEqual('${USERNAME} == mode  <==>  ${PASSWORD} == demo', m.rules[0].text)
         m.apply_variable_values(['demo', 'mode'])
         self.assertEqual('${USERNAME} == demo and ${PASSWORD} == mode', m.states[0].actions[0].condition)
         self.assertEqual('Welcome Page', m.states[0].actions[0].next_state.name)

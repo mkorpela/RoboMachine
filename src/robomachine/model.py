@@ -14,10 +14,11 @@
 
 class RoboMachina(object):
 
-    def __init__(self, states, variables, settings_table=None,
+    def __init__(self, states, variables, rules, settings_table=None,
                  variables_table=None, keywords_table=None):
         self.states = states or []
         self.variables = variables or []
+        self.rules = rules or []
         self._settings_table = settings_table or []
         self._variables_table = variables_table or []
         self._keywords_table = keywords_table or []
@@ -145,3 +146,12 @@ class Variable(object):
         if self._current_value is Variable._NO_VALUE:
             raise AssertionError('No current value set')
         return self._current_value
+
+class Rule(object):
+
+    def __init__(self, parts):
+        self._parts = parts
+
+    @property
+    def text(self):
+        return ''.join(self._parts).strip()
