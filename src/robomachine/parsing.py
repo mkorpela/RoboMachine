@@ -45,9 +45,9 @@ variable_definition.setParseAction(lambda t: [Variable(t.variable_name, list(t.v
 condition_part = variable+' == '+variable_value
 condition_part.setParseAction(lambda t: [Condition(t[0], t[2])])
 
-rule = condition_part+'  <==>  '+condition_part+LineEnd()
-rule.leaveWhitespace()
-rule.setParseAction(lambda t: [EquivalenceRule(t[0], t[2])])
+equivalence_rule = condition_part+'  <==>  '+condition_part+LineEnd()
+equivalence_rule.leaveWhitespace()
+equivalence_rule.setParseAction(lambda t: [EquivalenceRule(t[0], t[2])])
 
 step = Regex(r'  [^\n\[][^\n]*(?=\n)')+LineEnd()
 step.leaveWhitespace()
@@ -55,11 +55,14 @@ step.setParseAction(lambda t: [t[0]])
 
 action_header = White(min=2)+'[Actions]'
 
-condition = Literal('  when  ')+condition_part+ZeroOrMore('  and  '+condition_part)
+and_rule = condition_part+ZeroOrMore('  and  '+condition_part)
+and_rule.setParseAction(lambda t: [AndRule([t[i] for i in range(len(t)) if i % 2 == 0])])
+
+condition = Literal('  when  ')+and_rule
 condition = condition ^ Regex(r'  +otherwise')
 def parse_condition(cond):
     if cond[0] == '  when  ':
-        return [AndRule([cond[i] for i in range(len(cond)) if i % 2])]
+        return [cond[1]]
     return ['otherwise']
 
 condition.leaveWhitespace()
@@ -88,7 +91,7 @@ states = state+ZeroOrMore(OneOrMore(LineEnd())+state)
 states.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
 states = states.setResultsName('states')
 variables = ZeroOrMore(variable_definition).setResultsName('variables')
-rules = ZeroOrMore(rule).setResultsName('rules')
+rules = ZeroOrMore(equivalence_rule).setResultsName('rules')
 machine = Optional(settings_table).setResultsName('settings_table')+\
           Optional(variables_table).setResultsName('variables_table')+\
           machine_header+ZeroOrMore(LineEnd())+variables+\

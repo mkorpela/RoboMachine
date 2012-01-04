@@ -70,7 +70,7 @@ class ConditionActionParsingTestCases(unittest.TestCase):
 class RuleParsingTestCases(unittest.TestCase):
 
     def test_rule_parsing(self):
-        rule = parsing.rule.parseString('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}\n')[0]
+        rule = parsing.equivalence_rule.parseString('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}\n')[0]
         self.assertEqual('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}', rule.text)
         rule.set_variable('${USERNAME}', '${VALID_PASSWORD}')
         rule.set_variable('${PASSWORD}', '${VALID_USERNAME}')
