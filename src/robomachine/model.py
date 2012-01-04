@@ -69,7 +69,15 @@ class RoboMachina(object):
             next_values = tail_values[0]
             tail_values = tail_values[1:]
             head_values = [h+[n] for h in head_values for n in next_values]
-        return head_values
+        return [vs for vs in head_values if self._rules_are_ok(vs)]
+
+    def _rules_are_ok(self, values):
+        for rule in self.rules:
+            for variable, value in zip(self.variables, values):
+                rule.set_variable(variable.name, value)
+            if not rule.is_valid():
+                return False
+        return True
 
     def apply_variable_values(self, values):
         for variable, value in zip(self.variables, values):
@@ -123,12 +131,8 @@ class Action(object):
             return True
         cond = self.condition
         for variable in self._machine.variables:
-            cond = cond.replace(variable.name, variable.current_value)
-        cond = cond.split('  and  ')
-        for first, second in [c.split(' == ') for c in cond]:
-            if first != second:
-                return False
-        return True
+            cond.set_variable(variable.name, variable.current_value)
+        return cond.is_valid()
 
     def write_to(self, output):
         output.write('  %s\n' % self.name)
@@ -151,11 +155,46 @@ class Variable(object):
             raise AssertionError('No current value set')
         return self._current_value
 
-class Rule(object):
+class EquivalenceRule(object):
 
-    def __init__(self, parts):
-        self._parts = parts
+    def __init__(self, condition1, condition2):
+        self._condition1 = condition1
+        self._condition2 = condition2
+        self._values = {}
 
     @property
     def text(self):
-        return ''.join(self._parts).strip()
+        return '%s  <==>  %s' % (self._condition1, self._condition2)
+
+    def set_variable(self, name, value):
+        self._values[name] = value
+
+    def is_valid(self):
+        return self._condition1.is_valid(self._values) == self._condition2.is_valid(self._values)
+
+class AndRule(object):
+
+    def __init__(self, conditions):
+        self._conditions = conditions
+        self._values = {}
+
+    def __str__(self):
+        return '  and  '.join(str(c) for c in self._conditions)
+
+    def set_variable(self, name, value):
+        self._values[name] = value
+
+    def is_valid(self):
+        return not(any(not(c.is_valid(self._values)) for c in self._conditions))
+
+class Condition(object):
+
+    def __init__(self, variable_name, value):
+        self._name = variable_name.strip()
+        self._value = value.strip()
+
+    def __str__(self):
+        return '%s == %s' % (self._name, self._value)
+
+    def is_valid(self, value_mapping):
+        return value_mapping[self._name].strip() == self._value.strip()

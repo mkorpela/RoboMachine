@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from pyparsing import *
-from robomachine.model import RoboMachina, State, Action, Variable, Rule
+from robomachine.model import RoboMachina, State, Action, Variable, EquivalenceRule, Condition, AndRule
 
 
 settings_table = Literal('*** Settings ***')+Regex(r'[^\*]+(?=\*)')
@@ -43,10 +43,11 @@ variable_definition.leaveWhitespace()
 variable_definition.setParseAction(lambda t: [Variable(t.variable_name, list(t.variable_values))])
 
 condition_part = variable+' == '+variable_value
+condition_part.setParseAction(lambda t: [Condition(t[0], t[2])])
 
 rule = condition_part+'  <==>  '+condition_part+LineEnd()
 rule.leaveWhitespace()
-rule.setParseAction(lambda t: [Rule(list(t))])
+rule.setParseAction(lambda t: [EquivalenceRule(t[0], t[2])])
 
 step = Regex(r'  [^\n\[][^\n]*(?=\n)')+LineEnd()
 step.leaveWhitespace()
@@ -58,7 +59,7 @@ condition = Literal('  when  ')+condition_part+ZeroOrMore('  and  '+condition_pa
 condition = condition ^ Regex(r'  +otherwise')
 def parse_condition(cond):
     if cond[0] == '  when  ':
-        return ''.join(cond[1:])
+        return [AndRule([cond[i] for i in range(len(cond)) if i % 2])]
     return ['otherwise']
 
 condition.leaveWhitespace()
@@ -94,6 +95,7 @@ machine = Optional(settings_table).setResultsName('settings_table')+\
           ZeroOrMore(LineEnd())+rules+\
           ZeroOrMore(LineEnd())+states+\
           Optional(keywords_table).setResultsName('keywords_table')
+
 def create_robomachine(p):
     return RoboMachina(list(p.states),
                        list(p.variables),

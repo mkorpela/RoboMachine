@@ -52,13 +52,13 @@ class ConditionActionParsingTestCases(unittest.TestCase):
         a = parsing.action.parseString('    My Action  ==>  End Step  when  ${FOO} == bar\n')[0]
         self.assertEqual('My Action', a.name)
         self.assertEqual('End Step', a._next_state_name)
-        self.assertEqual('${FOO} == bar', a.condition)
+        self.assertEqual('${FOO} == bar', str(a.condition))
 
     def test_multiconditional_action_parsing(self):
         a = parsing.action.parseString('    My Action  ==>  End Step  when  ${BAR} == a  and  ${FOO} == cee\n')[0]
         self.assertEqual('My Action', a.name)
         self.assertEqual('End Step', a._next_state_name)
-        self.assertEqual('${BAR} == a  and  ${FOO} == cee', a.condition)
+        self.assertEqual('${BAR} == a  and  ${FOO} == cee', str(a.condition))
 
     def test_otherwise_conditional_action_parsing(self):
         a = parsing.action.parseString('    My Action  ==>  End Step  otherwise\n')[0]
@@ -72,11 +72,25 @@ class RuleParsingTestCases(unittest.TestCase):
     def test_rule_parsing(self):
         rule = parsing.rule.parseString('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}\n')[0]
         self.assertEqual('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}', rule.text)
+        rule.set_variable('${USERNAME}', '${VALID_PASSWORD}')
+        rule.set_variable('${PASSWORD}', '${VALID_USERNAME}')
+        self.assertTrue(rule.is_valid())
+        rule.set_variable('${USERNAME}', 'something else')
+        self.assertFalse(rule.is_valid())
+        rule.set_variable('${USERNAME}', '${VALID_PASSWORD}')
+        rule.set_variable('${PASSWORD}', 'something')
+        self.assertFalse(rule.is_valid())
+        rule.set_variable('${USERNAME}', 'not valid')
+        rule.set_variable('${PASSWORD}', 'nothis validus')
+        self.assertTrue(rule.is_valid())
+
 
 _LOGIN_MACHINE = """\
 *** Machine ***
 ${USERNAME}  any of  demo  mode  invalid  ${EMPTY}
 ${PASSWORD}  any of  mode  demo  invalid  ${EMPTY}
+
+${USERNAME} == mode  <==>  ${PASSWORD} == demo
 
 Login Page
   Title Should Be  Login Page
@@ -100,90 +114,54 @@ Test 1
   Title Should Be  Welcome Page
 
 Test 2
-  Set Machine Variables  demo  demo
-  Title Should Be  Login Page
-  Submit Credentials
-  Title Should Be  Error Page
-
-Test 3
   Set Machine Variables  demo  invalid
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
-Test 4
+Test 3
   Set Machine Variables  demo  ${EMPTY}
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
-Test 5
-  Set Machine Variables  mode  mode
-  Title Should Be  Login Page
-  Submit Credentials
-  Title Should Be  Error Page
-
-Test 6
+Test 4
   Set Machine Variables  mode  demo
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
-Test 7
-  Set Machine Variables  mode  invalid
-  Title Should Be  Login Page
-  Submit Credentials
-  Title Should Be  Error Page
-
-Test 8
-  Set Machine Variables  mode  ${EMPTY}
-  Title Should Be  Login Page
-  Submit Credentials
-  Title Should Be  Error Page
-
-Test 9
+Test 5
   Set Machine Variables  invalid  mode
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
-Test 10
-  Set Machine Variables  invalid  demo
-  Title Should Be  Login Page
-  Submit Credentials
-  Title Should Be  Error Page
-
-Test 11
+Test 6
   Set Machine Variables  invalid  invalid
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
-Test 12
+Test 7
   Set Machine Variables  invalid  ${EMPTY}
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
-Test 13
+Test 8
   Set Machine Variables  ${EMPTY}  mode
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
-Test 14
-  Set Machine Variables  ${EMPTY}  demo
-  Title Should Be  Login Page
-  Submit Credentials
-  Title Should Be  Error Page
-
-Test 15
+Test 9
   Set Machine Variables  ${EMPTY}  invalid
   Title Should Be  Login Page
   Submit Credentials
   Title Should Be  Error Page
 
-Test 16
+Test 10
   Set Machine Variables  ${EMPTY}  ${EMPTY}
   Title Should Be  Login Page
   Submit Credentials
@@ -205,7 +183,7 @@ class VariableMachineParsingTestCases(unittest.TestCase):
         self.assertEqual('${PASSWORD}', m.variables[1].name)
         self.assertEqual(2, len(m.variables))
         m.apply_variable_values(['demo', 'mode'])
-        self.assertEqual('${USERNAME} == demo  and  ${PASSWORD} == mode', m.states[0].actions[0].condition)
+        self.assertEqual('${USERNAME} == demo  and  ${PASSWORD} == mode', str(m.states[0].actions[0].condition))
         self.assertEqual('Welcome Page', m.states[0].actions[0].next_state.name)
         m.apply_variable_values(['invalid', 'invalid'])
         self.assertEqual('otherwise', m.states[0].actions[0].condition)

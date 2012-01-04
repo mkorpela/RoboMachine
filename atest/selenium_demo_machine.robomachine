@@ -1,5 +1,5 @@
 *** Settings ***
-Suite Setup     Open Browser  ${LOGIN_PAGE_URL}
+Suite Setup     Open Browser  ${LOGIN_PAGE_URL}   googlechrome
 Suite Teardown  Close Browser
 Test Setup      Go to  ${LOGIN_PAGE_URL}
 Library         SeleniumLibrary
@@ -7,7 +7,7 @@ Library         SeleniumLibrary
 *** Variables ***
 ${USERNAME_FIELD}  username_field
 ${PASSWORD_FIELD}  password_field
-${LOGIN_BUTTON}    login
+${LOGIN_BUTTON}    LOGIN
 ${VALID_USERNAME}  demo
 ${VALID_PASSWORD}  mode
 ${LOGIN_PAGE_URL}  http://localhost:7272/html/
