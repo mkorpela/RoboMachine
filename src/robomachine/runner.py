@@ -14,11 +14,33 @@
 
 import sys
 import robomachine
+import argparse
+
+#Usage:
+#  robomachine [OPTIONS] [INPUT.robomachine]
+#
+#Options:
+# --tests-max NUMBER                    default 1000
+# --steps-max NUMBER                    default 100
+# --generation-algorithm (dfs|random)   default dfs
+# --output NAME                         default INPUT.txt
 
 if __name__ == '__main__':
-    input_file = sys.argv[1]
-    output_file = sys.argv[2]
-    with open(input_file, 'r') as inp:
-        with open(output_file, 'w') as out:
+    parser = argparse.ArgumentParser(description='RoboMachine')
+    parser.add_argument('input', type=str, help='input file')
+    parser.add_argument('--output', '-o', type=str, default=None,
+                        help='output file (default is input file with txt suffix)')
+    parser.add_argument('--tests-max', '-t',
+                         type=int, default=1000,
+                         help='maximum number of tests to generate (default 1000)')
+    parser.add_argument('--steps-max', '-s',
+                         type=int, default=100,
+                         help='maximum number of steps to generate (default 100)')
+    parser.add_argument('--generation-algorithm', '-g',
+                         type=str, default='dfs',
+                         help='used test generation algorithm (dfs or random)')
+    args = parser.parse_args()
+    with open(args.input, 'r') as inp:
+        with open(args.output, 'w') as out:
             model = robomachine.parse(inp.read())
             robomachine.generate_all_dfs(model, 10, out)
