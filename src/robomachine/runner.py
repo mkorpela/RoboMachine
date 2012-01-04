@@ -11,6 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import os
 
 import sys
 import robomachine
@@ -37,10 +38,10 @@ if __name__ == '__main__':
                          type=int, default=100,
                          help='maximum number of steps to generate (default 100)')
     parser.add_argument('--generation-algorithm', '-g',
-                         type=str, default='dfs',
+                         type=str, default='dfs', choices=['dfs', 'random'],
                          help='used test generation algorithm (dfs or random)')
     args = parser.parse_args()
     with open(args.input, 'r') as inp:
-        with open(args.output, 'w') as out:
+        with open(args.output or os.path.splitext(args.input)[0]+'.txt', 'w') as out:
             model = robomachine.parse(inp.read())
             robomachine.generate_all_dfs(model, 10, out)
