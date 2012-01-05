@@ -16,40 +16,39 @@ from StringIO import StringIO
 from parsing import parse
 
 
-def _write_tests(machine, max_actions, output):
+def _write_test(name, machine, output, test, values):
+    output.write('\n%s\n' % name)
+    if values:
+        machine.write_variable_setting_step(values, output)
+    machine.start_state.write_steps_to(output)
+    for action in test:
+        action.write_to(output)
+
+def _write_tests(machine, max_tests, max_actions, output):
     i = 1
     for values in machine.variable_value_sets():
         machine.apply_variable_values(values)
         for test in generate_all_from(machine.start_state, max_actions):
-            output.write('\nTest %d\n' % i)
-            if values:
-                machine.write_variable_setting_step(values, output)
-            machine.start_state.write_steps_to(output)
-            for action in test:
-                action.write_to(output)
+            _write_test('Test %d' % i, machine, output, test, values)
             i += 1
+            if max_tests is not None and i > max_tests:
+                return
 
-def generate_dfs(machine, max_actions=None, output=None):
+def generate_dfs(machine, max_tests=None, max_actions=None, output=None):
     max_actions = -1 if max_actions is None else max_actions
     machine.write_settings_table(output)
     machine.write_variables_table(output)
     output.write('*** Test Cases ***')
-    _write_tests(machine, max_actions, output)
+    _write_tests(machine, max_tests, max_actions, output)
     machine.write_keywords_table(output)
 
 def generate_all_from(state, max_actions):
-    if max_actions == 0:
-        return []
-    if not state.actions:
-        return [[]]
-    tests = []
-    for action in state.actions:
-        sub_tests = generate_all_from(action.next_state, max_actions-1)
-        if sub_tests:
-            tests += [[action]+t for t in sub_tests]
-        else:
-            tests += [[action]]
-    return tests
+    if not state.actions or max_actions == 0:
+        yield []
+    else:
+        for action in state.actions:
+            for test in generate_all_from(action.next_state, max_actions-1):
+                yield [action]+test
 
 def transform(text):
     output = StringIO()

@@ -181,7 +181,7 @@ class TestTestGeneration(unittest.TestCase):
         m = robomachine.parse(_MACHINA2)
         out = StringIO()
         robomachine.generate_dfs(m, max_actions=2, output=out)
-        self.assertEqual(out.getvalue(), _TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2)
+        self.assertEqual(_TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2, out.getvalue())
 
 
 class TestComment(unittest.TestCase):

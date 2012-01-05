@@ -44,4 +44,7 @@ if __name__ == '__main__':
     with open(args.input, 'r') as inp:
         with open(args.output or os.path.splitext(args.input)[0]+'.txt', 'w') as out:
             model = robomachine.parse(inp.read())
-            robomachine.generate_dfs(model, args.actions_max, out)
+            robomachine.generate_dfs(model,
+                                     max_tests=args.tests_max,
+                                     max_actions=args.actions_max,
+                                     output=out)
