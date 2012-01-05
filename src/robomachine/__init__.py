@@ -29,7 +29,7 @@ def _write_tests(machine, max_actions, output):
                 action.write_to(output)
             i += 1
 
-def generate_all_dfs(machine, max_actions=None, output=None):
+def generate_dfs(machine, max_actions=None, output=None):
     max_actions = -1 if max_actions is None else max_actions
     machine.write_settings_table(output)
     machine.write_variables_table(output)
@@ -53,5 +53,5 @@ def generate_all_from(state, max_actions):
 
 def transform(text):
     output = StringIO()
-    generate_all_dfs(parse(text), output=output)
+    generate_dfs(parse(text), output=output)
     return output.getvalue()

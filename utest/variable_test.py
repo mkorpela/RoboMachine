@@ -195,7 +195,7 @@ class TestGenerationTestCases(unittest.TestCase):
     def test_generate_all_dfs(self):
         m = parsing.parse(_LOGIN_MACHINE)
         out = StringIO()
-        robomachine.generate_all_dfs(m, output=out)
+        robomachine.generate_dfs(m, output=out)
         self.assertEqual(out.getvalue(), _LOGIN_TESTS_GENERATE_ALL_DFS)
 
 if __name__ == '__main__':

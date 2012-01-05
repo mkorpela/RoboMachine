@@ -180,7 +180,7 @@ class TestTestGeneration(unittest.TestCase):
     def test_generate_all_dfs_max_actions_2(self):
         m = robomachine.parse(_MACHINA2)
         out = StringIO()
-        robomachine.generate_all_dfs(m, max_actions=2, output=out)
+        robomachine.generate_dfs(m, max_actions=2, output=out)
         self.assertEqual(out.getvalue(), _TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2)
 
 
