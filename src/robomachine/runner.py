@@ -27,7 +27,7 @@ import argparse
 # --output NAME                         default INPUT.txt
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='RoboMachine')
+    parser = argparse.ArgumentParser(description='RoboMachine, a test data generator for Robot Framework')
     parser.add_argument('input', type=str, help='input file')
     parser.add_argument('--output', '-o', type=str, default=None,
                         help='output file (default is input file with txt suffix)')
@@ -39,7 +39,7 @@ if __name__ == '__main__':
                          help='maximum number of steps to generate (default 100)')
     parser.add_argument('--generation-algorithm', '-g',
                          type=str, default='dfs', choices=['dfs', 'random'],
-                         help='used test generation algorithm (dfs or random)')
+                         help='used test generation algorithm (default dfs)')
     args = parser.parse_args()
     with open(args.input, 'r') as inp:
         with open(args.output or os.path.splitext(args.input)[0]+'.txt', 'w') as out:
