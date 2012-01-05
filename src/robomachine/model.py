@@ -63,13 +63,12 @@ class RoboMachina(object):
     def variable_value_sets(self):
         if not self.variables:
             return ((),)
-        tail_values = [v.values for v in self.variables[1:]]
-        head_values = [[value] for value in self.variables[0].values]
-        while tail_values:
-            next_values = tail_values[0]
-            tail_values = tail_values[1:]
-            head_values = [h+[n] for h in head_values for n in next_values]
-        return [vs for vs in head_values if self._rules_are_ok(vs)]
+        return (vs for vs in self._var_set(self.variables) if self._rules_are_ok(vs))
+
+    def _var_set(self, vars):
+        if not vars:
+            return [[]]
+        return ([val]+sub_set for val in vars[0].values for sub_set in self._var_set(vars[1:]))
 
     def _rules_are_ok(self, values):
         for rule in self.rules:
