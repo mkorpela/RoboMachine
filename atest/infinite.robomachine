@@ -1,0 +1,117 @@
+*** Machine ***
+${VAR1}  any of  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P
+${VAR2}  any of  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P
+${VAR3}  any of  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P
+${VAR4}  any of  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P
+${VAR5}  any of  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P
+${VAR6}  any of  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P
+${VAR7}  any of  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P
+${VAR8}  any of  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P
+
+State 1
+  [Actions]
+    action 1  ==>  State 1
+    action 2  ==>  State 2
+    action 3  ==>  State 3
+    action 4  ==>  State 4
+    action 5  ==>  State 5
+    action 6  ==>  State 6
+    action 7  ==>  State 7
+    action 8  ==>  State 8
+    action 9  ==>  State 9
+
+State 2
+  [Actions]
+    action 1  ==>  State 1
+    action 2  ==>  State 2
+    action 3  ==>  State 3
+    action 4  ==>  State 4
+    action 5  ==>  State 5
+    action 6  ==>  State 6
+    action 7  ==>  State 7
+    action 8  ==>  State 8
+    action 9  ==>  State 9
+
+State 3
+  [Actions]
+    action 1  ==>  State 1
+    action 2  ==>  State 2
+    action 3  ==>  State 3
+    action 4  ==>  State 4
+    action 5  ==>  State 5
+    action 6  ==>  State 6
+    action 7  ==>  State 7
+    action 8  ==>  State 8
+    action 9  ==>  State 9
+
+State 4
+  [Actions]
+    action 1  ==>  State 1
+    action 2  ==>  State 2
+    action 3  ==>  State 3
+    action 4  ==>  State 4
+    action 5  ==>  State 5
+    action 6  ==>  State 6
+    action 7  ==>  State 7
+    action 8  ==>  State 8
+    action 9  ==>  State 9
+
+State 5
+  [Actions]
+    action 1  ==>  State 1
+    action 2  ==>  State 2
+    action 3  ==>  State 3
+    action 4  ==>  State 4
+    action 5  ==>  State 5
+    action 6  ==>  State 6
+    action 7  ==>  State 7
+    action 8  ==>  State 8
+    action 9  ==>  State 9
+
+State 6
+  [Actions]
+    action 1  ==>  State 1
+    action 2  ==>  State 2
+    action 3  ==>  State 3
+    action 4  ==>  State 4
+    action 5  ==>  State 5
+    action 6  ==>  State 6
+    action 7  ==>  State 7
+    action 8  ==>  State 8
+    action 9  ==>  State 9
+
+State 7
+  [Actions]
+    action 1  ==>  State 1
+    action 2  ==>  State 2
+    action 3  ==>  State 3
+    action 4  ==>  State 4
+    action 5  ==>  State 5
+    action 6  ==>  State 6
+    action 7  ==>  State 7
+    action 8  ==>  State 8
+    action 9  ==>  State 9
+
+State 8
+  [Actions]
+    action 1  ==>  State 1
+    action 2  ==>  State 2
+    action 3  ==>  State 3
+    action 4  ==>  State 4
+    action 5  ==>  State 5
+    action 6  ==>  State 6
+    action 7  ==>  State 7
+    action 8  ==>  State 8
+    action 9  ==>  State 9
+
+State 9
+  [Actions]
+    action 1  ==>  State 1
+    action 2  ==>  State 2
+    action 3  ==>  State 3
+    action 4  ==>  State 4
+    action 5  ==>  State 5
+    action 6  ==>  State 6
+    action 7  ==>  State 7
+    action 8  ==>  State 8
+    action 9  ==>  State 9
