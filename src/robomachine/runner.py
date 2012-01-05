@@ -34,9 +34,9 @@ if __name__ == '__main__':
     parser.add_argument('--tests-max', '-t',
                          type=int, default=1000,
                          help='maximum number of tests to generate (default 1000)')
-    parser.add_argument('--steps-max', '-s',
+    parser.add_argument('--actions-max', '-a',
                          type=int, default=100,
-                         help='maximum number of steps to generate (default 100)')
+                         help='maximum number of actions to generate (default 100)')
     parser.add_argument('--generation-algorithm', '-g',
                          type=str, default='dfs', choices=['dfs', 'random'],
                          help='used test generation algorithm (default dfs)')
@@ -44,4 +44,4 @@ if __name__ == '__main__':
     with open(args.input, 'r') as inp:
         with open(args.output or os.path.splitext(args.input)[0]+'.txt', 'w') as out:
             model = robomachine.parse(inp.read())
-            robomachine.generate_all_dfs(model, args.steps_max, out)
+            robomachine.generate_all_dfs(model, args.actions_max, out)
