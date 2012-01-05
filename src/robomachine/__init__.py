@@ -15,11 +15,8 @@ from StringIO import StringIO
 
 from parsing import parse
 
-def generate_all_dfs(machine, max_actions=None, output=None):
-    max_actions = -1 if max_actions is None else max_actions
-    machine.write_settings_table(output)
-    machine.write_variables_table(output)
-    output.write('*** Test Cases ***')
+
+def _write_tests(machine, max_actions, output):
     i = 1
     for values in machine.variable_value_sets():
         machine.apply_variable_values(values)
@@ -31,6 +28,13 @@ def generate_all_dfs(machine, max_actions=None, output=None):
             for action in test:
                 action.write_to(output)
             i += 1
+
+def generate_all_dfs(machine, max_actions=None, output=None):
+    max_actions = -1 if max_actions is None else max_actions
+    machine.write_settings_table(output)
+    machine.write_variables_table(output)
+    output.write('*** Test Cases ***')
+    _write_tests(machine, max_actions, output)
     machine.write_keywords_table(output)
 
 def generate_all_from(state, max_actions):
