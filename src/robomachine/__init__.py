@@ -26,13 +26,11 @@ def _write_test(name, machine, output, test, values):
 
 def _write_tests(machine, max_tests, max_actions, output):
     i = 1
-    for values in machine.variable_value_sets():
-        machine.apply_variable_values(values)
-        for test in generate_all_from(machine.start_state, max_actions):
-            _write_test('Test %d' % i, machine, output, test, values)
-            i += 1
-            if max_tests is not None and i > max_tests:
-                return
+    for test, values in machine.dfs_tests(max_actions):
+        _write_test('Test %d' % i, machine, output, test, values)
+        i += 1
+        if max_tests is not None and i > max_tests:
+            return
 
 def generate_dfs(machine, max_tests=None, max_actions=None, output=None):
     max_actions = -1 if max_actions is None else max_actions
@@ -41,14 +39,6 @@ def generate_dfs(machine, max_tests=None, max_actions=None, output=None):
     output.write('*** Test Cases ***')
     _write_tests(machine, max_tests, max_actions, output)
     machine.write_keywords_table(output)
-
-def generate_all_from(state, max_actions):
-    if not state.actions or max_actions == 0:
-        yield []
-    else:
-        for action in state.actions:
-            for test in generate_all_from(action.next_state, max_actions-1):
-                yield [action]+test
 
 def transform(text):
     output = StringIO()
