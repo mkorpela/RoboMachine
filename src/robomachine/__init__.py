@@ -27,11 +27,18 @@ def _write_test(name, machine, output, test, values):
 
 def _write_tests(machine, max_tests, max_actions, output, strategy_class):
     i = 1
+    generated_tests = set()
     for test, values in strategy_class(machine, max_actions).tests():
-        _write_test('Test %d' % i, machine, output, test, values)
-        i += 1
         if max_tests is not None and i > max_tests:
             return
+        if (tuple(test), tuple(values)) in generated_tests:
+            if max_tests is not None:
+                max_tests -= 1
+            continue
+        else:
+            generated_tests.add((tuple(test), tuple(values)))
+        _write_test('Test %d' % i, machine, output, test, values)
+        i += 1
 
 def generate(machine, max_tests=None, max_actions=None, output=None, strategy=DepthFirstSearchStrategy):
     max_actions = -1 if max_actions is None else max_actions
