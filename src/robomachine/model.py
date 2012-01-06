@@ -29,20 +29,6 @@ class RoboMachina(object):
     def start_state(self):
         return self.states[0]
 
-    def dfs_tests(self, max_actions):
-        for values in self.variable_value_sets():
-            self.apply_variable_values(values)
-            for test in self._generate_all_from(self.start_state, max_actions):
-                yield test, values
-
-    def _generate_all_from(self, state, max_actions):
-        if not state.actions or max_actions == 0:
-            yield []
-        else:
-            for action in state.actions:
-                for test in self._generate_all_from(action.next_state, max_actions-1):
-                    yield [action]+test
-
     def find_state_by_name(self, name):
         for state in self.states:
             if state.name == name:

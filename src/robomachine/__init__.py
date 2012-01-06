@@ -14,6 +14,7 @@
 from StringIO import StringIO
 
 from parsing import parse
+from robomachine.strategies import DepthFirstSearch
 
 
 def _write_test(name, machine, output, test, values):
@@ -26,7 +27,7 @@ def _write_test(name, machine, output, test, values):
 
 def _write_tests(machine, max_tests, max_actions, output):
     i = 1
-    for test, values in machine.dfs_tests(max_actions):
+    for test, values in DepthFirstSearch(machine, max_actions).tests():
         _write_test('Test %d' % i, machine, output, test, values)
         i += 1
         if max_tests is not None and i > max_tests:
