@@ -26,7 +26,7 @@ test data vectors from there.
 What does it look like?
 =======================
 
-Here is an example machine that can generate tests for SeleniumLibrary demo::
+Here is an example machine that can generate tests for `SeleniumLibrary demo <http://code.google.com/p/robotframework-seleniumlibrary/wiki/Demo>`_::
 
     *** Settings ***
     Suite Setup     Open Browser  ${LOGIN_PAGE_URL}   googlechrome
