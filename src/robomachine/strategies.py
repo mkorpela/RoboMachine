@@ -11,8 +11,10 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import random
 
-class DepthFirstSearch(object):
+
+class DepthFirstSearchStrategy(object):
 
     def __init__(self, machine, max_actions):
         self._machine = machine
@@ -41,3 +43,20 @@ class DepthFirstSearch(object):
             for action in state.actions:
                 for test in self._generate_all_from(action.next_state, max_actions-1):
                     yield [action]+test
+
+
+class RandomStrategy(object):
+
+    def __init__(self, machine, max_actions):
+        self._machine = machine
+        self._max_actions = max_actions
+
+    def tests(self):
+        while True:
+            test = []
+            current_state = self._machine.start_state
+            while self._max_actions > len(test) and current_state.actions:
+                action = random.choice(current_state.actions)
+                current_state = action.next_state
+                test.append(action)
+            yield test, ()

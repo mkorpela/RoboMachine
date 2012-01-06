@@ -14,7 +14,7 @@
 from StringIO import StringIO
 
 from parsing import parse
-from robomachine.strategies import DepthFirstSearch
+from robomachine.strategies import DepthFirstSearchStrategy
 
 
 def _write_test(name, machine, output, test, values):
@@ -33,7 +33,7 @@ def _write_tests(machine, max_tests, max_actions, output, strategy_class):
         if max_tests is not None and i > max_tests:
             return
 
-def generate(machine, max_tests=None, max_actions=None, output=None, strategy=DepthFirstSearch):
+def generate(machine, max_tests=None, max_actions=None, output=None, strategy=DepthFirstSearchStrategy):
     max_actions = -1 if max_actions is None else max_actions
     machine.write_settings_table(output)
     machine.write_variables_table(output)

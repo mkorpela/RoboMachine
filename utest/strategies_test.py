@@ -14,19 +14,29 @@
 
 import unittest
 from robomachine.model import RoboMachina, State, Action
-from robomachine.strategies import DepthFirstSearch
+from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
 
-class DepthFirstSearchStrategyTestCase(unittest.TestCase):
+class StrategyTestCase(object):
 
     def test_can_generate_test_from_simple_machine(self):
         action12 = Action('to state2', 'state2', None)
         action21 = Action('to state1', 'state1', None)
         states = [State('state1', [], [action12]),
                   State('state2', [], [action21])]
-        tests = list(DepthFirstSearch(RoboMachina(states, [], []), 2).tests())
-        self.assertEqual(1, len(tests))
-        self.assertEqual(([action12, action21], ()), tests[0])
+        at_least_one_test_generated = False
+        for test in self.strategy_class(RoboMachina(states, [], []), 2).tests():
+            self.assertEqual(([action12, action21], ()), test)
+            at_least_one_test_generated = True
+            break
+        self.assertTrue(at_least_one_test_generated)
+
+
+class DepthFirstSearchStrategyTestCase(StrategyTestCase, unittest.TestCase):
+    strategy_class = DepthFirstSearchStrategy
+
+class RandomStrategyTestCase(StrategyTestCase, unittest.TestCase):
+    strategy_class = RandomStrategy
 
 if __name__ == '__main__':
     unittest.main()
