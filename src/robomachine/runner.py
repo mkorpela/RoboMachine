@@ -13,18 +13,9 @@
 #  limitations under the License.
 import os
 
-import sys
 import robomachine
 import argparse
 
-#Usage:
-#  robomachine [OPTIONS] [INPUT.robomachine]
-#
-#Options:
-# --tests-max NUMBER                    default 1000
-# --steps-max NUMBER                    default 100
-# --generation-algorithm (dfs|random)   default dfs
-# --output NAME                         default INPUT.txt
 from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
 
