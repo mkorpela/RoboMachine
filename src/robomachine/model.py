@@ -161,6 +161,7 @@ class EquivalenceRule(object):
     def is_valid(self):
         return self._condition1.is_valid(self._values) == self._condition2.is_valid(self._values)
 
+
 class AndRule(object):
 
     def __init__(self, conditions):
@@ -176,14 +177,20 @@ class AndRule(object):
     def is_valid(self):
         return not(any(not(c.is_valid(self._values)) for c in self._conditions))
 
+
 class Condition(object):
 
     def __init__(self, variable_name, value):
         self._name = variable_name.strip()
         self._value = value.strip()
+        self._values = {}
 
     def __str__(self):
         return '%s == %s' % (self._name, self._value)
 
-    def is_valid(self, value_mapping):
+    def is_valid(self, value_mapping=None):
+        value_mapping = value_mapping or self._values
         return value_mapping[self._name].strip() == self._value.strip()
+
+    def set_variable(self, name, value):
+        self._values[name] = value

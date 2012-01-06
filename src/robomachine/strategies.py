@@ -64,4 +64,7 @@ class RandomStrategy(object):
             yield test, values
 
     def _generate_variable_values(self):
-        return [random.choice(v.values) for v in self._machine.variables]
+        while True:
+            candidate = [random.choice(v.values) for v in self._machine.variables]
+            if self._machine.rules_are_ok(candidate):
+                return candidate

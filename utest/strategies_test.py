@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 import unittest
-from robomachine.model import RoboMachina, State, Action, Variable
+from robomachine.model import RoboMachina, State, Action, Variable, AndRule, Condition
 from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
 
@@ -41,6 +41,19 @@ class StrategyTestCase(object):
             at_least_one_test_generated = True
             break
         self.assertTrue(at_least_one_test_generated)
+
+    def test_obeys_rules(self):
+        variables = [Variable('${VAR}', ['a', 'b', 'c', 'd', 'e', 'f', 'g'])]
+        rules = [Condition('${VAR}', 'e')]
+        at_least_one_test_generated = False
+        for test in self.strategy_class(RoboMachina([State('state', [], [])], variables, rules), 0).tests():
+            self.assertEqual([], test[0])
+            self.assertEqual(1, len(test[1]))
+            self.assertEqual('e', test[1][0])
+            at_least_one_test_generated = True
+            break
+        self.assertTrue(at_least_one_test_generated)
+
 
 
 class DepthFirstSearchStrategyTestCase(StrategyTestCase, unittest.TestCase):
