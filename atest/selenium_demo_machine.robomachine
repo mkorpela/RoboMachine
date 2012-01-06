@@ -1,38 +1,38 @@
-    *** Settings ***
-    Suite Setup     Open Browser  ${LOGIN_PAGE_URL}   googlechrome
-    Suite Teardown  Close Browser
-    Test Setup      Go to  ${LOGIN_PAGE_URL}
-    Library         SeleniumLibrary
+*** Settings ***
+Suite Setup     Open Browser  ${LOGIN_PAGE_URL}   googlechrome
+Suite Teardown  Close Browser
+Test Setup      Go to  ${LOGIN_PAGE_URL}
+Library         SeleniumLibrary
 
-    *** Variables ***
-    ${USERNAME_FIELD}  username_field
-    ${PASSWORD_FIELD}  password_field
-    ${LOGIN_BUTTON}    LOGIN
-    ${VALID_USERNAME}  demo
-    ${VALID_PASSWORD}  mode
-    ${LOGIN_PAGE_URL}  http://localhost:7272/html/
+*** Variables ***
+${USERNAME_FIELD}  username_field
+${PASSWORD_FIELD}  password_field
+${LOGIN_BUTTON}    LOGIN
+${VALID_USERNAME}  demo
+${VALID_PASSWORD}  mode
+${LOGIN_PAGE_URL}  http://localhost:7272/html/
 
-    *** Machine ***
-    ${USERNAME}  any of  ${VALID_USERNAME}  ${VALID_PASSWORD}  invalid123  ${EMPTY}
-    ${PASSWORD}  any of  ${VALID_PASSWORD}  ${VALID_USERNAME}  password123  ${EMPTY}
+*** Machine ***
+${USERNAME}  any of  ${VALID_USERNAME}  ${VALID_PASSWORD}  invalid123  ${EMPTY}
+${PASSWORD}  any of  ${VALID_PASSWORD}  ${VALID_USERNAME}  password123  ${EMPTY}
 
-    # Add an equivalence rule to reduce the number of generated tests
-    ${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}
+# Add an equivalence rule to reduce the number of generated tests
+${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}
 
-    Login Page
-      Title Should Be  Login Page
-      [Actions]
-        Submit Credentials  ==>  Welcome Page  when  ${USERNAME} == ${VALID_USERNAME}  and  ${PASSWORD} == ${VALID_PASSWORD}
-        Submit Credentials  ==>  Error Page    otherwise
+Login Page
+  Title Should Be  Login Page
+  [Actions]
+    Submit Credentials  ==>  Welcome Page  when  ${USERNAME} == ${VALID_USERNAME}  and  ${PASSWORD} == ${VALID_PASSWORD}
+    Submit Credentials  ==>  Error Page    otherwise
 
-    Welcome Page
-      Title Should Be  Welcome Page
+Welcome Page
+  Title Should Be  Welcome Page
 
-    Error Page
-      Title Should Be  Error Page
+Error Page
+  Title Should Be  Error Page
 
-    *** Keywords ***
-    Submit Credentials
-      Input Text      ${USERNAME_FIELD}  ${USERNAME}
-      Input Password  ${PASSWORD_FIELD}  ${PASSWORD}
-      Click Button  ${LOGIN_BUTTON}
+*** Keywords ***
+Submit Credentials
+  Input Text      ${USERNAME_FIELD}  ${USERNAME}
+  Input Password  ${PASSWORD_FIELD}  ${PASSWORD}
+  Click Button  ${LOGIN_BUTTON}
