@@ -28,7 +28,7 @@ class DepthFirstSearchStrategy(object):
 
     def _variable_value_sets(self, variables):
             if not variables:
-                return ((),)
+                return ([],)
             return (vs for vs in self._var_set(variables) if self._machine.rules_are_ok(vs))
 
     def _var_set(self, vars):
@@ -54,9 +54,14 @@ class RandomStrategy(object):
     def tests(self):
         while True:
             test = []
+            values = self._generate_variable_values()
+            self._machine.apply_variable_values(values)
             current_state = self._machine.start_state
             while self._max_actions > len(test) and current_state.actions:
                 action = random.choice(current_state.actions)
                 current_state = action.next_state
                 test.append(action)
-            yield test, ()
+            yield test, values
+
+    def _generate_variable_values(self):
+        return [random.choice(v.values) for v in self._machine.variables]

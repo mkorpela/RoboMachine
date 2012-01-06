@@ -25,6 +25,8 @@ import argparse
 # --steps-max NUMBER                    default 100
 # --generation-algorithm (dfs|random)   default dfs
 # --output NAME                         default INPUT.txt
+from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='RoboMachine, a test data generator for Robot Framework')
@@ -46,4 +48,5 @@ if __name__ == '__main__':
             robomachine.generate(robomachine.parse(inp.read()),
                                  max_tests=args.tests_max,
                                  max_actions=args.actions_max,
-                                 output=out)
+                                 output=out,
+                                 strategy=DepthFirstSearchStrategy if args.generation_algorithm == 'dfs' else RandomStrategy)

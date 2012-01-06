@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 import unittest
-from robomachine.model import RoboMachina, State, Action
+from robomachine.model import RoboMachina, State, Action, Variable
 from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
 
@@ -26,7 +26,18 @@ class StrategyTestCase(object):
                   State('state2', [], [action21])]
         at_least_one_test_generated = False
         for test in self.strategy_class(RoboMachina(states, [], []), 2).tests():
-            self.assertEqual(([action12, action21], ()), test)
+            self.assertEqual(([action12, action21], []), test)
+            at_least_one_test_generated = True
+            break
+        self.assertTrue(at_least_one_test_generated)
+
+    def test_can_generate_test_from_variable_machine(self):
+        variables = [Variable('var', ['a', 'b', 'c'])]
+        at_least_one_test_generated = False
+        for test in self.strategy_class(RoboMachina([State('state', [], [])], variables, []), 0).tests():
+            self.assertEqual([], test[0])
+            self.assertEqual(1, len(test[1]))
+            self.assertTrue(test[1][0] in ['a', 'b', 'c'])
             at_least_one_test_generated = True
             break
         self.assertTrue(at_least_one_test_generated)
