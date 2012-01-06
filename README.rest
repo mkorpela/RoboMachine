@@ -21,3 +21,48 @@ If you know Combinatorial Testing or like data drive testing:
 With RoboMachine you can define sets of data and rules about that data, that can be used to generate data driven tests
 (and also keyword driven tests). This allows you to keep your data in compact sets and let the system generate the real
 test data vectors from there.
+
+=======================
+What does it look like?
+=======================
+
+Here is an example machine that can generate tests for SeleniumLibrary demo::
+
+    *** Settings ***
+    Suite Setup     Open Browser  ${LOGIN_PAGE_URL}   googlechrome
+    Suite Teardown  Close Browser
+    Test Setup      Go to  ${LOGIN_PAGE_URL}
+    Library         SeleniumLibrary
+    
+    *** Variables ***
+    ${USERNAME_FIELD}  username_field
+    ${PASSWORD_FIELD}  password_field
+    ${LOGIN_BUTTON}    LOGIN
+    ${VALID_USERNAME}  demo
+    ${VALID_PASSWORD}  mode
+    ${LOGIN_PAGE_URL}  http://localhost:7272/html/
+    
+    *** Machine ***
+    ${USERNAME}  any of  ${VALID_USERNAME}  ${VALID_PASSWORD}  invalid123  ${EMPTY}
+    ${PASSWORD}  any of  ${VALID_PASSWORD}  ${VALID_USERNAME}  password123  ${EMPTY}
+    
+    # Add an equivalence rule to reduce the number of generated tests
+    ${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}
+    
+    Login Page
+      Title Should Be  Login Page
+      [Actions]
+        Submit Credentials  ==>  Welcome Page  when  ${USERNAME} == ${VALID_USERNAME}  and  ${PASSWORD} == ${VALID_PASSWORD}
+        Submit Credentials  ==>  Error Page    otherwise
+    
+    Welcome Page
+      Title Should Be  Welcome Page
+    
+    Error Page
+      Title Should Be  Error Page
+    
+    *** Keywords ***
+    Submit Credentials
+      Input Text      ${USERNAME_FIELD}  ${USERNAME}
+      Input Password  ${PASSWORD_FIELD}  ${PASSWORD}
+      Click Button  ${LOGIN_BUTTON}
