@@ -25,23 +25,23 @@ def _write_test(name, machine, output, test, values):
     for action in test:
         action.write_to(output)
 
-def _write_tests(machine, max_tests, max_actions, output):
+def _write_tests(machine, max_tests, max_actions, output, strategy_class):
     i = 1
-    for test, values in DepthFirstSearch(machine, max_actions).tests():
+    for test, values in strategy_class(machine, max_actions).tests():
         _write_test('Test %d' % i, machine, output, test, values)
         i += 1
         if max_tests is not None and i > max_tests:
             return
 
-def generate_dfs(machine, max_tests=None, max_actions=None, output=None):
+def generate(machine, max_tests=None, max_actions=None, output=None, strategy=DepthFirstSearch):
     max_actions = -1 if max_actions is None else max_actions
     machine.write_settings_table(output)
     machine.write_variables_table(output)
     output.write('*** Test Cases ***')
-    _write_tests(machine, max_tests, max_actions, output)
+    _write_tests(machine, max_tests, max_actions, output, strategy)
     machine.write_keywords_table(output)
 
 def transform(text):
     output = StringIO()
-    generate_dfs(parse(text), output=output)
+    generate(parse(text), output=output)
     return output.getvalue()
