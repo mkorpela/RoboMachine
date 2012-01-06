@@ -19,10 +19,20 @@ class DepthFirstSearch(object):
         self._max_actions = max_actions
 
     def tests(self):
-        for values in self._machine.variable_value_sets():
+        for values in self._variable_value_sets(self._machine.variables):
             self._machine.apply_variable_values(values)
             for test in self._generate_all_from(self._machine.start_state, self._max_actions):
                 yield test, values
+
+    def _variable_value_sets(self, variables):
+            if not variables:
+                return ((),)
+            return (vs for vs in self._var_set(variables) if self._machine.rules_are_ok(vs))
+
+    def _var_set(self, vars):
+        if not vars:
+            return [[]]
+        return ([val]+sub_set for val in vars[0].values for sub_set in self._var_set(vars[1:]))
 
     def _generate_all_from(self, state, max_actions):
         if not state.actions or max_actions == 0:

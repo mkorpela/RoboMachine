@@ -60,17 +60,7 @@ class RoboMachina(object):
     def write_variable_setting_step(self, values, output):
         output.write('  Set Machine Variables  %s\n' % '  '.join(values))
 
-    def variable_value_sets(self):
-        if not self.variables:
-            return ((),)
-        return (vs for vs in self._var_set(self.variables) if self._rules_are_ok(vs))
-
-    def _var_set(self, vars):
-        if not vars:
-            return [[]]
-        return ([val]+sub_set for val in vars[0].values for sub_set in self._var_set(vars[1:]))
-
-    def _rules_are_ok(self, values):
+    def rules_are_ok(self, values):
         for rule in self.rules:
             for variable, value in zip(self.variables, values):
                 rule.set_variable(variable.name, value)
