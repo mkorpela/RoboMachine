@@ -48,6 +48,24 @@ class AndRule(object):
         return not(any(not(c.is_valid(value_mapping)) for c in self._conditions))
 
 
+class OrRule(object):
+
+    def __init__(self, conditions):
+        self._conditions = conditions
+
+    def is_valid(self, value_mapping):
+        return any(c.is_valid(value_mapping) for c in self._conditions)
+
+
+class NotRule(object):
+
+    def __init__(self, condition):
+        self._condition = condition
+
+    def is_valid(self, value_mapping):
+        return not self._condition.is_valid(value_mapping)
+
+
 class Condition(object):
 
     def __init__(self, variable_name, value):
