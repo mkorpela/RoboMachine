@@ -13,8 +13,8 @@
 #  limitations under the License.
 
 from pyparsing import *
-from robomachine.model import RoboMachina, State, Action, Variable, EquivalenceRule, Condition, AndRule
-
+from robomachine.model import RoboMachina, State, Action, Variable
+from robomachine.rules import AndRule, Condition, EquivalenceRule
 
 settings_table = Literal('*** Settings ***')+Regex(r'[^\*]+(?=\*)')
 settings_table.setParseAction(lambda t: '\n'.join(t))

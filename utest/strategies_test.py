@@ -13,7 +13,8 @@
 #  limitations under the License.
 
 import unittest
-from robomachine.model import RoboMachina, State, Action, Variable, AndRule, Condition
+from robomachine.model import RoboMachina, State, Action, Variable
+from robomachine.rules import Condition
 from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
 
