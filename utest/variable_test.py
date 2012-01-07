@@ -96,6 +96,14 @@ class RuleParsingTestCases(unittest.TestCase):
         rule = parsing.rule.parseString('${VARIABLE} == value  or  ${VAR2} == baluu')[0]
         self.assertEqual('${VARIABLE} == value  or  ${VAR2} == baluu', str(rule))
 
+    def test_not_rule_parsing(self):
+        rule = parsing.rule.parseString('not (${VAR2} == baluu)')[0]
+        self.assertEqual('not (${VAR2} == baluu)', str(rule))
+
+    def test_complex(self):
+        rule = parsing.rule.parseString('${FOO} == bar  or  (not (${BAR} == foo  and  ${ZOO} == fii))')[0]
+        self.assertEqual('${FOO} == bar  or  not (${BAR} == foo  and  ${ZOO} == fii)', str(rule))
+
 
 _LOGIN_MACHINE = """\
 *** Machine ***

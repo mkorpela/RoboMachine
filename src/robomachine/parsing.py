@@ -14,7 +14,7 @@
 
 from pyparsing import *
 from robomachine.model import RoboMachine, State, Action, Variable
-from robomachine.rules import AndRule, Condition, EquivalenceRule, OrRule
+from robomachine.rules import AndRule, Condition, EquivalenceRule, OrRule, NotRule
 
 
 settings_table = Literal('*** Settings ***')+Regex(r'[^\*]+(?=\*)')
@@ -43,23 +43,32 @@ variable_definition = variable.setResultsName('variable_name') + '  any of  ' + 
 variable_definition.leaveWhitespace()
 variable_definition.setParseAction(lambda t: [Variable(t.variable_name, list(t.variable_values))])
 
-condition_part = variable+' == '+variable_value
-condition_part.setParseAction(lambda t: [Condition(t[0], t[2])])
-condition_part.leaveWhitespace()
+rule = Forward()
 
-equivalence_rule = condition_part+'  <==>  '+condition_part
+condition_rule = variable+' == '+variable_value
+condition_rule.setParseAction(lambda t: [Condition(t[0], t[2])])
+condition_rule.leaveWhitespace()
+
+closed_rule = condition_rule ^ ('('+rule+')')
+closed_rule.setParseAction(lambda t: [t[1]] if len(t) == 3 else t)
+
+not_rule = Literal('not ')+closed_rule
+not_rule.leaveWhitespace()
+not_rule.setParseAction(lambda t: [NotRule(t[1])])
+
+equivalence_rule = closed_rule +'  <==>  '+closed_rule
 equivalence_rule.leaveWhitespace()
 equivalence_rule.setParseAction(lambda t: [EquivalenceRule(t[0], t[2])])
 
-and_rule = condition_part+ZeroOrMore('  and  '+condition_part)
+and_rule = closed_rule+ZeroOrMore('  and  '+closed_rule)
 and_rule.setParseAction(lambda t: [AndRule([t[i] for i in range(len(t)) if i % 2 == 0])])
 and_rule.leaveWhitespace()
 
-or_rule = condition_part+ZeroOrMore('  or  '+condition_part)
+or_rule = closed_rule+ZeroOrMore('  or  '+closed_rule)
 or_rule.setParseAction(lambda t: [OrRule([t[i] for i in range(len(t)) if i % 2 == 0])])
 or_rule.leaveWhitespace()
 
-rule = condition_part ^ equivalence_rule ^ and_rule ^ or_rule
+rule << (not_rule ^ equivalence_rule ^ and_rule ^ or_rule ^ closed_rule)
 
 step = Regex(r'  [^\n\[][^\n]*(?=\n)')+LineEnd()
 step.leaveWhitespace()

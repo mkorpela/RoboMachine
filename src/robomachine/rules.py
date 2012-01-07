@@ -54,6 +54,9 @@ class NotRule(object):
     def __init__(self, condition):
         self._condition = condition
 
+    def __str__(self):
+        return 'not (%s)' % self._condition
+
     def is_valid(self, value_mapping):
         return not self._condition.is_valid(value_mapping)
 
