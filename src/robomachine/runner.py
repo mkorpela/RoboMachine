@@ -41,3 +41,6 @@ def main():
                                  max_actions=args.actions_max,
                                  output=out,
                                  strategy=DepthFirstSearchStrategy if args.generation_algorithm == 'dfs' else RandomStrategy)
+
+if __name__ == '__main__':
+    main()

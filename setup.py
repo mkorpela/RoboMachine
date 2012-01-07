@@ -10,5 +10,7 @@ setup(name='RoboMachine',
       author='Mikko Korpela',
       packages=['robomachine'],
       package_dir={'':'src'},
-      scripts = [os.path.join('src','bin','robomachine')]
+      scripts = [os.path.join('src','bin','robomachine'),
+                 os.path.join('src','bin','robomachine.bat')],
+      requires = ['pyparsing']
      )
