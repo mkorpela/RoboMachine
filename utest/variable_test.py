@@ -72,17 +72,17 @@ class RuleParsingTestCases(unittest.TestCase):
     def test_rule_parsing(self):
         rule = parsing.equivalence_rule.parseString('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}\n')[0]
         self.assertEqual('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}', rule.text)
-        rule.set_variable('${USERNAME}', '${VALID_PASSWORD}')
-        rule.set_variable('${PASSWORD}', '${VALID_USERNAME}')
-        self.assertTrue(rule.is_valid())
-        rule.set_variable('${USERNAME}', 'something else')
-        self.assertFalse(rule.is_valid())
-        rule.set_variable('${USERNAME}', '${VALID_PASSWORD}')
-        rule.set_variable('${PASSWORD}', 'something')
-        self.assertFalse(rule.is_valid())
-        rule.set_variable('${USERNAME}', 'not valid')
-        rule.set_variable('${PASSWORD}', 'nothis validus')
-        self.assertTrue(rule.is_valid())
+        value_mapping = {'${USERNAME}':'${VALID_PASSWORD}',
+                         '${PASSWORD}':'${VALID_USERNAME}'}
+        self.assertTrue(rule.is_valid(value_mapping=value_mapping))
+        value_mapping['${USERNAME}']='something else'
+        self.assertFalse(rule.is_valid(value_mapping=value_mapping))
+        value_mapping['${USERNAME}']='${VALID_PASSWORD}'
+        value_mapping['${PASSWORD}']='something'
+        self.assertFalse(rule.is_valid(value_mapping=value_mapping))
+        value_mapping['${USERNAME}']='not valid'
+        value_mapping['${PASSWORD}']='nothis validus'
+        self.assertTrue(rule.is_valid(value_mapping=value_mapping))
 
 
 _LOGIN_MACHINE = """\

@@ -29,6 +29,10 @@ class RoboMachina(object):
     def start_state(self):
         return self.states[0]
 
+    @property
+    def variable_value_mapping(self):
+        return dict((v.name, v.current_value) for v in self.variables)
+
     def find_state_by_name(self, name):
         for state in self.states:
             if state.name == name:
@@ -61,10 +65,9 @@ class RoboMachina(object):
         output.write('  Set Machine Variables  %s\n' % '  '.join(values))
 
     def rules_are_ok(self, values):
+        value_mapping = dict((v.name, value) for v, value in zip(self.variables, values))
         for rule in self.rules:
-            for variable, value in zip(self.variables, values):
-                rule.set_variable(variable.name, value)
-            if not rule.is_valid():
+            if not rule.is_valid(value_mapping=value_mapping):
                 return False
         return True
 
@@ -118,10 +121,7 @@ class Action(object):
             return True
         if self.condition == 'otherwise':
             return True
-        cond = self.condition
-        for variable in self._machine.variables:
-            cond.set_variable(variable.name, variable.current_value)
-        return cond.is_valid()
+        return self.condition.is_valid(value_mapping=self._machine.variable_value_mapping)
 
     def write_to(self, output):
         output.write('  %s\n' % self.name)

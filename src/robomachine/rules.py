@@ -17,17 +17,12 @@ class EquivalenceRule(object):
     def __init__(self, condition1, condition2):
         self._condition1 = condition1
         self._condition2 = condition2
-        self._values = {}
 
     @property
     def text(self):
         return '%s  <==>  %s' % (self._condition1, self._condition2)
 
-    def set_variable(self, name, value):
-        self._values[name] = value
-
-    def is_valid(self, value_mapping=None):
-        value_mapping = value_mapping or self._values
+    def is_valid(self, value_mapping):
         return self._condition1.is_valid(value_mapping) == self._condition2.is_valid(value_mapping)
 
 
@@ -35,16 +30,11 @@ class AndRule(object):
 
     def __init__(self, conditions):
         self._conditions = conditions
-        self._values = {}
 
     def __str__(self):
         return '  and  '.join(str(c) for c in self._conditions)
 
-    def set_variable(self, name, value):
-        self._values[name] = value
-
-    def is_valid(self, value_mapping=None):
-        value_mapping = value_mapping or self._values
+    def is_valid(self, value_mapping):
         return not(any(not(c.is_valid(value_mapping)) for c in self._conditions))
 
 
@@ -71,14 +61,9 @@ class Condition(object):
     def __init__(self, variable_name, value):
         self._name = variable_name.strip()
         self._value = value.strip()
-        self._values = {}
 
     def __str__(self):
         return '%s == %s' % (self._name, self._value)
 
-    def is_valid(self, value_mapping=None):
-        value_mapping = value_mapping or self._values
+    def is_valid(self, value_mapping):
         return value_mapping[self._name].strip() == self._value.strip()
-
-    def set_variable(self, name, value):
-        self._values[name] = value
