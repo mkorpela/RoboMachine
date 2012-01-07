@@ -26,8 +26,9 @@ class EquivalenceRule(object):
     def set_variable(self, name, value):
         self._values[name] = value
 
-    def is_valid(self):
-        return self._condition1.is_valid(self._values) == self._condition2.is_valid(self._values)
+    def is_valid(self, value_mapping=None):
+        value_mapping = value_mapping or self._values
+        return self._condition1.is_valid(value_mapping) == self._condition2.is_valid(value_mapping)
 
 
 class AndRule(object):
@@ -42,8 +43,9 @@ class AndRule(object):
     def set_variable(self, name, value):
         self._values[name] = value
 
-    def is_valid(self):
-        return not(any(not(c.is_valid(self._values)) for c in self._conditions))
+    def is_valid(self, value_mapping=None):
+        value_mapping = value_mapping or self._values
+        return not(any(not(c.is_valid(value_mapping)) for c in self._conditions))
 
 
 class Condition(object):
