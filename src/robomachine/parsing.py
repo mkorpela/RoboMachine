@@ -14,7 +14,8 @@
 
 from pyparsing import *
 from robomachine.model import RoboMachine, State, Action, Variable
-from robomachine.rules import AndRule, Condition, EquivalenceRule
+from robomachine.rules import AndRule, Condition, EquivalenceRule, OrRule
+
 
 settings_table = Literal('*** Settings ***')+Regex(r'[^\*]+(?=\*)')
 settings_table.setParseAction(lambda t: '\n'.join(t))
@@ -44,10 +45,21 @@ variable_definition.setParseAction(lambda t: [Variable(t.variable_name, list(t.v
 
 condition_part = variable+' == '+variable_value
 condition_part.setParseAction(lambda t: [Condition(t[0], t[2])])
+condition_part.leaveWhitespace()
 
-equivalence_rule = condition_part+'  <==>  '+condition_part+LineEnd()
+equivalence_rule = condition_part+'  <==>  '+condition_part
 equivalence_rule.leaveWhitespace()
 equivalence_rule.setParseAction(lambda t: [EquivalenceRule(t[0], t[2])])
+
+and_rule = condition_part+ZeroOrMore('  and  '+condition_part)
+and_rule.setParseAction(lambda t: [AndRule([t[i] for i in range(len(t)) if i % 2 == 0])])
+and_rule.leaveWhitespace()
+
+or_rule = condition_part+ZeroOrMore('  or  '+condition_part)
+or_rule.setParseAction(lambda t: [OrRule([t[i] for i in range(len(t)) if i % 2 == 0])])
+or_rule.leaveWhitespace()
+
+rule = condition_part ^ equivalence_rule ^ and_rule ^ or_rule
 
 step = Regex(r'  [^\n\[][^\n]*(?=\n)')+LineEnd()
 step.leaveWhitespace()
@@ -55,10 +67,7 @@ step.setParseAction(lambda t: [t[0]])
 
 action_header = White(min=2)+'[Actions]'
 
-and_rule = condition_part+ZeroOrMore('  and  '+condition_part)
-and_rule.setParseAction(lambda t: [AndRule([t[i] for i in range(len(t)) if i % 2 == 0])])
-
-condition = Literal('  when  ')+and_rule
+condition = Literal('  when  ')+rule
 condition = condition ^ Regex(r'  +otherwise')
 def parse_condition(cond):
     if cond[0] == '  when  ':
@@ -91,7 +100,8 @@ states = state+ZeroOrMore(OneOrMore(LineEnd())+state)
 states.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
 states = states.setResultsName('states')
 variables = ZeroOrMore(variable_definition).setResultsName('variables')
-rules = ZeroOrMore(equivalence_rule).setResultsName('rules')
+rules = ZeroOrMore(rule+LineEnd()).setResultsName('rules')
+rules.setParseAction(lambda t: [t[i] for i in range(len(t)) if i % 2 == 0])
 machine = Optional(settings_table).setResultsName('settings_table')+\
           Optional(variables_table).setResultsName('variables_table')+\
           machine_header+ZeroOrMore(LineEnd())+variables+\

@@ -18,8 +18,7 @@ class EquivalenceRule(object):
         self._condition1 = condition1
         self._condition2 = condition2
 
-    @property
-    def text(self):
+    def __str__(self):
         return '%s  <==>  %s' % (self._condition1, self._condition2)
 
     def is_valid(self, value_mapping):
@@ -42,6 +41,9 @@ class OrRule(object):
 
     def __init__(self, conditions):
         self._conditions = conditions
+
+    def __str__(self):
+        return '  or  '.join(str(c) for c in self._conditions)
 
     def is_valid(self, value_mapping):
         return any(c.is_valid(value_mapping) for c in self._conditions)

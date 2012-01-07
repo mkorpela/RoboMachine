@@ -69,9 +69,9 @@ class ConditionActionParsingTestCases(unittest.TestCase):
 
 class RuleParsingTestCases(unittest.TestCase):
 
-    def test_rule_parsing(self):
-        rule = parsing.equivalence_rule.parseString('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}\n')[0]
-        self.assertEqual('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}', rule.text)
+    def test_equivalence_rule_parsing(self):
+        rule = parsing.rule.parseString('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}\n')[0]
+        self.assertEqual('${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}', str(rule))
         value_mapping = {'${USERNAME}':'${VALID_PASSWORD}',
                          '${PASSWORD}':'${VALID_USERNAME}'}
         self.assertTrue(rule.is_valid(value_mapping=value_mapping))
@@ -83,6 +83,18 @@ class RuleParsingTestCases(unittest.TestCase):
         value_mapping['${USERNAME}']='not valid'
         value_mapping['${PASSWORD}']='nothis validus'
         self.assertTrue(rule.is_valid(value_mapping=value_mapping))
+
+    def test_condition_parsing(self):
+        rule = parsing.rule.parseString('${VARIABLE} == value')[0]
+        self.assertEqual('${VARIABLE} == value', str(rule))
+
+    def test_and_rule_parsing(self):
+        rule = parsing.rule.parseString('${VARIABLE} == value  and  ${VAR2} == baluu')[0]
+        self.assertEqual('${VARIABLE} == value  and  ${VAR2} == baluu', str(rule))
+
+    def test_or_rule_parsing(self):
+        rule = parsing.rule.parseString('${VARIABLE} == value  or  ${VAR2} == baluu')[0]
+        self.assertEqual('${VARIABLE} == value  or  ${VAR2} == baluu', str(rule))
 
 
 _LOGIN_MACHINE = """\
