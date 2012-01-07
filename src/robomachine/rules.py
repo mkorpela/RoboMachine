@@ -25,6 +25,19 @@ class EquivalenceRule(object):
         return self._condition1.is_valid(value_mapping) == self._condition2.is_valid(value_mapping)
 
 
+class ImplicationRule(object):
+
+    def __init__(self, condition1, condition2):
+        self._condition1 = condition1
+        self._condition2 = condition2
+
+    def __str__(self):
+        return '%s  ==>  %s' % (self._condition1, self._condition2)
+
+    def is_valid(self, value_mapping):
+        return not self._condition1.is_valid(value_mapping) or self._condition2.is_valid(value_mapping)
+
+
 class AndRule(object):
 
     def __init__(self, conditions):

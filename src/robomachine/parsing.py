@@ -14,7 +14,7 @@
 
 from pyparsing import *
 from robomachine.model import RoboMachine, State, Action, Variable
-from robomachine.rules import AndRule, Condition, EquivalenceRule, OrRule, NotRule
+from robomachine.rules import AndRule, Condition, EquivalenceRule, OrRule, NotRule, ImplicationRule
 
 
 settings_table = Literal('*** Settings ***')+Regex(r'[^\*]+(?=\*)')
@@ -60,6 +60,10 @@ equivalence_rule = closed_rule +'  <==>  '+closed_rule
 equivalence_rule.leaveWhitespace()
 equivalence_rule.setParseAction(lambda t: [EquivalenceRule(t[0], t[2])])
 
+implication_rule = closed_rule +'  ==>  '+closed_rule
+implication_rule.leaveWhitespace()
+implication_rule.setParseAction(lambda t: [ImplicationRule(t[0], t[2])])
+
 and_rule = closed_rule+ZeroOrMore('  and  '+closed_rule)
 and_rule.setParseAction(lambda t: [AndRule([t[i] for i in range(len(t)) if i % 2 == 0])])
 and_rule.leaveWhitespace()
@@ -68,7 +72,7 @@ or_rule = closed_rule+ZeroOrMore('  or  '+closed_rule)
 or_rule.setParseAction(lambda t: [OrRule([t[i] for i in range(len(t)) if i % 2 == 0])])
 or_rule.leaveWhitespace()
 
-rule << (not_rule ^ equivalence_rule ^ and_rule ^ or_rule ^ closed_rule)
+rule << (not_rule ^ equivalence_rule ^ implication_rule ^ and_rule ^ or_rule ^ closed_rule)
 
 step = Regex(r'  [^\n\[][^\n]*(?=\n)')+LineEnd()
 step.leaveWhitespace()

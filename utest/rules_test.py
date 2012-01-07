@@ -11,12 +11,18 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import random
 
 import unittest
-from robomachine.rules import Condition, AndRule, EquivalenceRule, OrRule, NotRule
+from robomachine.rules import Condition, AndRule, EquivalenceRule, OrRule, NotRule, ImplicationRule
 
 
 class RulesTestCases(unittest.TestCase):
+
+    _TRUE = lambda:0
+    _TRUE.is_valid = lambda value_mapping: True
+    _FALSE = lambda:0
+    _FALSE.is_valid = lambda value_mapping: False
 
     def test_condition(self):
         condition = Condition('${VARIABLE}', 'value')
@@ -24,35 +30,28 @@ class RulesTestCases(unittest.TestCase):
         self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'wrong value'}))
 
     def test_and_rule(self):
-        and_rule = AndRule([Condition('${VARIABLE%d}' % i, str(i)) for i in range(10)])
-        value_mapping = {}
-        for i in range(10):
-            value_mapping['${VARIABLE%d}' % i] = str(i)
-        self.assertTrue(and_rule.is_valid(value_mapping=value_mapping))
-        for i in range(10):
-            value_mapping['${VARIABLE%d}' % i] = 'wrong'
-            self.assertFalse(and_rule.is_valid(value_mapping=value_mapping))
-            value_mapping['${VARIABLE%d}' % i] = str(i)
+        self.assertTrue(AndRule([self._TRUE for _ in range(10)]).is_valid({}))
+        self.assertFalse(AndRule([self._FALSE]+[self._TRUE for _ in range(10)]).is_valid({}))
 
     def test_equivalence_rule(self):
-        equivalence_rule = EquivalenceRule(Condition('${V1}', 'foo'), Condition('${V2}', 'bar'))
-        self.assertTrue(equivalence_rule.is_valid({'${V1}':'foo', '${V2}':'bar'}))
+        self.assertTrue(EquivalenceRule(self._TRUE, self._TRUE).is_valid({}))
+        self.assertFalse(EquivalenceRule(self._FALSE, self._TRUE).is_valid({}))
+        self.assertFalse(EquivalenceRule(self._TRUE, self._FALSE).is_valid({}))
+        self.assertTrue(EquivalenceRule(self._FALSE, self._FALSE).is_valid({}))
 
     def test_or_rule(self):
-        or_rule = OrRule([Condition('${VARIABLE%d}' % i, str(i)) for i in range(10)])
-        value_mapping = {}
-        for i in range(10):
-            value_mapping['${VARIABLE%d}' % i] = 'wrong'
-        self.assertFalse(or_rule.is_valid(value_mapping=value_mapping))
-        for i in range(10):
-            value_mapping['${VARIABLE%d}' % i] = str(i)
-            self.assertTrue(or_rule.is_valid(value_mapping=value_mapping))
-            value_mapping['${VARIABLE%d}' % i] = 'wrong'
+        self.assertFalse(OrRule([self._FALSE for _ in range(10)]).is_valid({}))
+        self.assertTrue(OrRule([self._TRUE]+[self._FALSE for _ in range(10)]).is_valid({}))
 
     def test_not_rule(self):
-        not_rule = NotRule(Condition('${VARIABLE}', 'value'))
-        self.assertFalse(not_rule.is_valid({'${VARIABLE}':'value'}))
-        self.assertTrue(not_rule.is_valid({'${VARIABLE}':'wrong value'}))
+        self.assertFalse(NotRule(self._TRUE).is_valid({}))
+        self.assertTrue(NotRule(self._FALSE).is_valid({}))
+
+    def test_implication_rule(self):
+        self.assertTrue(ImplicationRule(self._TRUE, self._TRUE).is_valid({}))
+        self.assertTrue(ImplicationRule(self._FALSE, self._TRUE).is_valid({}))
+        self.assertFalse(ImplicationRule(self._TRUE, self._FALSE).is_valid({}))
+        self.assertTrue(ImplicationRule(self._FALSE, self._FALSE).is_valid({}))
 
 if __name__ == '__main__':
     unittest.main()
