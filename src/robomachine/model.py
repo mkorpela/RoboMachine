@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-class RoboMachina(object):
+class RoboMachine(object):
 
     def __init__(self, states, variables, rules, settings_table=None,
                  variables_table=None, keywords_table=None):

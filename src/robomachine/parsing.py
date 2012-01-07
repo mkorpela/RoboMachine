@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from pyparsing import *
-from robomachine.model import RoboMachina, State, Action, Variable
+from robomachine.model import RoboMachine, State, Action, Variable
 from robomachine.rules import AndRule, Condition, EquivalenceRule
 
 settings_table = Literal('*** Settings ***')+Regex(r'[^\*]+(?=\*)')
@@ -100,7 +100,7 @@ machine = Optional(settings_table).setResultsName('settings_table')+\
           Optional(keywords_table).setResultsName('keywords_table')
 
 def create_robomachine(p):
-    return RoboMachina(list(p.states),
+    return RoboMachine(list(p.states),
                        list(p.variables),
                        list(p.rules),
                        settings_table=p.settings_table,

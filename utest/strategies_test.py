@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 import unittest
-from robomachine.model import RoboMachina, State, Action, Variable
+from robomachine.model import RoboMachine, State, Action, Variable
 from robomachine.rules import Condition
 from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
@@ -26,7 +26,7 @@ class StrategyTestCase(object):
         states = [State('state1', [], [action12]),
                   State('state2', [], [action21])]
         at_least_one_test_generated = False
-        for test in self.strategy_class(RoboMachina(states, [], []), 2).tests():
+        for test in self.strategy_class(RoboMachine(states, [], []), 2).tests():
             self.assertEqual(([action12, action21], []), test)
             at_least_one_test_generated = True
             break
@@ -35,7 +35,7 @@ class StrategyTestCase(object):
     def test_can_generate_test_from_variable_machine(self):
         variables = [Variable('var', ['a', 'b', 'c'])]
         at_least_one_test_generated = False
-        for test in self.strategy_class(RoboMachina([State('state', [], [])], variables, []), 0).tests():
+        for test in self.strategy_class(RoboMachine([State('state', [], [])], variables, []), 0).tests():
             self.assertEqual([], test[0])
             self.assertEqual(1, len(test[1]))
             self.assertTrue(test[1][0] in ['a', 'b', 'c'])
@@ -47,7 +47,7 @@ class StrategyTestCase(object):
         variables = [Variable('${VAR}', ['a', 'b', 'c', 'd', 'e', 'f', 'g'])]
         rules = [Condition('${VAR}', 'e')]
         at_least_one_test_generated = False
-        for test in self.strategy_class(RoboMachina([State('state', [], [])], variables, rules), 0).tests():
+        for test in self.strategy_class(RoboMachine([State('state', [], [])], variables, rules), 0).tests():
             self.assertEqual([], test[0])
             self.assertEqual(1, len(test[1]))
             self.assertEqual('e', test[1][0])

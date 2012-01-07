@@ -13,13 +13,13 @@
 #  limitations under the License.
 
 import unittest
-from robomachine.model import RoboMachina, Variable
+from robomachine.model import RoboMachine, Variable
 
 
 class MachinaModelTestCase(unittest.TestCase):
 
     def test_empty_machina_model(self):
-        empty_machina = RoboMachina(None, None, None)
+        empty_machina = RoboMachine(None, None, None)
         self.assertEqual([], empty_machina.states)
         self.assertEqual([], empty_machina.variables)
         self.assertEqual(None, empty_machina.find_state_by_name('some name'))
