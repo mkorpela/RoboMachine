@@ -1,6 +1,10 @@
 *** Machine ***
 
 ${FOO}  any of  foo  bar  zoo
+${BAR}  any of  some  one  out  there
+
+${FOO} == foo  ==>  ${BAR} == there
+${BAR} == some  ==>  (${FOO} == bar  or  ${FOO} == zoo)
 
 Starting State
   Log  hello ${FOO}
