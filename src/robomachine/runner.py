@@ -18,21 +18,21 @@ import argparse
 
 from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
+parser = argparse.ArgumentParser(description='RoboMachine, a test data generator for Robot Framework')
+parser.add_argument('input', type=str, help='input file')
+parser.add_argument('--output', '-o', type=str, default=None,
+                    help='output file (default is input file with txt suffix)')
+parser.add_argument('--tests-max', '-t',
+                     type=int, default=1000,
+                     help='maximum number of tests to generate (default 1000)')
+parser.add_argument('--actions-max', '-a',
+                     type=int, default=100,
+                     help='maximum number of actions to generate (default 100)')
+parser.add_argument('--generation-algorithm', '-g',
+                     type=str, default='dfs', choices=['dfs', 'random'],
+                     help='used test generation algorithm (default dfs)')
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='RoboMachine, a test data generator for Robot Framework')
-    parser.add_argument('input', type=str, help='input file')
-    parser.add_argument('--output', '-o', type=str, default=None,
-                        help='output file (default is input file with txt suffix)')
-    parser.add_argument('--tests-max', '-t',
-                         type=int, default=1000,
-                         help='maximum number of tests to generate (default 1000)')
-    parser.add_argument('--actions-max', '-a',
-                         type=int, default=100,
-                         help='maximum number of actions to generate (default 100)')
-    parser.add_argument('--generation-algorithm', '-g',
-                         type=str, default='dfs', choices=['dfs', 'random'],
-                         help='used test generation algorithm (default dfs)')
+def main():
     args = parser.parse_args()
     with open(args.input, 'r') as inp:
         with open(args.output or os.path.splitext(args.input)[0]+'.txt', 'w') as out:
