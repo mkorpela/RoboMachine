@@ -3,6 +3,7 @@ RoboMachine
 ===========
 
 A test data generator for Robot Framework.
+NOTE! This tool is a work in progress. If you have any comments or issues with the tool please report them.
 
 ======================
 What is this tool for?
@@ -10,13 +11,28 @@ What is this tool for?
 
 You know those ugly bugs that users report that somehow were missed by all your
 ATDD-, TDD- and exploratory testing?
-Those bugs that lurk in the corners of the complexity of the system that you are building?
-Those bugs that will make your applications users hate you?
-This tool is here to help you seek and destroy those bugs.
+Those bugs that lurk in the corners of complexity of the system that you are building.
+Those bugs that will make users of your application hate you..
+
+This tool is here to help you seek and destroy those bugs before the users will find them.
+
 It gives you the ability to generate a huge number of tests that can go through
 a very vast number of similar (or not so similar) test scenarios.
-NOTE: This is not something that is meant to replace the other type of testing
+
+==========================
+What this tool is not for?
+==========================
+
+This is not something that is meant to replace the other types of testing
 that I mentioned.
+
+ATDD, TDD and BDD are about making clear examples about how the system should behave -
+RoboMachine is about finding the examples (clear, complex or even insane ones)
+where the system doesn't behave correctly.
+
+RoboMachine machines are limited. They can not generate tests that are outside
+of there definitions. This means that there is always a possibility that a bug
+exists somewhere else - there is always room for exploratory testing.
 
 ===========
 What is it?
@@ -123,7 +139,6 @@ An example of a valid machine variable definition line::
 
     ${VALID_VARIABLE_1}  any of  Value 1  Value 2  Value 3
 
-
 Rules about the machine variables should be next. Rule building blocks:
   * Variable condition:    ${VARIABLE} = value
   * And rule:             [some condition]  and  [some other condition]
@@ -133,10 +148,15 @@ Rules about the machine variables should be next. Rule building blocks:
   * Equivalence rule:     [some condition]  <==>  [some condition]
   * [some condition]:     Variable condition OR (rule)
 
+Rules can be used to remove variable combinations that should not be used in
+test generation.
+
 An example of a valid rule line::
 
     ${VARIABLE_1} = Value 1  ==>  (${FOO} = bar  or  ${FOO} = zoo)
 
+Which means: When ${VARIABLE_1} value is "Value 1" then ${FOO} should either
+be "bar" or "zoo".
 
 State blocks should be next. First state block is the starting state.
 
