@@ -75,3 +75,78 @@ The new syntax:
   * Steps in states
   * Actions that transition to other states
   * Conditons in actions
+
+======
+Syntax
+======
+
+Only supported Robot Framework format is space separated format.
+
+You should use .robomachine suffix for your Machine files.
+
+You can have a Robot Framework *Settings* table at the beginning of the machine file.
+
+You can have a Robot Framework *Variables* table after the optional Settings table.
+
+*Machine* table is a must.
+
+You can have a Robot Framework *Keywords* table after the Machine table.
+
+====================
+Machine table syntax
+====================
+
+Used machine variables must be introduced at the beginning of the machine table.
+Valid machine variable is a valid Robot Framework variable that contains only
+uppercase characters A-Z, numbers (not at the start) 0-9 and
+underscores '_'. For example: ${VALID_123} is a valid machine variable.
+
+An example of a valid machine variable definition line:
+
+    ${VALID_VARIABLE_1}  any of  Value 1  Value 2  Value 3
+
+Rules about the machine variables should be next. Rule building blocks:
+  * Variable condition:    ${VARIABLE} = value
+  * And rule:             [some condition]  and  [some other condition]
+  * Or rule:              [some condition]  or  [some other condition]
+  * Not rule:             not ([some condition])
+  * Implication rule:     [some condition]  ==>  [some condition]
+  * Equivalence rule:     [some condition]  <==>  [some condition]
+  * [some condition]:     Variable condition OR (rule)
+
+An example of a valid rule line:
+
+    ${VARIABLE_1} = Value 1  =>  (${FOO} = bar  or  ${FOO} = zoo)
+
+State blocks should be next. First state block is the starting state.
+
+State block starts with a line containing the states name.
+Valid state name contains only upper and lowercase characters a-zA-Z,
+numbers (not at the start) 0-9 and spaces (not at the start or end and only one
+between words).
+
+This is followed by the Robot Framework steps that should be executed when in that
+state.
+
+This can be followed by an actions block definition.
+
+An actions block starts with [Actions] tag and is followed by one or more action lines.
+
+An action line has four parts:
+  * a Robot Framework step that is executed when the action happens (action label)
+  * '  ==>  ' right arrow with two spaces before and after
+  * Name of the state that the machine ends up when the action is taken (end state)
+  * Optional rule (when the action is available) this either starts with
+ '  when  ' and the rule or  '  otherwise' - meaning this action should be taken when
+ all of the actions with same action label are not available
+
+An example of a valid state definition:
+
+    State Name
+      Robot Framework  Step  with  ${arguments}
+      Log  something  WARN
+      [Actions]
+        Log  other thing  ==>  Other State  when  ${FOO} = bar
+        Log  other thing  ==>  Another State  when  (${FOO} = zoo  and  ${BAR} = goo)
+        Log  other thing  ==>  End State  otherwise
+        Log  nothing      ==>  End State
