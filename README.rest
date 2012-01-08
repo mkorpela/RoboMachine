@@ -143,8 +143,8 @@ An action line has four parts:
   * '  ==>  ' right arrow with two spaces before and after
   * Name of the state that the machine ends up when the action is taken (end state)
   * Optional rule (when the action is available) this either starts with
-'  when  ' and the rule or  '  otherwise' - meaning this action should be taken when
-all of the actions with same action label are not available
+    '  when  ' and the rule or  '  otherwise' - meaning this action should be taken when
+    all of the actions with same action label are not available
 
 An example of a valid state definition::
 
