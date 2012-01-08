@@ -67,14 +67,18 @@ Here is an example machine that can generate tests for `SeleniumLibrary demo <ht
       Input Password  ${PASSWORD_FIELD}  ${PASSWORD}
       Click Button  ${LOGIN_BUTTON}
 
-The new syntax:
-  * Added a new table '*** Machine ***'
-  * New kinds of variable definitions '${USERNAME}  any of  value1  value2  value3  ..'
-  * Rules about those variables '${VARIABLE_NAME} == value1  <==>  ...'
-  * State definitions  'Login Page'
-  * Steps in states
-  * Actions that transition to other states
-  * Conditons in actions
+============
+Installation
+============
+
+Currently only from source::
+
+    git clone git://github.com/mkorpela/RoboMachine.git
+    cd RoboMachine
+    python setup.py install
+
+After this you should have a commandline tool robomachine available.
+See 'robomachine --help' for commandline tool usage.
 
 ======
 Syntax
