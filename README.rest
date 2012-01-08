@@ -14,7 +14,7 @@ Those bugs that lurk in the corners of the complexity of the system that you are
 Those bugs that will make your applications users hate you?
 This tool is here to help you seek and destroy those bugs.
 It gives you the ability to generate a huge number of tests that can go through
- a very vast number of similar (or not so similar) test scenarios.
+a very vast number of similar (or not so similar) test scenarios.
 NOTE: This is not something that is meant to replace the other type of testing
 that I mentioned.
 
