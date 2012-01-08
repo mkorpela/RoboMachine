@@ -2,15 +2,15 @@
 
 from distutils.core import setup
 import os
+from setuptools import find_packages
 
 
 setup(name='RoboMachine',
       version='0.1',
       description='Test data generator for Robot Framework',
       author='Mikko Korpela',
-      packages=['robomachine'],
-      package_dir={'':'src'},
-      scripts = [os.path.join('src','bin','robomachine'),
-                 os.path.join('src','bin','robomachine.bat')],
-      requires = ['pyparsing']
+      packages=find_packages(),
+      scripts = [os.path.join('bin','robomachine'),
+                 os.path.join('bin','robomachine.bat')],
+      install_requires = ['pyparsing']
      )
