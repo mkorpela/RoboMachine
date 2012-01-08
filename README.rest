@@ -4,9 +4,26 @@ RoboMachine
 
 A test data generator for Robot Framework.
 
-=============
-What is this?
-=============
+======================
+What is this tool for?
+======================
+
+You know those ugly bugs that users report that somehow were missed by all your
+ATDD-, TDD- and exploratory testing?
+Those bugs that lurk in the corners of the complexity of the system that you are building?
+Those bugs that will make your applications users hate you?
+
+This tool is here to help you seek and destroy those bugs.
+
+It gives you the ability to generate a huge number of tests that can go through
+ a very vast number of similar (or not so similar) test scenarios.
+
+NOTE: This is not something that is meant to replace the other type of testing
+that I mentioned.
+
+===========
+What is it?
+===========
 
 If you know Regular Expressions:
 A regular expression is a pattern that represents all the possible strings that match that pattern.
@@ -14,8 +31,8 @@ RoboMachine works in a similar way. A machine represents a set of tests in a com
 This machine can be used to generate all (or part of) the tests that it represents.
 
 If you know Model-Based Testing or automata theory:
-With RoboMachine you define an extended finite state machine (in a Robot Framework like syntax) that represents a set of tests.
-RoboMachine also contains algorithms that can be used to generate real executable Robot Framework tests from RoboMachine model.
+With RoboMachine you define an extended finite state machine (in a Robot Framework -like syntax) that represents a set of tests.
+RoboMachine also contains algorithms that can be used to generate real executable Robot Framework tests from a RoboMachine model.
 
 If you know Combinatorial Testing or like data drive testing:
 With RoboMachine you can define sets of data and rules about that data, that can be used to generate data driven tests
