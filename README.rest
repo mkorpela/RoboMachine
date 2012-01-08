@@ -103,7 +103,9 @@ underscores '_'. For example: ${VALID_123} is a valid machine variable.
 
 An example of a valid machine variable definition line:
 
+
     ${VALID_VARIABLE_1}  any of  Value 1  Value 2  Value 3
+
 
 Rules about the machine variables should be next. Rule building blocks:
   * Variable condition:    ${VARIABLE} = value
@@ -116,7 +118,9 @@ Rules about the machine variables should be next. Rule building blocks:
 
 An example of a valid rule line:
 
-    ${VARIABLE_1} = Value 1  =>  (${FOO} = bar  or  ${FOO} = zoo)
+
+    ${VARIABLE_1} = Value 1  ==>  (${FOO} = bar  or  ${FOO} = zoo)
+
 
 State blocks should be next. First state block is the starting state.
 
