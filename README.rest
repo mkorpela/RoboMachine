@@ -12,12 +12,9 @@ You know those ugly bugs that users report that somehow were missed by all your
 ATDD-, TDD- and exploratory testing?
 Those bugs that lurk in the corners of the complexity of the system that you are building?
 Those bugs that will make your applications users hate you?
-
 This tool is here to help you seek and destroy those bugs.
-
 It gives you the ability to generate a huge number of tests that can go through
  a very vast number of similar (or not so similar) test scenarios.
-
 NOTE: This is not something that is meant to replace the other type of testing
 that I mentioned.
 
@@ -94,7 +91,7 @@ Currently only from source::
     cd RoboMachine
     python setup.py install
 
-After this you should have a commandline tool robomachine available.
+After this you should have a commandline tool called 'robomachine' available.
 See 'robomachine --help' for commandline tool usage.
 
 ======
