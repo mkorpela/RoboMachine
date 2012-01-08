@@ -101,8 +101,7 @@ Valid machine variable is a valid Robot Framework variable that contains only
 uppercase characters A-Z, numbers (not at the start) 0-9 and
 underscores '_'. For example: ${VALID_123} is a valid machine variable.
 
-An example of a valid machine variable definition line:
-
+An example of a valid machine variable definition line::
 
     ${VALID_VARIABLE_1}  any of  Value 1  Value 2  Value 3
 
@@ -116,8 +115,7 @@ Rules about the machine variables should be next. Rule building blocks:
   * Equivalence rule:     [some condition]  <==>  [some condition]
   * [some condition]:     Variable condition OR (rule)
 
-An example of a valid rule line:
-
+An example of a valid rule line::
 
     ${VARIABLE_1} = Value 1  ==>  (${FOO} = bar  or  ${FOO} = zoo)
 
@@ -144,7 +142,7 @@ An action line has four parts:
  '  when  ' and the rule or  '  otherwise' - meaning this action should be taken when
  all of the actions with same action label are not available
 
-An example of a valid state definition:
+An example of a valid state definition::
 
     State Name
       Robot Framework  Step  with  ${arguments}
