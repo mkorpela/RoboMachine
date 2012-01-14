@@ -88,6 +88,7 @@ A
   [Actions]
     first  ==>  B
     second  ==>  C
+    ==>  D
 
 B
   [Actions]
@@ -96,6 +97,9 @@ B
 
 C
   No Operation  #This is a comment
+
+D
+  Log  tau action can only get here
 """
 
 _TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2 = """\
@@ -120,6 +124,11 @@ Test 3
   Bar  foo
   second
   No Operation  #This is a comment
+
+Test 4
+  Foo  bar
+  Bar  foo
+  Log  tau action can only get here
 """
 
 class TestParsing(unittest.TestCase):
@@ -157,6 +166,16 @@ A
         self._should_parse_step('  ${value}=  Set Variable  something\n')
         self._should_parse_step('  Log  [something]\n')
 
+    def test_action_parsing(self):
+        action = parsing.action.parseString('    action name  ==>  state')[0]
+        self.assertEqual('action name', action.name)
+        self.assertEqual('state', action._next_state_name)
+
+    def test_tau_action_parsing(self):
+        action = parsing.action.parseString('    ==>  state')[0]
+        self.assertEqual('', action.name)
+        self.assertEqual('state', action._next_state_name)
+
     def _should_parse_step(self, step):
         self.assertEqual(step[:-1], parsing.step.parseString(step)[0])
 
@@ -164,8 +183,8 @@ A
         m = robomachine.parse(_MACHINA2)
         self.assertEqual(m.states[0].name, 'A')
         self.assertEqual(m.states[0].steps, ['  Foo  bar', '  Bar  foo'])
-        self.assertEqual([a.name for a in m.states[0].actions], ['first', 'second'])
-        self.assertEqual([a.next_state.name for a in m.states[0].actions], ['B', 'C'])
+        self.assertEqual([a.name for a in m.states[0].actions], ['first', 'second', ''])
+        self.assertEqual([a.next_state.name for a in m.states[0].actions], ['B', 'C', 'D'])
         self.assertEqual(m.states[1].name, 'B')
         self.assertEqual(m.states[1].steps, [])
         self.assertEqual([a.name for a in m.states[1].actions], ['something else', 'other thing'])

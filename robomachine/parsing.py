@@ -90,7 +90,7 @@ def parse_condition(cond):
 condition.leaveWhitespace()
 condition.setParseAction(parse_condition)
 condition = Optional(condition).setResultsName('condition')
-action = White(min=4)+robo_step + White(min=2) + '==>'+White(min=2) + state_name + condition + LineEnd()
+action = White(min=4)+Optional(robo_step + White(min=2)) + '==>'+White(min=2) + state_name + condition + LineEnd()
 action.leaveWhitespace()
 action.setParseAction(lambda t: [Action(t.robo_step.rstrip(), t.state_name, t.condition)])
 

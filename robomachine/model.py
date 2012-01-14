@@ -124,7 +124,8 @@ class Action(object):
         return self.condition.is_valid(value_mapping=self._machine.variable_value_mapping)
 
     def write_to(self, output):
-        output.write('  %s\n' % self.name)
+        if self.name:
+            output.write('  %s\n' % self.name)
         self.next_state.write_steps_to(output)
 
 class Variable(object):
