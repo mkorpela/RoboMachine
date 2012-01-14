@@ -45,6 +45,11 @@ class VariableParsingTestCases(unittest.TestCase):
         self.assertEqual('${ABC123}', v.name)
         self.assertEqual(['one', 'two', '123'], v.values)
 
+    def test_variable_definition_parsing_when_more_than_two_spaces(self):
+        v = parsing.variable_definition.parseString('${ABC123}          any of           one   two  123\n')[0]
+        self.assertEqual('${ABC123}', v.name)
+        self.assertEqual(['one', 'two', '123'], v.values)
+
 
 class ConditionActionParsingTestCases(unittest.TestCase):
 

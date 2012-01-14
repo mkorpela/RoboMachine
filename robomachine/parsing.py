@@ -36,10 +36,13 @@ variable = Regex(r'\$\{[_A-Z][_A-Z0-9]*\}')
 
 variable_value = Regex(r'[\w\$\{\}!?\-\_\.\/]+( [\w\$\{\}!?\-\_\.\/]+)*')
 
-variable_values = (variable_value+ZeroOrMore('  '+variable_value)).setResultsName('variable_values')
+splitter = Literal(' ')+OneOrMore(' ')
+splitter.setParseAction(lambda t: '  ')
+
+variable_values = (variable_value+ZeroOrMore(splitter+variable_value)).setResultsName('variable_values')
 variable_values.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
 
-variable_definition = variable.setResultsName('variable_name') + '  any of  ' + variable_values + LineEnd()
+variable_definition = variable.setResultsName('variable_name') + splitter+'any of'+splitter+ variable_values + LineEnd()
 variable_definition.leaveWhitespace()
 variable_definition.setParseAction(lambda t: [Variable(t.variable_name, list(t.variable_values))])
 
