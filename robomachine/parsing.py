@@ -138,4 +138,10 @@ machine.ignore(comment)
 machine.setWhitespaceChars(' ')
 
 def parse(text):
-    return machine.parseString(text, parseAll=True)[0]
+    try:
+        return machine.parseString(text, parseAll=True)[0]
+    except ParseBaseException, pe:
+        print 'Exception on line %d' % pe.lineno
+        print pe.msg
+        print 'line: %r' % pe.line
+        raise
