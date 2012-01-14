@@ -47,7 +47,7 @@ If you know Model-Based Testing or automata theory:
 With RoboMachine you define an extended finite state machine (in a Robot Framework -like syntax) that represents a set of tests.
 RoboMachine also contains algorithms that can be used to generate real executable Robot Framework tests from a RoboMachine model.
 
-If you know Combinatorial Testing or like data drive testing:
+If you know Combinatorial Testing or like data driven testing:
 With RoboMachine you can define sets of data and rules about that data, that can be used to generate data driven tests
 (and also keyword driven tests). This allows you to keep your data in compact sets and let the system generate the real
 test data vectors from there.
@@ -173,7 +173,7 @@ This can be followed by an actions block definition.
 An actions block starts with [Actions] tag and is followed by one or more action lines.
 
 An action line has four parts:
-  * a Robot Framework step that is executed when the action happens (action label)
+  * a Robot Framework step that is executed when the action happens (action label) (you can also leave this out - use a tau transition)
   * '  ==>  ' right arrow with two spaces before and after
   * Name of the state that the machine ends up when the action is taken (end state)
   * Optional rule (when the action is available) this either starts with
@@ -190,3 +190,4 @@ An example of a valid state definition::
         Log  other thing  ==>  Another State  when  (${FOO} = zoo  and  ${BAR} = goo)
         Log  other thing  ==>  End State  otherwise
         Log  nothing      ==>  End State
+        ==>  Some state # This here is a tau transition that does not write a step to the test
