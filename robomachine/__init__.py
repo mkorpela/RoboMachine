@@ -34,8 +34,7 @@ def _write_tests(machine, max_tests, max_actions, output, strategy_class):
             print '--tests-max generation try limit (%d) reached with (%d) tests generated' % (max_tests, i - 1)
             return
         if (tuple(test), tuple(values)) in generated_tests:
-            if max_tests is not None:
-                skipped += 1
+            skipped += 1
             continue
         else:
             generated_tests.add((tuple(test), tuple(values)))
