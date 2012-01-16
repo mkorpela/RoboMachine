@@ -14,11 +14,18 @@
 import random
 
 
-class DepthFirstSearchStrategy(object):
+class _Strategy(object):
 
-    def __init__(self, machine, max_actions):
+    def __init__(self, machine, max_actions, to_state=None):
         self._machine = machine
         self._max_actions = max_actions
+        self._to_state = to_state
+
+    def _matching_to_state(self, test):
+        return not self._to_state or self._to_state == test[-1].next_state.name
+
+
+class DepthFirstSearchStrategy(_Strategy):
 
     def tests(self):
         for values in self._variable_value_sets(self._machine.variables):
@@ -38,18 +45,20 @@ class DepthFirstSearchStrategy(object):
 
     def _generate_all_from(self, state, max_actions):
         if not state.actions or max_actions == 0:
+            if self._to_state and self._to_state != state.name:
+                return
             yield []
         else:
+            at_least_one_generated = False
             for action in state.actions:
                 for test in self._generate_all_from(action.next_state, max_actions-1):
+                    at_least_one_generated = True
                     yield [action]+test
+            if not at_least_one_generated and self._to_state == state.name:
+                yield []
 
 
-class RandomStrategy(object):
-
-    def __init__(self, machine, max_actions):
-        self._machine = machine
-        self._max_actions = max_actions
+class RandomStrategy(_Strategy):
 
     def tests(self):
         while True:
@@ -61,6 +70,10 @@ class RandomStrategy(object):
                 action = random.choice(current_state.actions)
                 current_state = action.next_state
                 test.append(action)
+            while test and not self._matching_to_state(test):
+                test.pop()
+            if not test and self._to_state and self._to_state != self._machine.start_state.name:
+                continue
             yield test, values
 
     def _generate_variable_values(self):
