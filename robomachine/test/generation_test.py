@@ -27,12 +27,11 @@ class GenerationTestCase(unittest.TestCase):
 
 class _MockStrategy(object):
 
-    def __init__(self, machine, max_actions):
+    def __init__(self, machine, *others):
         self._machine = machine
-        self._max_actions = max_actions
 
     def _action(self):
-        a = Action('foo', 'bar', None)
+        a = Action('foo', 'bar')
         a.set_machine(self._machine)
         return a
 

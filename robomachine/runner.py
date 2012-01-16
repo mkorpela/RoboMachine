@@ -25,6 +25,10 @@ parser.add_argument('--output', '-o', type=str, default=None,
 parser.add_argument('--tests-max', '-t',
                      type=int, default=1000,
                      help='maximum number of tests to generate (default 1000)')
+parser.add_argument('--to-state', '-T',
+                    type=str, default=None,
+                    help='State that all generated tests should end.\n'+\
+                    'If none given all states are valid test end states')
 parser.add_argument('--actions-max', '-a',
                      type=int, default=100,
                      help='maximum number of actions to generate (default 100)')
@@ -39,6 +43,7 @@ def main():
             robomachine.generate(robomachine.parse(inp.read()),
                                  max_tests=args.tests_max,
                                  max_actions=args.actions_max,
+                                 to_state=args.to_state,
                                  output=out,
                                  strategy=DepthFirstSearchStrategy if args.generation_algorithm == 'dfs' else RandomStrategy)
 
