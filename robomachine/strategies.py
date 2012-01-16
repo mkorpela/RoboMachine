@@ -20,6 +20,7 @@ class _Strategy(object):
         self._machine = machine
         self._max_actions = max_actions
         self._to_state = to_state
+        assert not to_state or self._machine.find_state_by_name(to_state)
 
     def _matching_to_state(self, test):
         return not self._to_state or self._to_state == test[-1].next_state.name
