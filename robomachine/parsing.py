@@ -137,6 +137,9 @@ machine.setParseAction(create_robomachine)
 machine.ignore(comment)
 machine.setWhitespaceChars(' ')
 
+class RoboMachineParsingException(Exception):
+    pass
+
 def parse(text):
     try:
         return machine.parseString(text, parseAll=True)[0]
@@ -144,4 +147,7 @@ def parse(text):
         print 'Exception on line %d' % pe.lineno
         print pe.msg
         print 'line: %r' % pe.line
-        raise
+        raise RoboMachineParsingException(pe.msg)
+    except AssertionError, ae:
+        print ae
+        raise RoboMachineParsingException(ae)

@@ -16,7 +16,7 @@ from StringIO import StringIO
 import unittest
 from robomachine import parsing
 import robomachine
-from robomachine.parsing import comment
+from robomachine.parsing import comment, RoboMachineParsingException
 
 
 _MACHINA = """\
@@ -131,6 +131,13 @@ Test 4
   Log  tau action can only get here
 """
 
+_INVALID_STATE_MACHINE = """\
+*** Machine ***
+State 1
+  [Actions]
+    ==>  Invalid
+"""
+
 class TestParsing(unittest.TestCase):
 
     def test_header_parsing(self):
@@ -192,6 +199,14 @@ A
         self.assertEqual(m.states[2].name, 'C')
         self.assertEqual(m.states[2].steps, ['  No Operation  #This is a comment'])
         self.assertEqual(m.states[2].actions, [])
+
+    def test_invalid_state_parsing(self):
+        try:
+            m = robomachine.parse(_INVALID_STATE_MACHINE)
+            self.fail('Should raise exception')
+        except RoboMachineParsingException:
+            pass
+
 
 
 class TestTestGeneration(unittest.TestCase):

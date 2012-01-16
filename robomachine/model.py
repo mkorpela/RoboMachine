@@ -111,6 +111,8 @@ class Action(object):
 
     def set_machine(self, machine):
         self._machine = machine
+        if not self.next_state:
+            raise AssertionError('Invalid end state "%s" in action "%s"!' % (self._next_state_name, self.name))
 
     @property
     def next_state(self):
