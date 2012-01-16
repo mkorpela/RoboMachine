@@ -16,6 +16,7 @@ from pyparsing import *
 from robomachine.model import RoboMachine, State, Action, Variable
 from robomachine.rules import AndRule, Condition, EquivalenceRule, OrRule, NotRule, ImplicationRule
 
+end_of_line = Regex(r' *\n') ^ LineEnd()
 
 settings_table = Literal('*** Settings ***')+Regex(r'[^\*]+(?=\*)')
 settings_table.setParseAction(lambda t: '\n'.join(t))
@@ -42,7 +43,7 @@ splitter.setParseAction(lambda t: '  ')
 variable_values = (variable_value+ZeroOrMore(splitter+variable_value)).setResultsName('variable_values')
 variable_values.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
 
-variable_definition = variable.setResultsName('variable_name') + splitter+'any of'+splitter+ variable_values + LineEnd()
+variable_definition = variable.setResultsName('variable_name') + splitter+'any of'+splitter+ variable_values + end_of_line
 variable_definition.leaveWhitespace()
 variable_definition.setParseAction(lambda t: [Variable(t.variable_name, list(t.variable_values))])
 
@@ -93,11 +94,11 @@ def parse_condition(cond):
 condition.leaveWhitespace()
 condition.setParseAction(parse_condition)
 condition = Optional(condition).setResultsName('condition')
-action = White(min=4)+Optional(robo_step + White(min=2)) + '==>'+White(min=2) + state_name + condition + LineEnd()
+action = White(min=4)+Optional(robo_step + White(min=2)) + '==>'+White(min=2) + state_name + condition + end_of_line
 action.leaveWhitespace()
 action.setParseAction(lambda t: [Action(t.robo_step.rstrip(), t.state_name, t.condition)])
 
-actions = action_header + LineEnd() + OneOrMore(action).setResultsName('actions')
+actions = action_header + end_of_line + OneOrMore(action).setResultsName('actions')
 actions = Optional(actions)
 actions.leaveWhitespace()
 actions.setResultsName('actions')
@@ -107,22 +108,22 @@ comment.leaveWhitespace()
 
 steps = ZeroOrMore(step).setResultsName('steps')
 
-state = state_name + LineEnd() + steps + actions
+state = state_name + end_of_line + steps + actions
 state.leaveWhitespace()
 state.setParseAction(lambda p: State(p.state_name, list(p.steps), list(p.actions)))
 
-machine_header = Literal('*** Machine ***')+LineEnd()
+machine_header = Literal('*** Machine ***')+end_of_line
 states = state+ZeroOrMore(OneOrMore(LineEnd())+state)
 states.setParseAction(lambda t: [[t[2*i] for i in range((len(t)+1)/2)]])
 states = states.setResultsName('states')
 variables = ZeroOrMore(variable_definition).setResultsName('variables')
-rules = ZeroOrMore(rule+LineEnd()).setResultsName('rules')
+rules = ZeroOrMore(rule+end_of_line).setResultsName('rules')
 rules.setParseAction(lambda t: [t[i] for i in range(len(t)) if i % 2 == 0])
 machine = Optional(settings_table).setResultsName('settings_table')+\
           Optional(variables_table).setResultsName('variables_table')+\
-          machine_header+ZeroOrMore(LineEnd())+variables+\
-          ZeroOrMore(LineEnd())+rules+\
-          ZeroOrMore(LineEnd())+states+\
+          machine_header+ZeroOrMore(end_of_line)+variables+\
+          ZeroOrMore(end_of_line)+rules+\
+          ZeroOrMore(end_of_line)+states+\
           Optional(keywords_table).setResultsName('keywords_table')
 
 def create_robomachine(p):
