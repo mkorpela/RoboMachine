@@ -39,13 +39,14 @@ parser.add_argument('--generation-algorithm', '-g',
 def main():
     args = parser.parse_args()
     with open(args.input, 'r') as inp:
-        with open(args.output or os.path.splitext(args.input)[0]+'.txt', 'w') as out:
-            robomachine.generate(robomachine.parse(inp.read()),
-                                 max_tests=args.tests_max,
-                                 max_actions=args.actions_max,
-                                 to_state=args.to_state,
-                                 output=out,
-                                 strategy=DepthFirstSearchStrategy if args.generation_algorithm == 'dfs' else RandomStrategy)
+        machine = robomachine.parse(inp.read())
+    with open(args.output or os.path.splitext(args.input)[0]+'.txt', 'w') as out:
+        robomachine.generate(machine,
+                             max_tests=args.tests_max,
+                             max_actions=args.actions_max,
+                             to_state=args.to_state,
+                             output=out,
+                             strategy=DepthFirstSearchStrategy if args.generation_algorithm == 'dfs' else RandomStrategy)
 
 if __name__ == '__main__':
     main()
