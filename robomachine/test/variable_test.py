@@ -138,69 +138,75 @@ _LOGIN_TESTS_GENERATE_ALL_DFS = """\
 *** Test Cases ***
 Test 1
   Set Machine Variables  demo  mode
-  Title Should Be  Login Page
+  Login Page
   Submit Credentials
-  Title Should Be  Welcome Page
+  Welcome Page
 
 Test 2
   Set Machine Variables  demo  invalid
-  Title Should Be  Login Page
+  Login Page
   Submit Credentials
-  Title Should Be  Error Page
+  Error Page
 
 Test 3
   Set Machine Variables  demo  ${EMPTY}
-  Title Should Be  Login Page
+  Login Page
   Submit Credentials
-  Title Should Be  Error Page
+  Error Page
 
 Test 4
   Set Machine Variables  mode  demo
-  Title Should Be  Login Page
+  Login Page
   Submit Credentials
-  Title Should Be  Error Page
+  Error Page
 
 Test 5
   Set Machine Variables  invalid  mode
-  Title Should Be  Login Page
+  Login Page
   Submit Credentials
-  Title Should Be  Error Page
+  Error Page
 
 Test 6
   Set Machine Variables  invalid  invalid
-  Title Should Be  Login Page
+  Login Page
   Submit Credentials
-  Title Should Be  Error Page
+  Error Page
 
 Test 7
   Set Machine Variables  invalid  ${EMPTY}
-  Title Should Be  Login Page
+  Login Page
   Submit Credentials
-  Title Should Be  Error Page
+  Error Page
 
 Test 8
   Set Machine Variables  ${EMPTY}  mode
-  Title Should Be  Login Page
+  Login Page
   Submit Credentials
-  Title Should Be  Error Page
+  Error Page
 
 Test 9
   Set Machine Variables  ${EMPTY}  invalid
-  Title Should Be  Login Page
+  Login Page
   Submit Credentials
-  Title Should Be  Error Page
+  Error Page
 
 Test 10
   Set Machine Variables  ${EMPTY}  ${EMPTY}
-  Title Should Be  Login Page
+  Login Page
   Submit Credentials
-  Title Should Be  Error Page
+  Error Page
 
 *** Keywords ***
 Set Machine Variables
   [Arguments]  ${USERNAME}  ${PASSWORD}
   Set Test Variable  \${USERNAME}
   Set Test Variable  \${PASSWORD}
+Login Page
+  Title Should Be  Login Page
+Welcome Page
+  Title Should Be  Welcome Page
+Error Page
+  Title Should Be  Error Page
 """
 
 
@@ -225,7 +231,7 @@ class TestGenerationTestCases(unittest.TestCase):
         m = parsing.parse(_LOGIN_MACHINE)
         out = StringIO()
         robomachine.generate(m, output=out)
-        self.assertEqual(out.getvalue(), _LOGIN_TESTS_GENERATE_ALL_DFS)
+        self.assertEqual(_LOGIN_TESTS_GENERATE_ALL_DFS, out.getvalue())
 
 if __name__ == '__main__':
     unittest.main()

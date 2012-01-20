@@ -49,14 +49,18 @@ ${BAR}  zoo
 
 *** Test Cases ***
 Test 1
-  Log  In Start State
+  Start State
   Some keyword
-  Log  In End State
+  End State
 
 *** Keywords ***
 
 Some keyword
   No Operation
+Start State
+  Log  In Start State
+End State
+  Log  In End State
 """
 
 class TestRoboMachina(unittest.TestCase):
@@ -105,29 +109,33 @@ D
 _TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2 = """\
 *** Test Cases ***
 Test 1
-  Foo  bar
-  Bar  foo
+  A
   first
   something else
-  Foo  bar
-  Bar  foo
+  A
 
 Test 2
-  Foo  bar
-  Bar  foo
+  A
   first
   other thing
-  No Operation  #This is a comment
+  C
 
 Test 3
-  Foo  bar
-  Bar  foo
+  A
   second
-  No Operation  #This is a comment
+  C
 
 Test 4
+  A
+  D
+
+*** Keywords ***
+A
   Foo  bar
   Bar  foo
+C
+  No Operation  #This is a comment
+D
   Log  tau action can only get here
 """
 

@@ -50,10 +50,14 @@ class RoboMachine(object):
     def write_keywords_table(self, output):
         for content in self._keywords_table:
             output.write('\n'+content)
+        if not self._keywords_table:
+            output.write('\n*** Keywords ***\n')
         if self.variables:
-            if not self._keywords_table:
-                output.write('\n*** Keywords ***\n')
             self.write_variable_setter(output)
+        for state in self.states:
+            if state.steps:
+                output.write(state.name+'\n')
+                state.write_steps_to(output)
 
     def write_variable_setter(self, output):
         output.write('Set Machine Variables\n')
@@ -101,6 +105,10 @@ class State(object):
         for step in self.steps:
             output.write(step+'\n')
 
+    def write_to(self, output):
+        if self.steps:
+            output.write('  %s\n' % self.name)
+
 
 class Action(object):
 
@@ -128,7 +136,7 @@ class Action(object):
     def write_to(self, output):
         if self.name:
             output.write('  %s\n' % self.name)
-        self.next_state.write_steps_to(output)
+        self.next_state.write_to(output)
 
 class Variable(object):
     _NO_VALUE = object()

@@ -21,7 +21,7 @@ def _write_test(name, machine, output, test, values):
     output.write('\n%s\n' % name)
     if values:
         machine.write_variable_setting_step(values, output)
-    machine.start_state.write_steps_to(output)
+    machine.start_state.write_to(output)
     for action in test:
         action.write_to(output)
 
