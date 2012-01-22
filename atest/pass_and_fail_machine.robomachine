@@ -1,8 +1,8 @@
 *** Machine ***
 Pass Or Fail
   [Actions]
-    No Operation  ==>  Passing
-    Fail          ==>  Failing
+    No Operation  ==>  Passing  # Should definetly pass
+    Fail          ==>  Failing  # this should be failing
 
 Passing
   Log  this will be reached
