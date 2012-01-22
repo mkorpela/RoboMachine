@@ -145,7 +145,7 @@ def parse(text):
     try:
         return machine.parseString(text, parseAll=True)[0]
     except ParseBaseException, pe:
-        print 'Exception on line %d' % pe.lineno
+        print 'Exception at line %d' % pe.lineno
         print pe.msg
         print 'line: "%s"' % pe.line
         raise RoboMachineParsingException(pe.msg)
