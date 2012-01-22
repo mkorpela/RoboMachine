@@ -12,6 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import os
+import sys
+from parsing import RoboMachineParsingException
 
 import robomachine
 import argparse
@@ -38,15 +40,24 @@ parser.add_argument('--generation-algorithm', '-g',
 
 def main():
     args = parser.parse_args()
-    with open(args.input, 'r') as inp:
-        machine = robomachine.parse(inp.read())
-    with open(args.output or os.path.splitext(args.input)[0]+'.txt', 'w') as out:
+    if args.input.endswith('.txt') and not args.output:
+        sys.exit('txt input not allowed when no output')
+    try:
+        with open(args.input, 'r') as inp:
+            machine = robomachine.parse(inp.read())
+    except IOError, e:
+        sys.exit(unicode(e))
+    except RoboMachineParsingException, e:
+        sys.exit(1)
+    output = args.output or os.path.splitext(args.input)[0]+'.txt'
+    with open(output, 'w') as out:
         robomachine.generate(machine,
                              max_tests=args.tests_max,
                              max_actions=args.actions_max,
                              to_state=args.to_state,
                              output=out,
                              strategy=DepthFirstSearchStrategy if args.generation_algorithm == 'dfs' else RandomStrategy)
+    print 'generated %s' % output
 
 if __name__ == '__main__':
     main()

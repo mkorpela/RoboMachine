@@ -147,7 +147,7 @@ def parse(text):
     except ParseBaseException, pe:
         print 'Exception on line %d' % pe.lineno
         print pe.msg
-        print 'line: %r' % pe.line
+        print 'line: "%s"' % pe.line
         raise RoboMachineParsingException(pe.msg)
     except AssertionError, ae:
         print ae
