@@ -3,6 +3,8 @@ RoboMachine
 ===========
 
 A test data generator for Robot Framework.
+
+
 NOTE! This tool is a work in progress. If you have any comments or issues with the tool please report them.
 
 ======================
@@ -18,21 +20,6 @@ This tool is here to help you seek and destroy those bugs before the users will 
 
 It gives you the ability to generate a huge number of tests that can go through
 a very vast number of similar (or not so similar) test scenarios.
-
-==========================
-What this tool is not for?
-==========================
-
-This is not something that is meant to replace the other types of testing
-that I mentioned.
-
-ATDD, TDD and BDD are about making clear examples about how the system should behave -
-RoboMachine is about finding the examples (clear, complex or even insane ones)
-where the system doesn't behave correctly.
-
-RoboMachine machines are limited. They can not generate tests that are outside
-of there definitions. This means that there is always a possibility that a bug
-exists somewhere else - there is always room for exploratory testing.
 
 ===========
 What is it?
