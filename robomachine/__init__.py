@@ -30,7 +30,7 @@ def _write_tests(machine, max_tests, max_actions, to_state, output, strategy_cla
     skipped = 0
     generated_tests = set()
     for test, values in strategy_class(machine, max_actions, to_state).tests():
-        if max_tests is not None and i + skipped > max_tests:
+        if i + skipped > max_tests:
             print '--tests-max generation try limit (%d) reached with (%d) tests generated' % (max_tests, i - 1)
             return
         if (tuple(test), tuple(values)) in generated_tests:
@@ -41,7 +41,7 @@ def _write_tests(machine, max_tests, max_actions, to_state, output, strategy_cla
         _write_test('Test %d' % i, machine, output, test, values)
         i += 1
 
-def generate(machine, max_tests=None, max_actions=None, to_state=None, output=None, strategy=DepthFirstSearchStrategy):
+def generate(machine, max_tests=1000, max_actions=None, to_state=None, output=None, strategy=DepthFirstSearchStrategy):
     max_actions = -1 if max_actions is None else max_actions
     machine.write_settings_table(output)
     machine.write_variables_table(output)

@@ -32,7 +32,7 @@ class DepthFirstSearchStrategy(_Strategy):
         for values in self._variable_value_sets(self._machine.variables):
             self._machine.apply_variable_values(values)
             for test in self._generate_all_from(self._machine.start_state, self._max_actions):
-                yield test, values
+                yield test, [v.current_value for v in self._machine.variables]
 
     def _variable_value_sets(self, variables):
             if not variables:
@@ -75,7 +75,7 @@ class RandomStrategy(_Strategy):
                 test.pop()
             if not test and self._to_state and self._to_state != self._machine.start_state.name:
                 continue
-            yield test, values
+            yield test, [v.current_value for v in self._machine.variables]
 
     def _generate_variable_values(self):
         while True:

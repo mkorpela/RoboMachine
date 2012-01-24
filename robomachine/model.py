@@ -11,6 +11,8 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import re
+
 
 class RoboMachine(object):
 
@@ -24,6 +26,8 @@ class RoboMachine(object):
         self._keywords_table = keywords_table or []
         for state in self.states:
             state.set_machine(self)
+        for variable in self.variables:
+            variable.set_machine(self)
 
     @property
     def start_state(self):
@@ -37,6 +41,12 @@ class RoboMachine(object):
         for state in self.states:
             if state.name == name:
                 return state
+        return None
+
+    def find_variable_by_name(self, name):
+        for variable in self.variables:
+            if variable.name == name:
+                return variable
         return None
 
     def write_settings_table(self, output):
@@ -141,12 +151,17 @@ class Action(object):
         self.next_state.write_to(output)
 
 class Variable(object):
+    REGEX = r'\$\{[_A-Z][_A-Z0-9]*\}'
+    PATTERN = re.compile(REGEX)
     _NO_VALUE = object()
 
     def __init__(self, name, values):
         self.name = name
         self.values = values
         self._current_value = Variable._NO_VALUE
+
+    def set_machine(self, machine):
+        self._machine = machine
 
     def set_current_value(self, value):
         self._current_value = value
@@ -155,4 +170,13 @@ class Variable(object):
     def current_value(self):
         if self._current_value is Variable._NO_VALUE:
             raise AssertionError('No current value set')
-        return self._current_value
+        return self._resolve_value(self._current_value)
+
+    def _resolve_value(self, value):
+        return self.PATTERN.sub(self._resolve_variable, value)
+
+    def _resolve_variable(self, var_match):
+        var = self._machine.find_variable_by_name(var_match.group(0))
+        if not var:
+            return var_match.group(0)
+        return var.current_value

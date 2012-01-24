@@ -17,6 +17,7 @@ import unittest
 from robomachine import parsing
 import robomachine
 from robomachine.parsing import comment, RoboMachineParsingException
+from robomachine.strategies import RandomStrategy
 
 
 _MACHINA = """\
@@ -216,6 +217,37 @@ A
             pass
 
 
+_VAR_PROBLEM_MACHINE = """\
+*** Machine ***
+${FOO}  any of  bar
+${BAR}  any of  ${FOO}
+
+State
+  No Operation
+  [Actions]
+    ==>  End  when  ${BAR} == bar
+
+End
+  No Operation
+"""
+
+_TEST_VAR_PROBLEM_MACHINE = """\
+*** Test Cases ***
+Test 1
+  Set Machine Variables  bar  bar
+  State
+  End
+
+*** Keywords ***
+Set Machine Variables
+  [Arguments]  ${FOO}  ${BAR}
+  Set Test Variable  \${FOO}
+  Set Test Variable  \${BAR}
+State
+  No Operation
+End
+  No Operation
+"""
 
 class TestTestGeneration(unittest.TestCase):
 
@@ -224,6 +256,18 @@ class TestTestGeneration(unittest.TestCase):
         out = StringIO()
         robomachine.generate(m, max_actions=2, output=out)
         self.assertEqual(_TESTS2_GENERATE_ALL_DFS_MAX_ACTIONS_2, out.getvalue())
+
+    def test_generate_all_with_variable_resolving_problem(self):
+        m = robomachine.parse(_VAR_PROBLEM_MACHINE)
+        out = StringIO()
+        robomachine.generate(m, max_actions=1, output=out)
+        self.assertEqual(_TEST_VAR_PROBLEM_MACHINE, out.getvalue())
+
+    def test_generate_random_with_variable_resolving_problem(self):
+        m = robomachine.parse(_VAR_PROBLEM_MACHINE)
+        out = StringIO()
+        robomachine.generate(m, max_actions=1, output=out, strategy=RandomStrategy)
+        self.assertEqual(_TEST_VAR_PROBLEM_MACHINE, out.getvalue())
 
 
 class TestComment(unittest.TestCase):

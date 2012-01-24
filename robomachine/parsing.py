@@ -33,7 +33,7 @@ robo_step = Regex('([\w\$\{\}][ \w\$\{\}]*[\w\}]|\w)')
 robo_step.leaveWhitespace()
 robo_step = robo_step.setResultsName('robo_step')
 
-variable = Regex(r'\$\{[_A-Z][_A-Z0-9]*\}')
+variable = Regex(Variable.REGEX)
 
 variable_value = Regex(r'[\w\$\{\}!?\-\_\.\/]+( [\w\$\{\}!?\-\_\.\/]+)*')
 
