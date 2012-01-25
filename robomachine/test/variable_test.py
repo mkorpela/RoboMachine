@@ -90,8 +90,8 @@ class RuleParsingTestCases(unittest.TestCase):
         self.assertTrue(rule.is_valid(value_mapping=value_mapping))
 
     def test_implication_rule_parsing(self):
-        rule = parsing.rule.parseString('${VARIABLE} == value  ==>  ${OTHER} == other')[0]
-        self.assertEqual('${VARIABLE} == value  ==>  ${OTHER} == other', str(rule))
+        rule = parsing.rule.parseString('${VARIABLE} != value  ==>  ${OTHER} == other')[0]
+        self.assertEqual('not (${VARIABLE} == value)  ==>  ${OTHER} == other', str(rule))
 
     def test_condition_parsing(self):
         rule = parsing.rule.parseString('${VARIABLE} == value')[0]

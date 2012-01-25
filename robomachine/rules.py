@@ -85,3 +85,6 @@ class Condition(object):
 
     def is_valid(self, value_mapping):
         return value_mapping[self._name].strip() == self._value.strip()
+
+def UnequalCondition(variable_name, value):
+    return NotRule(Condition(variable_name, value))

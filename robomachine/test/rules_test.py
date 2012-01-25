@@ -15,6 +15,7 @@ import random
 
 import unittest
 from robomachine.rules import Condition, AndRule, EquivalenceRule, OrRule, NotRule, ImplicationRule
+from rules import UnequalCondition
 
 
 class RulesTestCases(unittest.TestCase):
@@ -28,6 +29,11 @@ class RulesTestCases(unittest.TestCase):
         condition = Condition('${VARIABLE}', 'value')
         self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'value'}))
         self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'wrong value'}))
+
+    def test_unequal_condition(self):
+        condition = UnequalCondition('${VARIABLE}', 'value')
+        self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'value'}))
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'wrong value'}))
 
     def test_and_rule(self):
         self.assertTrue(AndRule([self._TRUE for _ in range(10)]).is_valid({}))
