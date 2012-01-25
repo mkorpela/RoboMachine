@@ -14,8 +14,7 @@
 
 from pyparsing import *
 from robomachine.model import RoboMachine, State, Action, Variable
-from robomachine.rules import AndRule, Condition, EquivalenceRule, OrRule, NotRule, ImplicationRule
-from rules import UnequalCondition
+from robomachine.rules import AndRule, Condition, EquivalenceRule, OrRule, NotRule, ImplicationRule, UnequalCondition
 
 
 end_of_line = Regex(r' *\n') ^ LineEnd()

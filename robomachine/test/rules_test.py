@@ -14,8 +14,7 @@
 import random
 
 import unittest
-from robomachine.rules import Condition, AndRule, EquivalenceRule, OrRule, NotRule, ImplicationRule
-from rules import UnequalCondition
+from robomachine.rules import Condition, AndRule, EquivalenceRule, OrRule, NotRule, ImplicationRule, UnequalCondition
 
 
 class RulesTestCases(unittest.TestCase):
