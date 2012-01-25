@@ -43,7 +43,8 @@ test data vectors from there.
 What does it look like?
 =======================
 
-Here is an example machine that can generate tests for `SeleniumLibrary demo <http://code.google.com/p/robotframework-seleniumlibrary/wiki/Demo>`_::
+Here is an example machine (using combinatorial techniques)
+that can generate tests for `SeleniumLibrary demo <http://code.google.com/p/robotframework-seleniumlibrary/wiki/Demo>`_::
 
     *** Settings ***
     Suite Setup     Open Browser  ${LOGIN_PAGE_URL}   googlechrome
@@ -80,6 +81,53 @@ Here is an example machine that can generate tests for `SeleniumLibrary demo <ht
     
     *** Keywords ***
     Submit Credentials
+      Input Text      ${USERNAME_FIELD}  ${USERNAME}
+      Input Password  ${PASSWORD_FIELD}  ${PASSWORD}
+      Click Button  ${LOGIN_BUTTON}
+
+
+Here is another example machine (using model-based testing with finite state machine)::
+
+    *** Settings ***
+    Suite Setup     Open Browser  ${LOGIN_PAGE_URL}   googlechrome
+    Suite Teardown  Close Browser
+    Test Setup      Go to  ${LOGIN_PAGE_URL}
+    Library         SeleniumLibrary
+
+    *** Variables ***
+    ${USERNAME_FIELD}  username_field
+    ${PASSWORD_FIELD}  password_field
+    ${LOGIN_BUTTON}    LOGIN
+    ${VALID_USERNAME}  demo
+    ${VALID_PASSWORD}  mode
+    ${LOGIN_PAGE_URL}  http://localhost:7272/html/
+
+    *** Machine ***
+    Login Page
+      Title Should Be  Login Page
+      [Actions]
+        Submit Valid Credentials  ==>  Welcome Page
+        Submit Invalid Credentials  ==>  Error Page
+
+    Welcome Page
+      Title Should Be  Welcome Page
+      [Actions]
+        Go to  ${LOGIN_PAGE_URL}  ==>  Login Page
+
+    Error Page
+      Title Should Be  Error Page
+      [Actions]
+        Go to  ${LOGIN_PAGE_URL}  ==>  Login Page
+
+    *** Keywords ***
+    Submit Valid Credentials
+      Submit Credentials  ${VALID_USERNAME}  ${VALID_PASSWORD}
+
+    Submit Invalid Credentials
+      Submit Credentials  invalid_username   invalid_password
+
+    Submit Credentials
+      [Arguments]     ${username}        ${password}
       Input Text      ${USERNAME_FIELD}  ${USERNAME}
       Input Password  ${PASSWORD_FIELD}  ${PASSWORD}
       Click Button  ${LOGIN_BUTTON}
