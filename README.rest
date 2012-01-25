@@ -175,7 +175,8 @@ An example of a valid machine variable definition line::
     ${VALID_VARIABLE_1}  any of  Value 1  Value 2  Value 3
 
 Rules about the machine variables should be next. Rule building blocks:
-  * Variable condition:    ${VARIABLE} = value
+  * Variable condition:    ${VARIABLE} == value
+  * Variable unequal condition:   ${VARIABLE} != value
   * And rule:             [some condition]  and  [some other condition]
   * Or rule:              [some condition]  or  [some other condition]
   * Not rule:             not ([some condition])
@@ -188,7 +189,7 @@ test generation.
 
 An example of a valid rule line::
 
-    ${VARIABLE_1} = Value 1  ==>  (${FOO} = bar  or  ${FOO} = zoo)
+    ${VARIABLE_1} == Value 1  ==>  (${FOO} = bar  or  ${FOO} = zoo)
 
 Which means: When ${VARIABLE_1} value is "Value 1" then ${FOO} should either
 be "bar" or "zoo".
