@@ -9,7 +9,7 @@ name = 'Mikko Korpela'
 address = name.lower().replace(' ', '.')+chr(64)+'gmail.com'
 
 setup(name='RoboMachine',
-      version='0.1',
+      version='0.2',
       description='Test data generator for Robot Framework',
       author=name,
       author_email=address,

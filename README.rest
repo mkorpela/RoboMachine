@@ -142,7 +142,12 @@ For example "robomachine --tests-max 10 --actions-max 20 --to-state 'Welcome Pag
 Installation
 ============
 
-Currently only from source::
+From `Python Package Index <http://pypi.python.org/pypi>`::
+
+    pip install RoboMachine
+
+
+From source::
 
     git clone git://github.com/mkorpela/RoboMachine.git
     cd RoboMachine
