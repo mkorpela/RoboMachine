@@ -142,7 +142,7 @@ For example "robomachine --tests-max 10 --actions-max 20 --to-state 'Welcome Pag
 Installation
 ============
 
-From `Python Package Index <http://pypi.python.org/pypi>`::
+From `Python Package Index <http://pypi.python.org/pypi>`_::
 
     pip install RoboMachine
 
