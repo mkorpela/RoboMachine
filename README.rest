@@ -4,9 +4,6 @@ RoboMachine
 
 A test data generator for `Robot Framework <http://www.robotframework.org>`_.
 
-
-NOTE! This tool is a work in progress. If you have any comments or issues with the tool please report them.
-
 ======================
 What is this tool for?
 ======================
