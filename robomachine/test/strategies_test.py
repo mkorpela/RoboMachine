@@ -15,7 +15,7 @@
 import unittest
 from robomachine.model import RoboMachine, State, Action, Variable
 from robomachine.rules import Condition
-from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
+from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy, AllPairsRandomStrategy
 
 
 class StrategyTestCase(object):
@@ -99,6 +99,16 @@ class DepthFirstSearchStrategyTestCase(StrategyTestCase, unittest.TestCase):
 
 class RandomStrategyTestCase(StrategyTestCase, unittest.TestCase):
     strategy_class = RandomStrategy
+
+class AllPairsRandomStrategyTestCase(StrategyTestCase, unittest.TestCase):
+    strategy_class = AllPairsRandomStrategy
+
+    def test_generates_all_pairs(self):
+        variables = [Variable('${A}', [1,2,3]),
+                     Variable('${B}', [3,4,5]),
+                     Variable('${C}', [6,7,8])]
+        tests = list(AllPairsRandomStrategy(RoboMachine([State('s', [], [])], variables, []), 1, 's').tests())
+        self.assertEqual(len(tests), 9)
 
 if __name__ == '__main__':
     unittest.main()

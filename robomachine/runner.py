@@ -19,9 +19,10 @@ from parsing import RoboMachineParsingException
 import robomachine
 import argparse
 
-from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
+from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy, AllPairsRandomStrategy
 
-parser = argparse.ArgumentParser(description='RoboMachine 0.4 - a test data generator for Robot Framework')
+
+parser = argparse.ArgumentParser(description='RoboMachine 0.5 - a test data generator for Robot Framework')
 parser.add_argument('input', type=str, help='input file')
 parser.add_argument('--output', '-o', type=str, default=None,
                     help='output file (default is input file with txt suffix)')
@@ -36,7 +37,7 @@ parser.add_argument('--actions-max', '-a',
                      type=int, default=100,
                      help='maximum number of actions to generate (default 100)')
 parser.add_argument('--generation-algorithm', '-g',
-                     type=str, default='dfs', choices=['dfs', 'random'],
+                     type=str, default='dfs', choices=['dfs', 'random', 'allpairs-random'],
                      help='used test generation algorithm (default dfs)')
 parser.add_argument('--do-not-execute', action='store_true', default=False,
                     help='Do not execute generated tests with pybot command')
@@ -59,12 +60,20 @@ def main():
                              max_actions=args.actions_max,
                              to_state=args.to_state,
                              output=out,
-                             strategy=DepthFirstSearchStrategy if args.generation_algorithm == 'dfs' else RandomStrategy)
+                             strategy=_select_strategy(args.generation_algorithm))
     print 'generated %s' % output
     if not args.do_not_execute:
         print 'running generated tests with pybot'
         retcode = subprocess.call(['pybot', output])
         sys.exit(retcode)
+
+def _select_strategy(strategy):
+    if strategy == 'random':
+        return RandomStrategy
+    if strategy == 'dfs':
+        return DepthFirstSearchStrategy
+    if strategy == 'allpairs-random':
+        return AllPairsRandomStrategy
 
 if __name__ == '__main__':
     main()

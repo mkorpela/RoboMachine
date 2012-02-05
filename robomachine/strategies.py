@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import random
-
+import metacomm.combinatorics.all_pairs2 as all_pairs2
 
 class _Strategy(object):
 
@@ -63,22 +63,36 @@ class RandomStrategy(_Strategy):
 
     def tests(self):
         while True:
-            test = []
-            values = self._generate_variable_values()
-            self._machine.apply_variable_values(values)
-            current_state = self._machine.start_state
-            while self._max_actions > len(test) and current_state.actions:
-                action = random.choice(current_state.actions)
-                current_state = action.next_state
-                test.append(action)
-            while test and not self._matching_to_state(test):
-                test.pop()
+            test = self._generate_test(self._generate_variable_values())
             if not test and self._to_state and self._to_state != self._machine.start_state.name:
                 continue
             yield test, [v.current_value for v in self._machine.variables]
+
+    def _generate_test(self, values):
+        test = []
+        self._machine.apply_variable_values(values)
+        current_state = self._machine.start_state
+        while self._max_actions > len(test) and current_state.actions:
+            action = random.choice(current_state.actions)
+            current_state = action.next_state
+            test.append(action)
+        while test and not self._matching_to_state(test):
+            test.pop()
+        return test
 
     def _generate_variable_values(self):
         while True:
             candidate = [random.choice(v.values) for v in self._machine.variables]
             if self._machine.rules_are_ok(candidate):
                 return candidate
+
+
+class AllPairsRandomStrategy(RandomStrategy):
+
+    def tests(self):
+        for values in self._generate_all_pairs_variable_values():
+            yield self._generate_test(values), [v.current_value for v in self._machine.variables]
+
+    def _generate_all_pairs_variable_values(self):
+        return all_pairs2.all_pairs2([v.values for v in self._machine.variables])
+
