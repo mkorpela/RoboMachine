@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import os
+import subprocess
 import sys
 from parsing import RoboMachineParsingException
 
@@ -37,6 +38,8 @@ parser.add_argument('--actions-max', '-a',
 parser.add_argument('--generation-algorithm', '-g',
                      type=str, default='dfs', choices=['dfs', 'random'],
                      help='used test generation algorithm (default dfs)')
+parser.add_argument('--do-not-execute', action='store_true', default=False,
+                    help='Do not execute generated tests with pybot command')
 
 def main():
     args = parser.parse_args()
@@ -58,6 +61,10 @@ def main():
                              output=out,
                              strategy=DepthFirstSearchStrategy if args.generation_algorithm == 'dfs' else RandomStrategy)
     print 'generated %s' % output
+    if not args.do_not_execute:
+        print 'running generated tests with pybot'
+        retcode = subprocess.call(['pybot', output])
+        sys.exit(retcode)
 
 if __name__ == '__main__':
     main()
