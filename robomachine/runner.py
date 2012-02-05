@@ -22,7 +22,8 @@ import argparse
 from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy, AllPairsRandomStrategy
 
 
-parser = argparse.ArgumentParser(description='RoboMachine 0.5 - a test data generator for Robot Framework')
+parser = argparse.ArgumentParser(description='RoboMachine 0.5 - a test data generator for Robot Framework',
+                                 formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('input', type=str, help='input file')
 parser.add_argument('--output', '-o', type=str, default=None,
                     help='output file (default is input file with txt suffix)')
@@ -38,7 +39,12 @@ parser.add_argument('--actions-max', '-a',
                      help='maximum number of actions to generate (default 100)')
 parser.add_argument('--generation-algorithm', '-g',
                      type=str, default='dfs', choices=['dfs', 'random', 'allpairs-random'],
-                     help='used test generation algorithm (default dfs)')
+                     help='''\
+used test generation algorithm (default dfs)
+dfs = depth first search
+random = generate tests randomly
+allpairs-random = use all pairs strategy to generate test vectors from variables
+                  and use random strategy to select actions''')
 parser.add_argument('--do-not-execute', action='store_true', default=False,
                     help='Do not execute generated tests with pybot command')
 
