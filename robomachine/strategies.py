@@ -101,5 +101,11 @@ class AllPairsRandomStrategy(RandomStrategy):
             for var in self._machine.variables:
                 return [v for v in var.values if self._machine.rules_are_ok([v])]
             return [[]]
-        return all_pairs2.all_pairs2([v.values for v in self._machine.variables])
+        return all_pairs2.all_pairs2([v.values for v in self._machine.variables],
+                                    filter_func=self._filter_func)
+
+    def _filter_func(self, values):
+        if len(values) < len(self._machine.variables):
+            return True
+        return self._machine.rules_are_ok(values)
 
