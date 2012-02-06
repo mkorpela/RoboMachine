@@ -104,11 +104,18 @@ class AllPairsRandomStrategyTestCase(StrategyTestCase, unittest.TestCase):
     strategy_class = AllPairsRandomStrategy
 
     def test_generates_all_pairs(self):
-        variables = [Variable('${A}', [1,2,3]),
-                     Variable('${B}', [3,4,5]),
-                     Variable('${C}', [6,7,8])]
+        variables = [Variable('${A}', list('123')),
+                     Variable('${B}', list('345')),
+                     Variable('${C}', list('678'))]
         tests = list(AllPairsRandomStrategy(RoboMachine([State('s', [], [])], variables, []), 1, 's').tests())
         self.assertEqual(len(tests), 9)
+
+    def test_obeys_to_state(self):
+        # NOT APPLICABLE
+        pass
+
+    def test_all_pairs_obeys_rules(self):
+        self.fail('not implemented')
 
 if __name__ == '__main__':
     unittest.main()
