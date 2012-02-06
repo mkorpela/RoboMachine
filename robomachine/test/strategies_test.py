@@ -14,7 +14,7 @@
 
 import unittest
 from robomachine.model import RoboMachine, State, Action, Variable
-from robomachine.rules import Condition, AndRule, NotRule
+from robomachine.rules import *
 from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy, AllPairsRandomStrategy
 
 
@@ -117,7 +117,7 @@ class AllPairsRandomStrategyTestCase(StrategyTestCase, unittest.TestCase):
     def test_all_pairs_obeys_rules(self):
         variables = [Variable('${A}', list('123')),
                      Variable('${B}', list('456'))]
-        rules = [NotRule(AndRule([Condition('${A}', '1'), Condition('${B}', '4')]))]
+        rules = [OrRule([UnequalCondition('${A}', '1'), UnequalCondition('${B}', '4')])]
         tests = list(AllPairsRandomStrategy(RoboMachine([State('s', [], [])], variables, rules), 1, 's').tests())
         print tests
         self.assertEqual(len(tests), 8)
