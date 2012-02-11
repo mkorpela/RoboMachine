@@ -15,7 +15,7 @@
 import unittest
 from robomachine.model import RoboMachine, State, Action, Variable
 from robomachine.rules import *
-from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy, AllPairsRandomStrategy
+from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
 
 class StrategyTestCase(object):
@@ -99,28 +99,6 @@ class DepthFirstSearchStrategyTestCase(StrategyTestCase, unittest.TestCase):
 
 class RandomStrategyTestCase(StrategyTestCase, unittest.TestCase):
     strategy_class = RandomStrategy
-
-class AllPairsRandomStrategyTestCase(StrategyTestCase, unittest.TestCase):
-    strategy_class = AllPairsRandomStrategy
-
-    def test_generates_all_pairs(self):
-        variables = [Variable('${A}', list('123')),
-                     Variable('${B}', list('456')),
-                     Variable('${C}', list('789'))]
-        tests = list(AllPairsRandomStrategy(RoboMachine([State('s', [], [])], variables, []), 1, 's').tests())
-        self.assertEqual(len(tests), 9)
-
-    def test_obeys_to_state(self):
-        # NOT APPLICABLE
-        pass
-
-    def test_all_pairs_obeys_rules(self):
-        variables = [Variable('${A}', list('123')),
-                     Variable('${B}', list('456'))]
-        rules = [OrRule([UnequalCondition('${A}', '1'), UnequalCondition('${B}', '4')])]
-        tests = list(AllPairsRandomStrategy(RoboMachine([State('s', [], [])], variables, rules), 1, 's').tests())
-        print tests
-        self.assertEqual(len(tests), 8)
 
 if __name__ == '__main__':
     unittest.main()

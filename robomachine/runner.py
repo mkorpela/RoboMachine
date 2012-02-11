@@ -19,7 +19,7 @@ from parsing import RoboMachineParsingException
 import robomachine
 import argparse
 
-from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy, AllPairsRandomStrategy
+from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
 
 parser = argparse.ArgumentParser(description='RoboMachine 0.5 - a test data generator for Robot Framework',
@@ -42,9 +42,7 @@ parser.add_argument('--generation-algorithm', '-g',
                      help='''\
 used test generation algorithm (default dfs)
 dfs = depth first search
-random = generate tests randomly
-allpairs-random = use all pairs strategy to generate test vectors from variables
-                  and use random strategy to select actions''')
+random = generate tests randomly''')
 parser.add_argument('--do-not-execute', action='store_true', default=False,
                     help='Do not execute generated tests with pybot command')
 
@@ -78,8 +76,6 @@ def _select_strategy(strategy):
         return RandomStrategy
     if strategy == 'dfs':
         return DepthFirstSearchStrategy
-    if strategy == 'allpairs-random':
-        return AllPairsRandomStrategy
 
 if __name__ == '__main__':
     main()

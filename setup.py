@@ -17,5 +17,5 @@ setup(name='RoboMachine',
       packages=find_packages(),
       scripts = [os.path.join('scripts','robomachine'),
                  os.path.join('scripts','robomachine.bat')],
-      install_requires = ['pyparsing', 'argparse', 'robotframework', 'allpairs']
+      install_requires = ['pyparsing', 'argparse', 'robotframework']
      )
