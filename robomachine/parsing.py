@@ -65,20 +65,20 @@ not_rule = Literal('not ')+closed_rule
 not_rule.leaveWhitespace()
 not_rule.setParseAction(lambda t: [NotRule(t[1])])
 
-equivalence_rule = closed_rule +'  <==>  '+closed_rule
+equivalence_rule = closed_rule + splitter+'<==>'+splitter+closed_rule
 equivalence_rule.leaveWhitespace()
-equivalence_rule.setParseAction(lambda t: [EquivalenceRule(t[0], t[2])])
+equivalence_rule.setParseAction(lambda t: [EquivalenceRule(t[0], t[4])])
 
-implication_rule = closed_rule +'  ==>  '+closed_rule
+implication_rule = closed_rule + splitter +'==>'+splitter+closed_rule
 implication_rule.leaveWhitespace()
-implication_rule.setParseAction(lambda t: [ImplicationRule(t[0], t[2])])
+implication_rule.setParseAction(lambda t: [ImplicationRule(t[0], t[4])])
 
-and_rule = closed_rule+ZeroOrMore('  and  '+closed_rule)
-and_rule.setParseAction(lambda t: [AndRule([t[i] for i in range(len(t)) if i % 2 == 0])])
+and_rule = closed_rule+ZeroOrMore(splitter+'and'+splitter+closed_rule)
+and_rule.setParseAction(lambda t: [AndRule([t[i] for i in range(len(t)) if i % 4 == 0])])
 and_rule.leaveWhitespace()
 
-or_rule = closed_rule+ZeroOrMore('  or  '+closed_rule)
-or_rule.setParseAction(lambda t: [OrRule([t[i] for i in range(len(t)) if i % 2 == 0])])
+or_rule = closed_rule+ZeroOrMore(splitter+'or'+splitter+closed_rule)
+or_rule.setParseAction(lambda t: [OrRule([t[i] for i in range(len(t)) if i % 4 == 0])])
 or_rule.leaveWhitespace()
 
 rule << (not_rule ^ equivalence_rule ^ implication_rule ^ and_rule ^ or_rule ^ closed_rule)
@@ -89,11 +89,11 @@ step.setParseAction(lambda t: [t[0]])
 
 action_header = White(min=2)+'[Actions]'
 
-condition = Literal('  when  ')+rule
+condition = splitter+Literal('when')+splitter+rule
 condition = condition ^ Regex(r'  +otherwise')
 def parse_condition(cond):
-    if cond[0] == '  when  ':
-        return [cond[1]]
+    if len(cond) > 1:
+        return [cond[3]]
     return ['otherwise']
 
 condition.leaveWhitespace()
