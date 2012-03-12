@@ -146,9 +146,17 @@ machine.setWhitespaceChars(' ')
 class RoboMachineParsingException(Exception):
     pass
 
+def resolve_whitespace(text):
+    output_texts = []
+    for index, line in enumerate(text.splitlines()):
+        if '\t' in line:
+            print 'WARNING! tab detected on line [%d]: %r' % (index, line)
+        output_texts.append(line.rstrip())
+    return '\n'.join(output_texts).strip()+'\n'
+
 def parse(text):
     try:
-        return machine.parseString(text, parseAll=True)[0]
+        return machine.parseString(resolve_whitespace(text), parseAll=True)[0]
     except ParseBaseException, pe:
         print 'Exception at line %d' % pe.lineno
         print pe.msg
