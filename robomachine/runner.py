@@ -22,7 +22,7 @@ import argparse
 from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
 
-parser = argparse.ArgumentParser(description='RoboMachine 0.5 - a test data generator for Robot Framework',
+parser = argparse.ArgumentParser(description='RoboMachine 0.6 - a test data generator for Robot Framework',
                                  formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('input', type=str, help='input file')
 parser.add_argument('--output', '-o', type=str, default=None,
