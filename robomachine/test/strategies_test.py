@@ -15,8 +15,8 @@
 import unittest
 from robomachine.model import RoboMachine, State, Action, Variable
 from robomachine.rules import *
-from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy, AllPairsRandomStrategy
-
+from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
+from robomachine.allpairsstrategy import AllPairsRandomStrategy
 
 class StrategyTestCase(object):
 

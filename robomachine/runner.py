@@ -76,6 +76,15 @@ def _select_strategy(strategy):
         return RandomStrategy
     if strategy == 'dfs':
         return DepthFirstSearchStrategy
+    if strategy == 'allpairs-random':
+        try:
+            from robomachine.allpairsstrategy import AllPairsRandomStrategy
+            return AllPairsRandomStrategy
+        except ImportError:
+            print 'ERROR! allpairs-random strategy needs AllPairs module'
+            print 'please install it from Python Package Index'
+            print 'pip install allpairs'
+            raise
 
 if __name__ == '__main__':
     main()
