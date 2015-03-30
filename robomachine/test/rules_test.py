@@ -14,7 +14,10 @@
 import random
 
 import unittest
-from robomachine.rules import Condition, AndRule, EquivalenceRule, OrRule, NotRule, ImplicationRule, UnequalCondition
+from robomachine.rules import (Condition, AndRule, EquivalenceRule, OrRule,
+                               NotRule, ImplicationRule, UnequalCondition,
+                               GreaterThanCondition, GreaterThanOrEqualCondition,
+                               LessThanCondition, LessThanOrEqualCondition)
 
 
 class RulesTestCases(unittest.TestCase):
@@ -33,6 +36,30 @@ class RulesTestCases(unittest.TestCase):
         condition = UnequalCondition('${VARIABLE}', 'value')
         self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'value'}))
         self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'wrong value'}))
+
+    def test_greater_than_condition(self):
+        condition = GreaterThanCondition('${VARIABLE}', '1')
+        self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'0'}))
+        self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'1'}))
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'2'}))
+
+    def test_greater_than_or_equal_condition(self):
+        condition = GreaterThanOrEqualCondition('${VARIABLE}', '1')
+        self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'0'}))
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'1'}))
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'2'}))
+
+    def test_less_than_condition(self):
+        condition = LessThanCondition('${VARIABLE}', '1')
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'0'}))
+        self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'1'}))
+        self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'2'}))
+
+    def test_less_than_or_equal_condition(self):
+        condition = LessThanOrEqualCondition('${VARIABLE}', '1')
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'0'}))
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'1'}))
+        self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'2'}))
 
     def test_and_rule(self):
         self.assertTrue(AndRule([self._TRUE for _ in range(10)]).is_valid({}))

@@ -14,7 +14,10 @@
 
 from pyparsing import *
 from robomachine.model import RoboMachine, State, Action, Variable
-from robomachine.rules import AndRule, Condition, EquivalenceRule, OrRule, NotRule, ImplicationRule, UnequalCondition
+from robomachine.rules import (AndRule, Condition, EquivalenceRule, OrRule,
+                               NotRule, ImplicationRule, UnequalCondition,
+                               GreaterThanCondition, GreaterThanOrEqualCondition,
+                               LessThanCondition, LessThanOrEqualCondition)
 
 
 end_of_line = Regex(r' *\n') ^ LineEnd()
@@ -58,7 +61,23 @@ unequal_condition_rule = variable+' != '+variable_value
 unequal_condition_rule.setParseAction(lambda t: [UnequalCondition(t[0], t[2])])
 unequal_condition_rule.leaveWhitespace()
 
-closed_rule = condition_rule ^ unequal_condition_rule ^ ('('+rule+')')
+cond_gt_rule = variable+' > '+variable_value
+cond_gt_rule.setParseAction(lambda t: [GreaterThanCondition(t[0], t[2])])
+cond_gt_rule.leaveWhitespace()
+
+cond_ge_rule = variable+' >= '+variable_value
+cond_ge_rule.setParseAction(lambda t: [GreaterThanOrEqualCondition(t[0], t[2])])
+cond_ge_rule.leaveWhitespace()
+
+cond_lt_rule = variable+' < '+variable_value
+cond_lt_rule.setParseAction(lambda t: [LessThanCondition(t[0], t[2])])
+cond_lt_rule.leaveWhitespace()
+
+cond_le_rule = variable+' <= '+variable_value
+cond_le_rule.setParseAction(lambda t: [LessThanOrEqualCondition(t[0], t[2])])
+cond_le_rule.leaveWhitespace()
+
+closed_rule = condition_rule ^ unequal_condition_rule ^ cond_gt_rule ^ cond_ge_rule ^ cond_lt_rule ^ cond_le_rule ^ ('('+rule+')')
 closed_rule.setParseAction(lambda t: [t[1]] if len(t) == 3 else t)
 
 not_rule = Literal('not ')+closed_rule
