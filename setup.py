@@ -3,13 +3,14 @@
 from distutils.core import setup
 import os
 from setuptools import find_packages
+import robomachine
 
 name = 'Mikko Korpela'
 # I might be just a little bit too much afraid of those bots..
 address = name.lower().replace(' ', '.')+chr(64)+'gmail.com'
 
 setup(name='RoboMachine',
-      version='0.7',
+      version=robomachine.__version__,
       description='Test data generator for Robot Framework',
       author=name,
       author_email=address,
