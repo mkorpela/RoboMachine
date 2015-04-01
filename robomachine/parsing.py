@@ -108,7 +108,7 @@ actions = Optional(actions)
 actions.leaveWhitespace()
 actions.setResultsName('actions')
 
-comment = Regex(r'(^\s*\#[^\n]*\n)|(\s\s+\#[^\n]*(?=\n))')
+comment = Regex(r'(^\s*\#[^\n]*\n)|(\s\s+\#[^\n]*(?=\n))|(\n\s*\#[^\n]*)')
 comment.leaveWhitespace()
 
 steps = ZeroOrMore(step).setResultsName('steps')
