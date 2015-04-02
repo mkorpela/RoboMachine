@@ -132,9 +132,15 @@ machine = Optional(settings_table).setResultsName('settings_table')+\
           Optional(keywords_table).setResultsName('keywords_table')
 
 def create_robomachine(p):
+    # For some reason, p.rules contains only the _first_ rule. Work around it
+    # by finding rule elements based on their type.
+    def is_rule(obj):
+        return isinstance(obj, (EquivalenceRule, ImplicationRule, AndRule,
+                                OrRule, NotRule))
+    rules = [v for v in p if is_rule(v)]
     return RoboMachine(list(p.states),
                        list(p.variables),
-                       list(p.rules),
+                       rules,  # p.rules contains only first rule(!)
                        settings_table=p.settings_table,
                        variables_table=p.variables_table,
                        keywords_table=p.keywords_table)
