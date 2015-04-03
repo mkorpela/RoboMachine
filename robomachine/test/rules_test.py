@@ -17,7 +17,8 @@ import unittest
 from robomachine.rules import (Condition, AndRule, EquivalenceRule, OrRule,
                                NotRule, ImplicationRule, UnequalCondition,
                                GreaterThanCondition, GreaterThanOrEqualCondition,
-                               LessThanCondition, LessThanOrEqualCondition)
+                               LessThanCondition, LessThanOrEqualCondition,
+                               RegexCondition)
 
 
 class RulesTestCases(unittest.TestCase):
@@ -60,6 +61,12 @@ class RulesTestCases(unittest.TestCase):
         self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'0'}))
         self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'1'}))
         self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'2'}))
+
+    def test_regex_condition(self):
+        condition = RegexCondition('${VARIABLE}', '.*a')
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'abc'}))
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'bar'}))
+        self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'foo'}))
 
     def test_and_rule(self):
         self.assertTrue(AndRule([self._TRUE for _ in range(10)]).is_valid({}))
