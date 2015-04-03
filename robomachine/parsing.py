@@ -77,7 +77,13 @@ cond_le_rule = variable+' <= '+variable_value
 cond_le_rule.setParseAction(lambda t: [LessThanOrEqualCondition(t[0], t[2])])
 cond_le_rule.leaveWhitespace()
 
-closed_rule = condition_rule ^ unequal_condition_rule ^ cond_gt_rule ^ cond_ge_rule ^ cond_lt_rule ^ cond_le_rule ^ ('('+rule+')')
+cond_in_rule = (variable + ' in ' + Literal('(').suppress() +
+                variable_value + ZeroOrMore((Literal(',') + Optional(Literal(' '))).suppress() + variable_value) +
+                Literal(')').suppress())
+cond_in_rule.setParseAction(lambda t: [OrRule([Condition(t[0], t[i]) for i in range(2, len(t))])])
+cond_in_rule.leaveWhitespace()
+
+closed_rule = condition_rule ^ unequal_condition_rule ^ cond_gt_rule ^ cond_ge_rule ^ cond_lt_rule ^ cond_le_rule ^ cond_in_rule ^ ('('+rule+')')
 closed_rule.setParseAction(lambda t: [t[1]] if len(t) == 3 else t)
 
 not_rule = Literal('not ')+closed_rule
