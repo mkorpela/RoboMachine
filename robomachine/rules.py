@@ -88,3 +88,55 @@ class Condition(object):
 
 def UnequalCondition(variable_name, value):
     return NotRule(Condition(variable_name, value))
+
+
+class GreaterThanCondition(object):
+
+    def __init__(self, variable_name, value):
+        self._name = variable_name.strip()
+        self._value = value.strip()
+
+    def __str__(self):
+        return '%s > %s' % (self._name, self._value)
+
+    def is_valid(self, value_mapping):
+        return value_mapping[self._name].strip() > self._value.strip()
+
+
+class GreaterThanOrEqualCondition(object):
+
+    def __init__(self, variable_name, value):
+        self._name = variable_name.strip()
+        self._value = value.strip()
+
+    def __str__(self):
+        return '%s >= %s' % (self._name, self._value)
+
+    def is_valid(self, value_mapping):
+        return value_mapping[self._name].strip() >= self._value.strip()
+
+
+class LessThanCondition(object):
+
+    def __init__(self, variable_name, value):
+        self._name = variable_name.strip()
+        self._value = value.strip()
+
+    def __str__(self):
+        return '%s < %s' % (self._name, self._value)
+
+    def is_valid(self, value_mapping):
+        return value_mapping[self._name].strip() < self._value.strip()
+
+
+class LessThanOrEqualCondition(object):
+
+    def __init__(self, variable_name, value):
+        self._name = variable_name.strip()
+        self._value = value.strip()
+
+    def __str__(self):
+        return '%s <= %s' % (self._name, self._value)
+
+    def is_valid(self, value_mapping):
+        return value_mapping[self._name].strip() <= self._value.strip()

@@ -183,8 +183,14 @@ An example of a valid machine variable definition line::
     ${VALID_VARIABLE_1}  any of  Value 1  Value 2  Value 3
 
 Rules about the machine variables should be next. Rule building blocks:
-  * Variable condition:    ${VARIABLE} == value
-  * Variable unequal condition:   ${VARIABLE} != value
+  * Variable conditions:
+
+    - ${VARIABLE} == value
+    - ${VARIABLE} != value
+    - ${VARIABLE} <  value
+    - ${VARIABLE} <= value
+    - ${VARIABLE} >  value
+    - ${VARIABLE} >= value
   * And rule:             [some condition]  and  [some other condition]
   * Or rule:              [some condition]  or  [some other condition]
   * Not rule:             not ([some condition])
