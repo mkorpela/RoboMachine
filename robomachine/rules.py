@@ -155,3 +155,16 @@ class RegexCondition(object):
 
     def is_valid(self, value_mapping):
         return re.match(self._value.strip(), value_mapping[self._name].strip()) != None
+
+
+class RegexNegatedCondition(object):
+
+    def __init__(self, variable_name, value):
+        self._name = variable_name.strip()
+        self._value = value.strip()
+
+    def __str__(self):
+        return '%s !~ %s' % (self._name, self._value)
+
+    def is_valid(self, value_mapping):
+        return re.match(self._value.strip(), value_mapping[self._name].strip()) == None

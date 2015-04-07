@@ -18,7 +18,7 @@ from robomachine.rules import (AndRule, Condition, EquivalenceRule, OrRule,
                                NotRule, ImplicationRule, UnequalCondition,
                                GreaterThanCondition, GreaterThanOrEqualCondition,
                                LessThanCondition, LessThanOrEqualCondition,
-                               RegexCondition)
+                               RegexCondition, RegexNegatedCondition)
 
 
 end_of_line = Regex(r' *\n') ^ LineEnd()
@@ -88,7 +88,11 @@ cond_regex_rule = variable + ' ~ ' + delimitedList(Word(printables), delim=' ', 
 cond_regex_rule.setParseAction(lambda t: [RegexCondition(t[0], t[2])])
 cond_regex_rule.leaveWhitespace()
 
-closed_rule = condition_rule ^ unequal_condition_rule ^ cond_gt_rule ^ cond_ge_rule ^ cond_lt_rule ^ cond_le_rule ^ cond_in_rule ^ cond_regex_rule ^ ('('+rule+')')
+cond_regex_neg_rule = variable + ' !~ ' + delimitedList(Word(printables), delim=' ', combine=True)
+cond_regex_neg_rule.setParseAction(lambda t: [RegexNegatedCondition(t[0], t[2])])
+cond_regex_neg_rule.leaveWhitespace()
+
+closed_rule = condition_rule ^ unequal_condition_rule ^ cond_gt_rule ^ cond_ge_rule ^ cond_lt_rule ^ cond_le_rule ^ cond_in_rule ^ cond_regex_rule ^ cond_regex_neg_rule ^ ('('+rule+')')
 closed_rule.setParseAction(lambda t: [t[1]] if len(t) == 3 else t)
 
 not_rule = Literal('not ')+closed_rule
