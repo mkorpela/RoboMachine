@@ -154,7 +154,7 @@ class RegexCondition(object):
         return '%s ~ %s' % (self._name, self._value)
 
     def is_valid(self, value_mapping):
-        return re.match(self._value.strip(), value_mapping[self._name].strip()) != None
+        return re.search(self._value.strip(), value_mapping[self._name].strip()) != None
 
 
 class RegexNegatedCondition(object):
@@ -167,4 +167,4 @@ class RegexNegatedCondition(object):
         return '%s !~ %s' % (self._name, self._value)
 
     def is_valid(self, value_mapping):
-        return re.match(self._value.strip(), value_mapping[self._name].strip()) == None
+        return re.search(self._value.strip(), value_mapping[self._name].strip()) == None
