@@ -15,8 +15,9 @@ from StringIO import StringIO
 
 from parsing import parse
 from robomachine.strategies import DepthFirstSearchStrategy
+from version import VERSION
 
-__version__ = "0.7"
+__version__ = VERSION
 
 def _write_test(name, machine, output, test, values):
     output.write('\n%s\n' % name)
