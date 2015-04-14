@@ -12,6 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import re
+
 class EquivalenceRule(object):
 
     def __init__(self, condition1, condition2):
@@ -140,3 +142,29 @@ class LessThanOrEqualCondition(object):
 
     def is_valid(self, value_mapping):
         return value_mapping[self._name].strip() <= self._value.strip()
+
+
+class RegexCondition(object):
+
+    def __init__(self, variable_name, value):
+        self._name = variable_name.strip()
+        self._value = value.strip()
+
+    def __str__(self):
+        return '%s ~ %s' % (self._name, self._value)
+
+    def is_valid(self, value_mapping):
+        return re.search(self._value.strip(), value_mapping[self._name].strip()) != None
+
+
+class RegexNegatedCondition(object):
+
+    def __init__(self, variable_name, value):
+        self._name = variable_name.strip()
+        self._value = value.strip()
+
+    def __str__(self):
+        return '%s !~ %s' % (self._name, self._value)
+
+    def is_valid(self, value_mapping):
+        return re.search(self._value.strip(), value_mapping[self._name].strip()) == None

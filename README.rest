@@ -191,6 +191,9 @@ Rules about the machine variables should be next. Rule building blocks:
     - ${VARIABLE} <= value
     - ${VARIABLE} >  value
     - ${VARIABLE} >= value
+    - ${VARIABLE} in (a, b)  # short for ${VARIABLE} == a  or  ${VARIABLE} == b
+    - ${VARIABLE} ~ REGEX  # python regexp: re.search(REGEX, ${VARIABLE}) != None
+    - ${VARIABLE} !~ REGEX  # negated regexp match
   * And rule:             [some condition]  and  [some other condition]
   * Or rule:              [some condition]  or  [some other condition]
   * Not rule:             not ([some condition])

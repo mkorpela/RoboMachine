@@ -17,7 +17,8 @@ import unittest
 from robomachine.rules import (Condition, AndRule, EquivalenceRule, OrRule,
                                NotRule, ImplicationRule, UnequalCondition,
                                GreaterThanCondition, GreaterThanOrEqualCondition,
-                               LessThanCondition, LessThanOrEqualCondition)
+                               LessThanCondition, LessThanOrEqualCondition,
+                               RegexCondition, RegexNegatedCondition)
 
 
 class RulesTestCases(unittest.TestCase):
@@ -60,6 +61,18 @@ class RulesTestCases(unittest.TestCase):
         self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'0'}))
         self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'1'}))
         self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'2'}))
+
+    def test_regex_condition(self):
+        condition = RegexCondition('${VARIABLE}', '.*a')
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'abc'}))
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'bar'}))
+        self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'foo'}))
+
+    def test_regex_negated_condition(self):
+        condition = RegexNegatedCondition('${VARIABLE}', '.*a$')
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'foob'}))
+        self.assertTrue(condition.is_valid(value_mapping={'${VARIABLE}':'barb'}))
+        self.assertFalse(condition.is_valid(value_mapping={'${VARIABLE}':'fooa'}))
 
     def test_and_rule(self):
         self.assertTrue(AndRule([self._TRUE for _ in range(10)]).is_valid({}))
