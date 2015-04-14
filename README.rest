@@ -13,7 +13,7 @@ ATDD-, TDD- and exploratory testing?
 Those bugs that lurk in the corners of complexity of the system that you are building.
 Those bugs that will make users of your application hate you..
 
-This tool is here to help you seek and destroy those bugs before the users will find them.
+This tool is here to help you seek and destroy those bugs before users will find them.
 
 It gives you the ability to generate a huge number of tests that can go through
 a very vast number of similar (or not so similar) test scenarios.
