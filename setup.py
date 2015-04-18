@@ -3,14 +3,18 @@
 from distutils.core import setup
 import os
 from setuptools import find_packages
-import robomachine
+from os.path import dirname, abspath, join
 
 name = 'Mikko Korpela'
 # I might be just a little bit too much afraid of those bots..
 address = name.lower().replace(' ', '.')+chr(64)+'gmail.com'
 
+# Get version
+CURDIR = dirname(abspath(__file__))
+execfile(join(CURDIR, 'robomachine', 'version.py'))
+
 setup(name='RoboMachine',
-      version=robomachine.__version__,
+      version=VERSION,
       description='Test data generator for Robot Framework',
       author=name,
       author_email=address,
