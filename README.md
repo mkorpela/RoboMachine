@@ -63,7 +63,7 @@ Error Page
 Submit Credentials
   Input Text      ${USERNAME_FIELD}  ${USERNAME}
   Input Password  ${PASSWORD_FIELD}  ${PASSWORD}
-  Click Button  ${LOGIN_BUTTON}
+  Click Button    ${LOGIN_BUTTON}
 ```
 
 Here is another example machine (using model-based testing with finite state machine):
@@ -111,11 +111,15 @@ Submit Credentials
   [Arguments]     ${username}        ${password}
   Input Text      ${USERNAME_FIELD}  ${USERNAME}
   Input Password  ${PASSWORD_FIELD}  ${PASSWORD}
-  Click Button  ${LOGIN_BUTTON}
+  Click Button    ${LOGIN_BUTTON}
 ```
 
 NOTE! This machine can generate infinite number of test sequences thus you need to constraint the generation.
-For example: `robomachine --tests-max 10 --actions-max 20 --to-state 'Welcome Page' --generation-algorithm random` _[MACHINE_FILE_NAME]_ will generate 10 random tests with at most 20 actions each and all tests ending to state 'Welcome Page'.
+For example:
+
+    robomachine --tests-max 10 --actions-max 20 --to-state 'Welcome Page' --generation-algorithm random [MACHINE_FILE_NAME]
+
+will generate 10 random tests with at most 20 actions each and all tests ending to state 'Welcome Page'.
 
 ## Installation
 
