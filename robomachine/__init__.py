@@ -19,6 +19,7 @@ from version import VERSION
 
 __version__ = VERSION
 
+
 def _write_test(name, machine, output, test, values):
     output.write('\n%s\n' % name)
     if values:
@@ -26,6 +27,7 @@ def _write_test(name, machine, output, test, values):
     machine.start_state.write_to(output)
     for action in test:
         action.write_to(output)
+
 
 def _write_tests(machine, max_tests, max_actions, to_state, output, strategy_class):
     i = 1
@@ -43,6 +45,7 @@ def _write_tests(machine, max_tests, max_actions, to_state, output, strategy_cla
         _write_test('Test %d' % i, machine, output, test, values)
         i += 1
 
+
 def generate(machine, max_tests=1000, max_actions=None, to_state=None, output=None, strategy=DepthFirstSearchStrategy):
     max_actions = -1 if max_actions is None else max_actions
     machine.write_settings_table(output)
@@ -50,6 +53,7 @@ def generate(machine, max_tests=1000, max_actions=None, to_state=None, output=No
     output.write('*** Test Cases ***')
     _write_tests(machine, max_tests, max_actions, to_state, output, strategy)
     machine.write_keywords_table(output)
+
 
 def transform(text):
     output = StringIO()
