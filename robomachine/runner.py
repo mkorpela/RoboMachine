@@ -14,7 +14,7 @@
 import os
 import subprocess
 import sys
-from parsing import RoboMachineParsingException
+from robomachine.parsing import RoboMachineParsingException
 
 import robomachine
 import argparse
@@ -28,23 +28,24 @@ parser.add_argument('input', type=str, help='input file')
 parser.add_argument('--output', '-o', type=str, default=None,
                     help='output file (default is input file with txt suffix)')
 parser.add_argument('--tests-max', '-t',
-                     type=int, default=1000,
-                     help='maximum number of tests to generate (default 1000)')
+                    type=int, default=1000,
+                    help='maximum number of tests to generate (default 1000)')
 parser.add_argument('--to-state', '-T',
                     type=str, default=None,
                     help='State that all generated tests should end.\n'+\
                     'If none given all states are valid test end states')
 parser.add_argument('--actions-max', '-a',
-                     type=int, default=100,
-                     help='maximum number of actions to generate (default 100)')
+                    type=int, default=100,
+                    help='maximum number of actions to generate (default 100)')
 parser.add_argument('--generation-algorithm', '-g',
-                     type=str, default='dfs', choices=['dfs', 'random', 'allpairs-random'],
-                     help='''\
+                    type=str, default='dfs', choices=['dfs', 'random', 'allpairs-random'],
+                    help='''\
 used test generation algorithm (default dfs)
 dfs = depth first search
 random = generate tests randomly''')
 parser.add_argument('--do-not-execute', action='store_true', default=False,
                     help='Do not execute generated tests with pybot command')
+
 
 def main():
     args = parser.parse_args()
@@ -71,6 +72,7 @@ def main():
         retcode = subprocess.call(['pybot', output])
         sys.exit(retcode)
 
+
 def _select_strategy(strategy):
     if strategy == 'random':
         return RandomStrategy
@@ -85,6 +87,7 @@ def _select_strategy(strategy):
             print 'please install it from Python Package Index'
             print 'pip install allpairs'
             raise
+
 
 if __name__ == '__main__':
     main()

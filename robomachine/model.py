@@ -150,6 +150,7 @@ class Action(object):
             output.write('  %s\n' % self.name)
         self.next_state.write_to(output)
 
+
 class Variable(object):
     REGEX = r'\$\{[_A-Z][_A-Z0-9]*\}'
     PATTERN = re.compile(REGEX)
