@@ -12,13 +12,16 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import os
+import re
 import subprocess
 import sys
-from parsing import RoboMachineParsingException
+from robomachine.parsing import RoboMachineParsingException
+from robomachine.parsing import parse
 
 import robomachine
 import argparse
 
+from robomachine.generator import Generator
 from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
 
@@ -28,48 +31,133 @@ parser.add_argument('input', type=str, help='input file')
 parser.add_argument('--output', '-o', type=str, default=None,
                     help='output file (default is input file with txt suffix)')
 parser.add_argument('--tests-max', '-t',
-                     type=int, default=1000,
-                     help='maximum number of tests to generate (default 1000)')
+                    type=int, default=1000,
+                    help='maximum number of tests to generate (default 1000)')
 parser.add_argument('--to-state', '-T',
                     type=str, default=None,
                     help='State that all generated tests should end.\n'+\
                     'If none given all states are valid test end states')
 parser.add_argument('--actions-max', '-a',
-                     type=int, default=100,
-                     help='maximum number of actions to generate (default 100)')
+                    type=int, default=100,
+                    help='maximum number of actions to generate (default 100)')
 parser.add_argument('--generation-algorithm', '-g',
-                     type=str, default='dfs', choices=['dfs', 'random', 'allpairs-random'],
-                     help='''\
-used test generation algorithm (default dfs)
-dfs = depth first search
+                    type=str, default='dfs', choices=['dfs', 'random', 'allpairs-random'],
+                    help='''\
+Use test generation algorithm
+allpairs-random = generate tests randomly, use allpairs algorithm for parameter value selection
+dfs = depth first search  (default)
 random = generate tests randomly''')
 parser.add_argument('--do-not-execute', action='store_true', default=False,
                     help='Do not execute generated tests with pybot command')
+parser.add_argument('--generate-dot-graph', '-D',
+                    type=str, default='none', choices=['none', 'png', 'svg'],
+                    help='''\
+Generates a directional graph representing your test model. Select file format
+none - Do not generate a file (default)
+png  - bitmap
+svg  - vector''')
+
 
 def main():
     args = parser.parse_args()
+    generator = Generator()
+    strategy_class = _select_strategy(args.generation_algorithm)
+    all_states = set()
+    all_actions = set()
+
     if args.input.endswith('.txt') and not args.output:
         sys.exit('txt input not allowed when no output')
     try:
         with open(args.input, 'r') as inp:
-            machine = robomachine.parse(inp.read())
+            machine = parse(inp.read())
     except IOError, e:
         sys.exit(unicode(e))
     except RoboMachineParsingException, e:
         sys.exit(1)
-    output = args.output or os.path.splitext(args.input)[0]+'.txt'
-    with open(output, 'w') as out:
-        robomachine.generate(machine,
-                             max_tests=args.tests_max,
-                             max_actions=args.actions_max,
-                             to_state=args.to_state,
-                             output=out,
-                             strategy=_select_strategy(args.generation_algorithm))
-    print 'generated %s' % output
+
+    # File names:
+    output_base_name = os.path.splitext(args.output or args.input)[0]
+    output_test_file = output_base_name + ".robot"
+    output_dot_file = output_base_name + ".dot"
+
+    # Generate graph in dot format:
+    dot_graph = "digraph TestModel {\n"
+    #
+    # Nodes:
+    for state in machine.states:
+        all_states.add(state)
+        dot_graph += "  %s  [label=\"%s\"];\n" % (state.name.replace(' ', '_'), state.name)
+    #
+    # Transitions:
+    for state in machine.states:
+        for action in state._actions:
+            action._parent_state = state
+            all_actions.add(action)
+            action_name =  action.name if action.name != '' else '[tau]'
+            dot_graph += "  %s  -> %s  [label=\"%s\"];\n" % \
+                (state.name.replace(' ', '_'),
+                 action.next_state.name.replace(' ', '_'),
+                 re.sub('\s\s+', '  ', action_name))
+    dot_graph += "}\n"
+    #
+    # Write to STDOUT:
+    if args.generate_dot_graph != 'none':
+        print "-" * 80
+        print "Dot graph"
+        print "---------"
+        print dot_graph
+        print "-" * 80
+    #
+    # Write to file:
+    with open(output_dot_file, 'w') as out:
+        out.write(dot_graph)
+    try:
+        retcode = subprocess.call(['dot', '-O', '-T' + args.generate_dot_graph, output_dot_file])
+    except OSError:
+        retcode = -1
+    if retcode == 0:
+        print 'Generated dot files: %s, %s.%s' % (output_dot_file, output_dot_file, args.generate_dot_graph)
+    else:
+        print "ERROR: Something went wrong during the dot file generation!\n" + \
+              "       Maybe you haven't yet installed the dot tool?"
+
+    # Generate tests:
+    with open(output_test_file, 'w') as out:
+        generator.generate(machine,
+                           max_tests=args.tests_max,
+                           max_actions=args.actions_max,
+                           to_state=args.to_state,
+                           output=out,
+                           strategy=strategy_class)
+    print 'Generated test file: %s' % output_test_file
+
+    # Coverage information:
+    print "-" * 80
+    print "Covered states:"
+    for state in generator._visited_states:
+        print "    %s" % state.name
+    print "\nCovered actions:"
+    for action in generator._visited_actions:
+        action_name =  action.name if action.name != '' else '[tau]'
+        print "    %s  (%s -> %s)" % (action_name, action._parent_state.name, action.next_state.name)
+    print "\n"
+
+    print "Uncovered states:"
+    for state in all_states.difference(generator._visited_states):
+        print "    %s" % state.name
+    print "\nUncovered actions:"
+    for action in all_actions.difference(generator._visited_actions):
+        action_name =  action.name if action.name != '' else '[tau]'
+        print "    %s  (%s -> %s)" % (action_name, action._parent_state.name, action.next_state.name)
+    print
+    print "-" * 80
+
+    # Run tests:
     if not args.do_not_execute:
-        print 'running generated tests with pybot'
-        retcode = subprocess.call(['pybot', output])
+        print 'Running generated tests with pybot'
+        retcode = subprocess.call(['pybot', output_test_file])
         sys.exit(retcode)
+
 
 def _select_strategy(strategy):
     if strategy == 'random':
@@ -85,6 +173,7 @@ def _select_strategy(strategy):
             print 'please install it from Python Package Index'
             print 'pip install allpairs'
             raise
+
 
 if __name__ == '__main__':
     main()

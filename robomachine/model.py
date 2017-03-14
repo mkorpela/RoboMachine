@@ -124,6 +124,7 @@ class Action(object):
 
     def __init__(self, name, next_state, condition=None):
         self.name = name
+        self._parent_state = None
         self._next_state_name = next_state
         self.condition = condition
 
@@ -149,6 +150,7 @@ class Action(object):
         if self.name:
             output.write('  %s\n' % self.name)
         self.next_state.write_to(output)
+
 
 class Variable(object):
     REGEX = r'\$\{[_A-Z][_A-Z0-9]*\}'

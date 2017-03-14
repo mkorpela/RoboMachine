@@ -3,3 +3,5 @@ atest/*.txt
 log.html
 output.xml
 report.html
+env/
+.idea
