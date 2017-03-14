@@ -124,6 +124,7 @@ class Action(object):
 
     def __init__(self, name, next_state, condition=None):
         self.name = name
+        self._parent_state = None
         self._next_state_name = next_state
         self.condition = condition
 
