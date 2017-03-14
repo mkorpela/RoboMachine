@@ -1,0 +1,55 @@
+*** Settings ***
+Library         KeywordLibrary.py
+Test Setup      go to   Init
+
+
+*** Variables ***
+${VALID_USERNAME}  My Name
+${VALID_PASSWORD}  mypassword
+
+
+*** Machine ***
+${USERNAME}  any of  ${VALID_USERNAME}  ${VALID_PASSWORD}  invalid123  ${EMPTY}
+${PASSWORD}  any of  ${VALID_PASSWORD}  ${VALID_USERNAME}  password123  ${EMPTY}
+${BROWSER}   any of  Safari    Chrome    Firefox    Edge
+
+
+# Add an equivalence rule to reduce the number of generated tests.
+# N.B: Such rules can't be used with allpairs-random strategy!
+# ${USERNAME} == ${VALID_PASSWORD}  <==>  ${PASSWORD} == ${VALID_USERNAME}
+
+
+Init
+  start browser             ${BROWSER}
+  [Actions]
+    go to   Login Page      ==>  Login Page
+
+Login Page
+  assert page title is      Please log in!
+  [Actions]
+    submit credentials      ==>  Welcome Page  when  ${USERNAME} == ${VALID_USERNAME}  and  ${PASSWORD} == ${VALID_PASSWORD}
+    submit credentials      ==>  Error Page    otherwise
+
+Welcome Page
+  assert page title is      This is the welcome page!
+  [Actions]
+    go to profile page      ==>  Profile Page
+    click log out button    ==>  Login Page
+
+Profile Page
+  assert page title is      Hello, ${USERNAME}!
+  [Actions]
+    exit profile page       ==>  Welcome Page
+
+Error Page
+  assert page title is      Oops, something went wrong!
+  [Actions]
+    exit error page         ==>  Login Page
+
+
+*** Keywords ***
+submit credentials
+  enter username  ${USERNAME}
+  enter password  ${PASSWORD}
+  click login button
+
