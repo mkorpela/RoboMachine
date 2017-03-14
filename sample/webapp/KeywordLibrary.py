@@ -6,13 +6,14 @@ It it built for educational purposes and it merely mimics responses from a real 
 from robot.api import logger
 
 
+
 class KeywordLibrary(object):
     """
     This is the implementation of the keywords used in the robomachine test
     """
     def __init__(self):
         self._browser = None
-        self._url = None
+        self._state = None
         self._name = None
         self._password = None
         self.change_state('Login Page')
@@ -20,11 +21,19 @@ class KeywordLibrary(object):
     #
     # ASSERTS
     #
+    def assert_state_is(self, state):
+        """Asserts the page title"""
+        if state != self._state:
+            raise Exception('Wrong state! The state is `%s`, expected `%s`.' % \
+                (self._state, state))
+        else:
+            logger.info('State: `%s`' % self._state)
+
     def assert_page_title_is(self, title):
         """Asserts the page title"""
         if title != self._page_title:
             raise Exception('Wrong page! The title at page `%s` was `%s`, expected `%s`.' % \
-                (self._url, title, self._page_title))
+                (self._state, self._page_title, title))
         else:
             logger.info('Page title: `%s`' % self._page_title)
 
@@ -33,9 +42,6 @@ class KeywordLibrary(object):
     #
     def click_login_button(self):
         """Execute the login"""
-        # if self._browser == 'Edge':
-        #     # Simulate an error when using the Edge browser
-        #     return
         if self._name == 'My Name' and self._password == 'mypassword':
             self.change_state('Welcome Page')
         else:
@@ -75,21 +81,21 @@ class KeywordLibrary(object):
         elif new_state == 'Error Page':
             self._page_title = 'Oops, something went wrong!'
 
-        self._url = new_state
+        self._state = new_state
         logger.info('Changed state to `%s`' % new_state)
 
-    def exit_error_page(self):
-        """Close the error page and go to the login page"""
-        self.change_state('Login Page')
+    def exit_page(self):
+        """Exit current page and change state"""
+        if self._state == 'Error Page':
+            self.change_state('Login Page')
 
-    def exit_profile_page(self):
-        """Close the profile page and go to the welcome page"""
-        self.change_state('Welcome Page')
+        elif self._state == 'Profile Page':
+            self.change_state('Welcome Page')
 
-    def go_to(self, url):
-        """Change page"""
-        self._url = url
+    def go_to(self, state):
+        """Change state"""
+        self.change_state(state)
 
-    def go_to_profile_page(self):
-        """Navigate to the profile page"""
-        self.change_state('Profile Page')
+
+
+
