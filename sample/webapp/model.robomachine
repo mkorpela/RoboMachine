@@ -9,9 +9,9 @@ ${VALID_PASSWORD}  mypassword
 
 
 *** Machine ***
-${USERNAME}  any of  ${VALID_USERNAME}  ${VALID_PASSWORD}  invalid123  ${EMPTY}
-${PASSWORD}  any of  ${VALID_PASSWORD}  ${VALID_USERNAME}  password123  ${EMPTY}
-${BROWSER}   any of  Safari    Chrome    Firefox    Edge
+${USERNAME}    any of    ${VALID_USERNAME}  ${VALID_PASSWORD}  invalid123  ${EMPTY}
+${PASSWORD}    any of    ${VALID_PASSWORD}  ${VALID_USERNAME}  password123  ${EMPTY}
+${BROWSER}     any of    Safari    Chrome    Firefox
 
 
 # Add an equivalence rule to reduce the number of generated tests.
@@ -21,30 +21,35 @@ ${BROWSER}   any of  Safari    Chrome    Firefox    Edge
 
 Init
   start browser             ${BROWSER}
+  assert state is           Init
   [Actions]
     go to   Login Page      ==>  Login Page
 
 Login Page
+  assert state is           Login Page
   assert page title is      Please log in!
   [Actions]
     submit credentials      ==>  Welcome Page  when  ${USERNAME} == ${VALID_USERNAME}  and  ${PASSWORD} == ${VALID_PASSWORD}
     submit credentials      ==>  Error Page    otherwise
 
 Welcome Page
+  assert state is           Welcome Page
   assert page title is      This is the welcome page!
   [Actions]
-    go to profile page      ==>  Profile Page
+    go to   Profile Page    ==>  Profile Page
     click log out button    ==>  Login Page
 
 Profile Page
+  assert state is           Profile Page
   assert page title is      Hello, ${USERNAME}!
   [Actions]
-    exit profile page       ==>  Welcome Page
+    exit page               ==>  Welcome Page
 
 Error Page
+  assert state is           Error Page
   assert page title is      Oops, something went wrong!
   [Actions]
-    exit error page         ==>  Login Page
+    exit page               ==>  Login Page
 
 
 *** Keywords ***
