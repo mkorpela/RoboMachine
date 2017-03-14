@@ -19,6 +19,8 @@ class _Strategy(object):
         self._machine = machine
         self._max_actions = max_actions
         self._to_state = to_state
+        self._visited_states = set()
+        self._visited_actions = set()
         assert not to_state or self._machine.find_state_by_name(to_state)
 
     def _matching_to_state(self, test):
@@ -52,6 +54,10 @@ class DepthFirstSearchStrategy(_Strategy):
             at_least_one_generated = False
             for action in state.actions:
                 for test in self._generate_all_from(action.next_state, max_actions-1):
+                    action._parent_state = state
+                    self._visited_actions.add(action)
+                    self._visited_states.add(state)
+                    self._visited_states.add(action.next_state)
                     at_least_one_generated = True
                     yield [action]+test
             if not at_least_one_generated and self._to_state == state.name:
@@ -73,6 +79,10 @@ class RandomStrategy(_Strategy):
         current_state = self._machine.start_state
         while self._max_actions > len(test) and current_state.actions:
             action = random.choice(current_state.actions)
+            action._parent_state = current_state
+            self._visited_actions.add(action)
+            self._visited_states.add(current_state)
+            self._visited_states.add(action.next_state)
             current_state = action.next_state
             test.append(action)
         while test and not self._matching_to_state(test):
