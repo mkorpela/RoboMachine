@@ -1,15 +1,13 @@
-"""
-The keyword library for the sample webapp.
-
-It it built for educational purposes and it merely mimics responses from a real application.
-"""
 from robot.api import logger
-
 
 
 class KeywordLibrary(object):
     """
-    This is the implementation of the keywords used in the robomachine test
+    This is the implementation of the keywords used in the robomachine test.
+
+    The keywords mimic the behavior of a real application and is intended to
+    be used for educational purposes. Insert errors and re-run the tests
+    to see what happens!
     """
     def __init__(self):
         self._browser = None
