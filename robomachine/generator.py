@@ -51,7 +51,8 @@ class Generator(object):
         self._visited_states = strategy_class._visited_states
 
 
-    def generate(self, machine, max_tests=1000, max_actions=None, to_state=None, output=None, strategy=DepthFirstSearchStrategy):
+    def generate(self, machine, max_tests=1000, max_actions=None, to_state=None, output=None,
+                 strategy=DepthFirstSearchStrategy):
         max_actions = -1 if max_actions is None else max_actions
         machine.write_settings_table(output)
         machine.write_variables_table(output)

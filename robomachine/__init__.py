@@ -11,8 +11,14 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-from StringIO import StringIO
 
 from robomachine.version import VERSION
+from generator import Generator, DepthFirstSearchStrategy
+
 
 __version__ = VERSION
+
+def generate(machine, max_tests=1000, max_actions=None, to_state=None, output=None,
+    strategy=DepthFirstSearchStrategy):
+    generator = Generator()
+    return generator.generate(machine, max_tests, max_actions, to_state, output, strategy)
