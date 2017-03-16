@@ -1,6 +1,38 @@
 from robot.api import logger
+from random import random
 
 
+# Error-inducing decorators
+def fail_every_nth_time(count):
+    def decorator(fn):
+        def inner(*args, **kwargs):
+            inner._count += 1
+            if inner._count % count == 0:
+                logger.warn('`%s` failed on call count' % fn.__name__)
+                inner._count = 0
+            else:
+                fn(*args, **kwargs)
+            return inner
+        inner._count = 0
+        inner.__name__= fn.__name__
+        return inner
+    return decorator
+
+
+def failure_probability(prob):
+    def decorator(fn):
+        def inner(*args, **kwargs):
+            if random() <= prob:
+                logger.warn('`%s` random failure' % fn.__name__)
+            else:
+                fn(*args, **kwargs)
+            return inner
+        inner.__name__= fn.__name__
+        return inner
+    return decorator
+
+
+# The actual keyword library
 class KeywordLibrary(object):
     """
     This is the implementation of the keywords used in the robomachine test.
@@ -68,6 +100,8 @@ class KeywordLibrary(object):
     def change_state(self, new_state):
         """Set page titles according to current page"""
         if new_state == 'Login Page':
+            self._name = ''
+            self._password = ''
             self._page_title = 'Please log in!'
 
         elif new_state == 'Welcome Page':
@@ -93,7 +127,3 @@ class KeywordLibrary(object):
     def go_to(self, state):
         """Change state"""
         self.change_state(state)
-
-
-
-
