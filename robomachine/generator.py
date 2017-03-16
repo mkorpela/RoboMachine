@@ -10,8 +10,7 @@
 #  distributed under the License is distributed on an "AS IS" BASIS,
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
-#  limitations under the License.
-from StringIO import StringIO
+#  limitations under the License.from StringIO import StringIO
 
 from robomachine.parsing import parse
 from robomachine.strategies import DepthFirstSearchStrategy
@@ -52,7 +51,8 @@ class Generator(object):
         self._visited_states = strategy_class._visited_states
 
 
-    def generate(self, machine, max_tests=1000, max_actions=None, to_state=None, output=None, strategy=DepthFirstSearchStrategy):
+    def generate(self, machine, max_tests=1000, max_actions=None, to_state=None, output=None,
+                 strategy=DepthFirstSearchStrategy):
         max_actions = -1 if max_actions is None else max_actions
         machine.write_settings_table(output)
         machine.write_variables_table(output)

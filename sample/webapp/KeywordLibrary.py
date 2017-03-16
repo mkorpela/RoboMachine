@@ -1,15 +1,97 @@
 """
-The keyword library for the sample webapp.
-
-It it built for educational purposes and it merely mimics responses from a real application.
+This is the keyword library for the webapp sample application
 """
 from robot.api import logger
+from random import random
+
+from robot.libraries.BuiltIn import BuiltIn
+
+# Error-inducing decorators
+def fail_every_nth_time(count):
+    """
+    This decorator will skip the decorated function every n-th time it is called.
+
+    *Usage example:*
+
+        @fail_every_nth_time(12)
+        def my_func(*args):
+            ...
+
+    """
+    def decorator(fn):
+        def inner(*args, **kwargs):
+            inner._count += 1
+            if inner._count % count == 0:
+                logger.warn('`%s` failed on call count' % fn.__name__)
+                inner._count = 0
+            else:
+                fn(*args, **kwargs)
+            return inner
+        inner._count = 0
+        inner.__name__= fn.__name__
+        return inner
+    return decorator
 
 
+def failure_probability(prob):
+    """
+    This decorator will skip the decorated function based on the supplied
+    probability of failure [0..1]
 
+    *Usage example:*
+
+        @failure_probability(0.25)
+        def my_func(*args):
+            ...
+
+    Will skip the function on average 25% of the times it is called
+    """
+    def decorator(fn):
+        def inner(*args, **kwargs):
+            if random() <= prob:
+                logger.warn('`%s` random failure' % fn.__name__)
+            else:
+                fn(*args, **kwargs)
+            return inner
+        inner.__name__= fn.__name__
+        return inner
+    return decorator
+
+def fail_on_config(bad_configs):
+    """
+    This decorator will skip the decorated function if the supplied dictionary is a subset
+    of the available RobotFramework variables.
+
+    *Usage example:*
+
+        @fail_on_config('${USERNAME}', 'monkey')
+        @fail_on_config('${CITY}', 'New York')
+        def my_func(*args):
+            ...
+
+    Will skip the function if ${USERNAME} is 'monkey' or if ${CITY} is 'New York'
+    """
+    def decorator(fn):
+        def inner(*args, **kwargs):
+            vars = BuiltIn().get_variables()
+            if dict(vars, **bad_configs) == dict(vars):
+                logger.warn('`%s` configuration specific failure' % fn.__name__)
+            else:
+                fn(*args, **kwargs)
+            return inner
+        inner.__name__= fn.__name__
+        return inner
+    return decorator
+
+
+# The actual keyword library
 class KeywordLibrary(object):
     """
-    This is the implementation of the keywords used in the robomachine test
+    This is the implementation of the keywords used in the robomachine test.
+
+    The keywords mimic the behavior of a real application and is intended to
+    be used for educational purposes. Insert errors and re-run the tests
+    to see what happens!
     """
     def __init__(self):
         self._browser = None
@@ -62,6 +144,7 @@ class KeywordLibrary(object):
         logger.info('User name = `%s`' % name)
 
     def start_browser(self, browser):
+        """Emulate a browser start"""
         self._browser = browser
 
     #
@@ -70,6 +153,8 @@ class KeywordLibrary(object):
     def change_state(self, new_state):
         """Set page titles according to current page"""
         if new_state == 'Login Page':
+            self._name = ''
+            self._password = ''
             self._page_title = 'Please log in!'
 
         elif new_state == 'Welcome Page':
@@ -95,7 +180,3 @@ class KeywordLibrary(object):
     def go_to(self, state):
         """Change state"""
         self.change_state(state)
-
-
-
-
