@@ -11,7 +11,7 @@ ${VALID_PASSWORD}  mypassword
 *** Machine ***
 ${USERNAME}    any of    ${VALID_USERNAME}  ${VALID_PASSWORD}  invalid123  ${EMPTY}
 ${PASSWORD}    any of    ${VALID_PASSWORD}  ${VALID_USERNAME}  password123  ${EMPTY}
-${BROWSER}     any of    Safari    Chrome    Firefox
+${BROWSER}     any of    Safari    Chrome    Firefox    Edge
 
 
 # Add an equivalence rule to reduce the number of generated tests.

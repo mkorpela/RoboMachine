@@ -1,9 +1,23 @@
+"""
+This is the keyword library for the webapp sample application
+"""
 from robot.api import logger
 from random import random
 
+from robot.libraries.BuiltIn import BuiltIn
 
 # Error-inducing decorators
 def fail_every_nth_time(count):
+    """
+    This decorator will skip the decorated function every n-th time it is called.
+
+    *Usage example:*
+
+        @fail_every_nth_time(12)
+        def my_func(*args):
+            ...
+
+    """
     def decorator(fn):
         def inner(*args, **kwargs):
             inner._count += 1
@@ -20,10 +34,48 @@ def fail_every_nth_time(count):
 
 
 def failure_probability(prob):
+    """
+    This decorator will skip the decorated function based on the supplied
+    probability of failure [0..1]
+
+    *Usage example:*
+
+        @failure_probability(0.25)
+        def my_func(*args):
+            ...
+
+    Will skip the function on average 25% of the times it is called
+    """
     def decorator(fn):
         def inner(*args, **kwargs):
             if random() <= prob:
                 logger.warn('`%s` random failure' % fn.__name__)
+            else:
+                fn(*args, **kwargs)
+            return inner
+        inner.__name__= fn.__name__
+        return inner
+    return decorator
+
+def fail_on_config(bad_configs):
+    """
+    This decorator will skip the decorated function if the supplied dictionary is a subset
+    of the available RobotFramework variables.
+
+    *Usage example:*
+
+        @fail_on_config('${USERNAME}', 'monkey')
+        @fail_on_config('${CITY}', 'New York')
+        def my_func(*args):
+            ...
+
+    Will skip the function if ${USERNAME} is 'monkey' or if ${CITY} is 'New York'
+    """
+    def decorator(fn):
+        def inner(*args, **kwargs):
+            vars = BuiltIn().get_variables()
+            if dict(vars, **bad_configs) == dict(vars):
+                logger.warn('`%s` configuration specific failure' % fn.__name__)
             else:
                 fn(*args, **kwargs)
             return inner
@@ -92,6 +144,7 @@ class KeywordLibrary(object):
         logger.info('User name = `%s`' % name)
 
     def start_browser(self, browser):
+        """Emulate a browser start"""
         self._browser = browser
 
     #
