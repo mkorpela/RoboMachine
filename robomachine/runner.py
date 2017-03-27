@@ -11,6 +11,8 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+from __future__ import print_function
+
 import os
 import re
 import subprocess
@@ -70,23 +72,23 @@ def main():
     try:
         with open(args.input, 'r') as inp:
             machine = parse(inp.read())
-    except IOError, e:
+    except IOError as e:
         sys.exit(unicode(e))
-    except RoboMachineParsingException, e:
+    except RoboMachineParsingException as e:
         sys.exit(1)
 
     # File names:
     output_base_name = os.path.splitext(args.output or args.input)[0]
-    output_test_file = output_base_name + ".robot"
-    output_dot_file = output_base_name + ".dot"
+    output_test_file = output_base_name + '.robot'
+    output_dot_file = output_base_name + '.dot'
 
     # Generate graph in dot format:
-    dot_graph = "digraph TestModel {\n"
+    dot_graph = 'digraph TestModel {\n'
     #
     # Nodes:
     for state in machine.states:
         all_states.add(state)
-        dot_graph += "  %s  [label=\"%s\"];\n" % (state.name.replace(' ', '_'), state.name)
+        dot_graph += '  %s  [label=\"%s\"];\n' % (state.name.replace(' ', '_'), state.name)
     #
     # Transitions:
     for state in machine.states:
@@ -94,19 +96,19 @@ def main():
             action._parent_state = state
             all_actions.add(action)
             action_name =  action.name if action.name != '' else '[tau]'
-            dot_graph += "  %s  -> %s  [label=\"%s\"];\n" % \
+            dot_graph += '  %s  -> %s  [label="%s"];\n' % \
                 (state.name.replace(' ', '_'),
                  action.next_state.name.replace(' ', '_'),
                  re.sub('\s\s+', '  ', action_name))
-    dot_graph += "}\n"
+    dot_graph += '}\n'
     #
     # Write to STDOUT:
     if args.generate_dot_graph != 'none':
-        print "-" * 80
-        print "Dot graph"
-        print "---------"
-        print dot_graph
-        print "-" * 80
+        print('-' * 80)
+        print('Dot graph')
+        print('---------')
+        print(dot_graph)
+        print('-' * 80)
     #
     # Write to file:
     with open(output_dot_file, 'w') as out:
@@ -116,10 +118,10 @@ def main():
     except OSError:
         retcode = -1
     if retcode == 0:
-        print 'Generated dot files: %s, %s.%s' % (output_dot_file, output_dot_file, args.generate_dot_graph)
+        print('Generated dot files: %s, %s.%s' % (output_dot_file, output_dot_file, args.generate_dot_graph))
     else:
-        print "ERROR: Something went wrong during the dot file generation!\n" + \
-              "       Maybe you haven't yet installed the dot tool?"
+        print('ERROR: Something went wrong during the dot file generation!\n' +
+              '       Maybe you haven\'t yet installed the dot tool?')
 
     # Generate tests:
     with open(output_test_file, 'w') as out:
@@ -129,32 +131,32 @@ def main():
                            to_state=args.to_state,
                            output=out,
                            strategy=strategy_class)
-    print 'Generated test file: %s' % output_test_file
+    print('Generated test file: %s' % output_test_file)
 
     # Coverage information:
-    print "-" * 80
-    print "Covered states:"
+    print('-' * 80)
+    print('Covered states:')
     for state in generator._visited_states:
-        print "    %s" % state.name
-    print "\nCovered actions:"
+        print('    %s' % state.name)
+    print('\nCovered actions:')
     for action in generator._visited_actions:
         action_name =  action.name if action.name != '' else '[tau]'
-        print "    %s  (%s -> %s)" % (action_name, action._parent_state.name, action.next_state.name)
-    print "\n"
+        print('    %s  (%s -> %s)' % (action_name, action._parent_state.name, action.next_state.name))
+    print('\n')
 
-    print "Uncovered states:"
+    print('Uncovered states:')
     for state in all_states.difference(generator._visited_states):
-        print "    %s" % state.name
-    print "\nUncovered actions:"
+        print('    %s' % state.name)
+    print('\nUncovered actions:')
     for action in all_actions.difference(generator._visited_actions):
         action_name =  action.name if action.name != '' else '[tau]'
-        print "    %s  (%s -> %s)" % (action_name, action._parent_state.name, action.next_state.name)
-    print
-    print "-" * 80
+        print('    %s  (%s -> %s)' % (action_name, action._parent_state.name, action.next_state.name))
+    print()
+    print('-' * 80)
 
     # Run tests:
     if not args.do_not_execute:
-        print 'Running generated tests with pybot'
+        print('Running generated tests with pybot')
         retcode = subprocess.call(['pybot', output_test_file])
         sys.exit(retcode)
 
@@ -169,9 +171,9 @@ def _select_strategy(strategy):
             from robomachine.allpairsstrategy import AllPairsRandomStrategy
             return AllPairsRandomStrategy
         except ImportError:
-            print 'ERROR! allpairs-random strategy needs AllPairs module'
-            print 'please install it from Python Package Index'
-            print 'pip install allpairs'
+            print('ERROR! allpairs-random strategy needs AllPairs module')
+            print('please install it from Python Package Index')
+            print('pip install allpairs')
             raise
 
 
