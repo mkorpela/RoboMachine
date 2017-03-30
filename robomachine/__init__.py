@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from robomachine.version import VERSION
-from generator import Generator, DepthFirstSearchStrategy
+from robomachine.generator import Generator, DepthFirstSearchStrategy
 
 
 __version__ = VERSION
