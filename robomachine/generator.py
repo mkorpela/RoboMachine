@@ -12,6 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.from StringIO import StringIO
 
+from __future__ import print_function
+
 from robomachine.parsing import parse
 from robomachine.strategies import DepthFirstSearchStrategy
 
@@ -37,8 +39,8 @@ class Generator(object):
         strategy_class = strategy(machine, max_actions, to_state)
         for test, values in strategy_class.tests():
             if i + skipped > max_tests:
-                print '--tests-max generation try limit (%d) reached with (%d) tests generated' % \
-                    (max_tests, i - 1)
+                print('--tests-max generation try limit (%d) reached with (%d) tests generated' %
+                    (max_tests, i - 1))
                 break
             if (tuple(test), tuple(values)) in generated_tests:
                 skipped += 1
