@@ -26,6 +26,8 @@ import argparse
 from robomachine.generator import Generator
 from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
+if sys.version_info >= (3,0):
+    unicode = str
 
 parser = argparse.ArgumentParser(description='RoboMachine %s - a test data generator for Robot Framework' % robomachine.__version__,
                                  formatter_class=argparse.RawTextHelpFormatter)
