@@ -17,6 +17,11 @@ from __future__ import print_function
 from robomachine.parsing import parse
 from robomachine.strategies import DepthFirstSearchStrategy
 
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 
 class Generator(object):
     def __init__(self):
