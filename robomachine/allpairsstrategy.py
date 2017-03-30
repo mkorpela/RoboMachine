@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import metacomm.combinatorics.all_pairs2 as all_pairs2
-from strategies import RandomStrategy
+from robomachine.strategies import RandomStrategy
 
 
 class AllPairsRandomStrategy(RandomStrategy):
