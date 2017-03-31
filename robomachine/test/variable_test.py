@@ -12,7 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except:
+    from io import StringIO
+
 import unittest
 from robomachine import parsing
 import robomachine
@@ -37,7 +41,7 @@ class VariableParsingTestCases(unittest.TestCase):
         try:
             parsing.variable.parseString(var_name)
             self.fail('Should not parse invalid variable name "%s"' % var_name)
-        except pyparsing.ParseException, e:
+        except pyparsing.ParseException as e:
             pass
 
     def test_variable_definition_parsing(self):
