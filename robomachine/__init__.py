@@ -17,7 +17,7 @@ try:
 except:
     from io import StringIO
 
-from parsing import parse
+from robomachine.parsing import parse
 
 from robomachine.version import VERSION
 from robomachine.generator import Generator, DepthFirstSearchStrategy
