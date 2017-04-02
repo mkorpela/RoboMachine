@@ -11,8 +11,17 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+#  ------------------------------------------------------------------------
+#  Copyright 2017 David Kaplan
+#
+#  Changes:
+#  - Python 3 support
 
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except:
+    from io import StringIO
+
 import unittest
 from robomachine.model import RoboMachine, State, Action
 import robomachine

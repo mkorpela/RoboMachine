@@ -2,6 +2,7 @@
 
 from distutils.core import setup
 import os
+import sys
 from setuptools import find_packages
 from os.path import dirname, abspath, join
 
@@ -11,7 +12,12 @@ address = name.lower().replace(' ', '.')+chr(64)+'gmail.com'
 
 # Get version
 CURDIR = dirname(abspath(__file__))
-execfile(join(CURDIR, 'robomachine', 'version.py'))
+VERSIONFILE = join(CURDIR, 'robomachine', 'version.py')
+
+if sys.version_info.major == 3:
+    exec(open(VERSIONFILE).read())
+else:
+    execfile(VERSIONFILE)
 
 setup(name='RoboMachine',
       version=VERSION,
@@ -22,5 +28,5 @@ setup(name='RoboMachine',
       packages=find_packages(),
       scripts = [os.path.join('scripts','robomachine'),
                  os.path.join('scripts','robomachine.bat')],
-      install_requires = ['pyparsing', 'argparse', 'robotframework']
+      install_requires = ['pyparsing', 'argparse', 'robotframework', 'allpairspy']
      )

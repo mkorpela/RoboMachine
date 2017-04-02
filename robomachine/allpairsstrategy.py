@@ -11,8 +11,15 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-import metacomm.combinatorics.all_pairs2 as all_pairs2
-from strategies import RandomStrategy
+#  ------------------------------------------------------------------------
+#  Copyright 2017 David Kaplan
+#
+#  Changes:
+#  - Python 3 support
+#  - Replaced AllPairs with allpairspy for Python 3 support
+
+from allpairspy import AllPairs
+from robomachine.strategies import RandomStrategy
 
 
 class AllPairsRandomStrategy(RandomStrategy):
@@ -34,4 +41,4 @@ class AllPairsRandomStrategy(RandomStrategy):
             for var in self._machine.variables:
                 return [v for v in var.values]
             return [[]]
-        return all_pairs2.all_pairs2([v.values for v in self._machine.variables])
+        return AllPairs([v.values for v in self._machine.variables])

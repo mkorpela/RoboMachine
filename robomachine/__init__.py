@@ -12,8 +12,15 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+try:
+    from StringIO import StringIO
+except:
+    from io import StringIO
+
+from robomachine.parsing import parse
+
 from robomachine.version import VERSION
-from generator import Generator, DepthFirstSearchStrategy
+from robomachine.generator import Generator, DepthFirstSearchStrategy
 
 
 __version__ = VERSION
@@ -22,3 +29,8 @@ def generate(machine, max_tests=1000, max_actions=None, to_state=None, output=No
     strategy=DepthFirstSearchStrategy):
     generator = Generator()
     return generator.generate(machine, max_tests, max_actions, to_state, output, strategy)
+
+def transform(text):
+    output = StringIO()
+    generate(parse(text), output=output)
+    return output.getvalue()

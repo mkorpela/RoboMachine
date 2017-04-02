@@ -12,7 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except:
+    from io import StringIO
+
 import unittest
 from robomachine import parsing
 import robomachine
