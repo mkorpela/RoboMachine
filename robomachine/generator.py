@@ -38,6 +38,7 @@ class Generator(object):
         if values:
             machine.write_variable_setting_step(values, output)
         machine.start_state.write_to(output)
+        self.visited_states.add(machine.start_state)
         for action in test:
             self.visited_actions.add(action)
             self.visited_states.add(action._parent_state)
