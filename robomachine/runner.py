@@ -11,6 +11,13 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+#  ------------------------------------------------------------------------
+#  Copyright 2017 David Kaplan
+#
+#  Changes:
+#  - Python 3 support
+#  - Output DOT files for visualization of models
+#  - Measure covered / uncovered states
 
 from __future__ import print_function
 
