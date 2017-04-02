@@ -150,10 +150,10 @@ def main():
     print('Generated test file: %s' % output_test_file)
 
     # Coverage information:
-    covered_states = generator._visited_states
-    covered_actions = generator._visited_actions
-    uncovered_states = all_states.difference(generator._visited_states)
-    uncovered_actions = all_actions.difference(generator._visited_actions)
+    covered_states = generator.visited_states
+    covered_actions = generator.visited_actions
+    uncovered_states = all_states.difference(generator.visited_states)
+    uncovered_actions = all_actions.difference(generator.visited_actions)
     #
     # Write to STDOUT:
     print('-' * 78)
