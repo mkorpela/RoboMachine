@@ -30,8 +30,8 @@ except ImportError:
 
 class Generator(object):
     def __init__(self):
-        self._visited_states = set()
-        self._visited_actions = set()
+        self.visited_states = set()
+        self.visited_actions = set()
 
     def _write_test(self, name, machine, output, test, values):
         output.write('\n%s\n' % name)
@@ -39,7 +39,11 @@ class Generator(object):
             machine.write_variable_setting_step(values, output)
         machine.start_state.write_to(output)
         for action in test:
+            self.visited_actions.add(action)
+            self.visited_states.add(action._parent_state)
+            self.visited_states.add(action.next_state)
             action.write_to(output)
+
 
     def _write_tests(self, machine, max_tests, max_actions, to_state, output, strategy):
         i = 1
@@ -59,8 +63,6 @@ class Generator(object):
                 generated_tests.add((tuple(test), tuple(values)))
             self._write_test('Test %d' % i, machine, output, test, values)
             i += 1
-        self._visited_actions = strategy_class._visited_actions
-        self._visited_states = strategy_class._visited_states
 
 
     def generate(self, machine, max_tests=1000, max_actions=None, to_state=None, output=None,
