@@ -10,7 +10,12 @@
 #  distributed under the License is distributed on an "AS IS" BASIS,
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
-#  limitations under the License.from StringIO import StringIO
+#  limitations under the License.
+#  ------------------------------------------------------------------------
+#  Copyright 2017 David Kaplan
+#
+#  Changes:
+#  - Python 3 support
 
 from __future__ import print_function
 
