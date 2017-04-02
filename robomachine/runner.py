@@ -40,15 +40,15 @@ parser.add_argument('--tests-max', '-t',
                     help='maximum number of tests to generate (default 1000)')
 parser.add_argument('--to-state', '-T',
                     type=str, default=None,
-                    help='State that all generated tests should end.\n'+\
-                    'If none given all states are valid test end states')
+                    help='The state that all generated tests should end in.\n'+\
+                    'If none given, all states are considered valid test end states')
 parser.add_argument('--actions-max', '-a',
                     type=int, default=100,
                     help='maximum number of actions to generate (default 100)')
 parser.add_argument('--generation-algorithm', '-g',
                     type=str, default='dfs', choices=['dfs', 'random', 'allpairs-random'],
                     help='''\
-Use test generation algorithm
+Use test generation algorithm:
 allpairs-random = generate tests randomly, use allpairs algorithm for parameter value selection
 dfs = depth first search  (default)
 random = generate tests randomly''')
@@ -57,7 +57,7 @@ parser.add_argument('--do-not-execute', action='store_true', default=False,
 parser.add_argument('--generate-dot-graph', '-D',
                     type=str, default='none', choices=['none', 'png', 'svg'],
                     help='''\
-Generates a directional graph representing your test model. Select file format
+Generates a directional graph visualizing your test model. Select file format:
 none - Do not generate a file (default)
 png  - bitmap
 svg  - vector''')
@@ -199,9 +199,9 @@ def _select_strategy(strategy):
             from robomachine.allpairsstrategy import AllPairsRandomStrategy
             return AllPairsRandomStrategy
         except ImportError:
-            print('ERROR! allpairs-random strategy needs AllPairs module')
+            print('ERROR! allpairs-random strategy needs the AllPairs module')
             print('please install it from Python Package Index')
-            print('pip install allpairs')
+            print('pip install allpairspy')
             raise
 
 
