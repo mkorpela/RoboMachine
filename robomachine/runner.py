@@ -113,11 +113,11 @@ def main():
         dot_graph += '}\n'
         #
         # Write to STDOUT:
-        print('-' * 80)
+        print('-' * 78)
         print('Dot graph')
         print('---------')
         print(dot_graph)
-        print('-' * 80)
+        print('-' * 78)
         #
         # Write to file:
         with open(output_dot_file, 'w') as out:
