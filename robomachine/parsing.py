@@ -39,7 +39,7 @@ state_name = Regex(r'\w+( \w+)*')
 state_name.leaveWhitespace()
 state_name = state_name.setResultsName('state_name')
 
-robo_step = Regex('([\w\$\{\}][ \w\$\{\}]*[\w\}]|\w)')
+robo_step = Regex(r'([\w\$\{\}][ \w\$\{\}]*[\w\}]|\w)')
 robo_step.leaveWhitespace()
 robo_step = robo_step.setResultsName('robo_step')
 
@@ -99,8 +99,7 @@ cond_regex_neg_rule.setParseAction(lambda t: [RegexNegatedCondition(t[0], t[2])]
 cond_regex_neg_rule.leaveWhitespace()
 
 closed_rule = condition_rule ^ unequal_condition_rule ^ cond_gt_rule ^ cond_ge_rule ^ cond_lt_rule ^ \
-              cond_le_rule ^ cond_in_rule ^ cond_regex_rule ^ cond_regex_neg_rule ^ (
-              '(' + rule + ')')
+              cond_le_rule ^ cond_in_rule ^ cond_regex_rule ^ cond_regex_neg_rule ^ ('(' + rule + ')')
 closed_rule.setParseAction(lambda t: [t[1]] if len(t) == 3 else t)
 
 not_rule = Literal('not ') + closed_rule
@@ -144,7 +143,8 @@ def parse_condition(cond):
 condition.leaveWhitespace()
 condition.setParseAction(parse_condition)
 condition = Optional(condition).setResultsName('condition')
-action = White(min=4) + Optional(robo_step + White(min=2)) + '==>' + White(min=2) + state_name + condition + end_of_line
+action = White(min=4) + Optional(robo_step + White(min=2)) + \
+         '==>' + White(min=2) + state_name + condition + end_of_line
 action.leaveWhitespace()
 action.setParseAction(lambda t: [Action(t.robo_step.rstrip(), t.state_name, t.condition)])
 
