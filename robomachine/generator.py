@@ -11,11 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-#  ------------------------------------------------------------------------
-#  Copyright 2017 David Kaplan
-#
-#  Changes:
-#  - Python 3 support
+
 
 from __future__ import print_function
 
@@ -34,17 +30,15 @@ class Generator(object):
         self.visited_actions = set()
 
     def _write_test(self, name, machine, output, test, values):
-        output.write('\n%s\n' % name)
+        output.write('\n{:s}\n'.format(name))
         if values:
             machine.write_variable_setting_step(values, output)
         machine.start_state.write_to(output)
         self.visited_states.add(machine.start_state)
         for action in test:
             self.visited_actions.add(action)
-            self.visited_states.add(action._parent_state)
             self.visited_states.add(action.next_state)
             action.write_to(output)
-
 
     def _write_tests(self, machine, max_tests, max_actions, to_state, output, strategy):
         i = 1
@@ -54,15 +48,14 @@ class Generator(object):
         strategy_class = strategy(machine, max_actions, to_state)
         for test, values in strategy_class.tests():
             if i + skipped > max_tests:
-                print('--tests-max generation try limit (%d) reached with (%d) tests generated' %
-                    (max_tests, i - 1))
+                print('--tests-max generation try limit {:d} reached with {:d} tests generated'.format(max_tests, i - 1))
                 break
             if (tuple(test), tuple(values)) in generated_tests:
                 skipped += 1
                 continue
             else:
                 generated_tests.add((tuple(test), tuple(values)))
-            self._write_test('Test %d' % i, machine, output, test, values)
+            self._write_test('Test {:d}'.format(i), machine, output, test, values)
             i += 1
 
 

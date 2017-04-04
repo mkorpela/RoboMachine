@@ -11,11 +11,6 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-#  ------------------------------------------------------------------------
-#  Copyright 2017 David Kaplan
-#
-#  Changes:
-#  - Python 3 support
 
 from __future__ import print_function
 
@@ -211,7 +206,7 @@ def resolve_whitespace(text):
     output_texts = []
     for index, line in enumerate(text.splitlines()):
         if '\t' in line:
-            print('WARNING! tab detected on line [%d]: %r' % (index, line))
+            print('WARNING! tab detected on line [{:d}]: {:r}'.format(index, line))
         output_texts.append(line.rstrip())
     return '\n'.join(output_texts).strip() + '\n'
 
@@ -220,9 +215,9 @@ def parse(text):
     try:
         return machine.parseString(resolve_whitespace(text), parseAll=True)[0]
     except ParseBaseException as pe:
-        print('Exception at line %d' % pe.lineno)
+        print('Exception at line {:d}'.format(pe.lineno))
         print(pe.msg)
-        print('line: "%s"' % pe.line)
+        print('line: "{:s}"'.format(pe.line))
         raise RoboMachineParsingException(pe.msg)
     except AssertionError as ae:
         print(ae)

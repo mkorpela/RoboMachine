@@ -14,6 +14,7 @@
 
 import re
 
+
 class EquivalenceRule(object):
 
     def __init__(self, condition1, condition2):
@@ -21,7 +22,7 @@ class EquivalenceRule(object):
         self._condition2 = condition2
 
     def __str__(self):
-        return '%s  <==>  %s' % (self._condition1, self._condition2)
+        return '{:s}  <==>  {:s}'.format(str(self._condition1), str(self._condition2))
 
     def is_valid(self, value_mapping):
         return self._condition1.is_valid(value_mapping) == self._condition2.is_valid(value_mapping)
@@ -34,7 +35,7 @@ class ImplicationRule(object):
         self._condition2 = condition2
 
     def __str__(self):
-        return '%s  ==>  %s' % (self._condition1, self._condition2)
+        return '{:s}  ==>  {:s}'.format(str(self._condition1), str(self._condition2))
 
     def is_valid(self, value_mapping):
         return not self._condition1.is_valid(value_mapping) or self._condition2.is_valid(value_mapping)
@@ -70,7 +71,7 @@ class NotRule(object):
         self._condition = condition
 
     def __str__(self):
-        return 'not (%s)' % self._condition
+        return 'not ({:s})'.format(str(self._condition))
 
     def is_valid(self, value_mapping):
         return not self._condition.is_valid(value_mapping)
@@ -83,10 +84,11 @@ class Condition(object):
         self._value = value.strip()
 
     def __str__(self):
-        return '%s == %s' % (self._name, self._value)
+        return '{:s} == {:s}'.format(self._name, self._value)
 
     def is_valid(self, value_mapping):
         return value_mapping[self._name].strip() == self._value.strip()
+
 
 def UnequalCondition(variable_name, value):
     return NotRule(Condition(variable_name, value))
@@ -99,7 +101,7 @@ class GreaterThanCondition(object):
         self._value = value.strip()
 
     def __str__(self):
-        return '%s > %s' % (self._name, self._value)
+        return '{:s} > {:s}'.format(self._name, self._value)
 
     def is_valid(self, value_mapping):
         return value_mapping[self._name].strip() > self._value.strip()
@@ -112,7 +114,7 @@ class GreaterThanOrEqualCondition(object):
         self._value = value.strip()
 
     def __str__(self):
-        return '%s >= %s' % (self._name, self._value)
+        return '{:s} >= {:s}'.format(self._name, self._value)
 
     def is_valid(self, value_mapping):
         return value_mapping[self._name].strip() >= self._value.strip()
@@ -125,7 +127,7 @@ class LessThanCondition(object):
         self._value = value.strip()
 
     def __str__(self):
-        return '%s < %s' % (self._name, self._value)
+        return '{:s} < {:s}'.format(self._name, self._value)
 
     def is_valid(self, value_mapping):
         return value_mapping[self._name].strip() < self._value.strip()
@@ -138,7 +140,7 @@ class LessThanOrEqualCondition(object):
         self._value = value.strip()
 
     def __str__(self):
-        return '%s <= %s' % (self._name, self._value)
+        return '{:s} <= {:s}'.format(self._name, self._value)
 
     def is_valid(self, value_mapping):
         return value_mapping[self._name].strip() <= self._value.strip()
@@ -151,10 +153,10 @@ class RegexCondition(object):
         self._value = value.strip()
 
     def __str__(self):
-        return '%s ~ %s' % (self._name, self._value)
+        return '{:s} ~ {:s}'.format(self._name, self._value)
 
     def is_valid(self, value_mapping):
-        return re.search(self._value.strip(), value_mapping[self._name].strip()) != None
+        return re.search(self._value.strip(), value_mapping[self._name].strip()) is not None
 
 
 class RegexNegatedCondition(object):
@@ -164,7 +166,7 @@ class RegexNegatedCondition(object):
         self._value = value.strip()
 
     def __str__(self):
-        return '%s !~ %s' % (self._name, self._value)
+        return '{:s} !~ {:s}'.format(self._name, self._value)
 
     def is_valid(self, value_mapping):
-        return re.search(self._value.strip(), value_mapping[self._name].strip()) == None
+        return re.search(self._value.strip(), value_mapping[self._name].strip()) is None

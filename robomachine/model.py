@@ -11,11 +11,6 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-#  ------------------------------------------------------------------------
-#  Copyright 2017 David Kaplan
-#
-#  Changes:
-#  - Python 3 support
 
 import re
 
@@ -77,12 +72,13 @@ class RoboMachine(object):
 
     def write_variable_setter(self, output):
         output.write('Set Machine Variables\n')
-        output.write('  [Arguments]  %s\n' % '  '.join(variable.name for variable in self.variables))
+        output.write('  [Arguments]  {:s}\n'.format('  '.join(variable.name for variable in self.variables)))
         for variable in self.variables:
-            output.write('  Set Test Variable  \\%s\n' % variable.name)
+            output.write('  Set Test Variable  \\{:s}\n'.format(variable.name))
 
-    def write_variable_setting_step(self, values, output):
-        output.write('  Set Machine Variables  %s\n' % '  '.join(values))
+    @staticmethod
+    def write_variable_setting_step(values, output):
+        output.write('  Set Machine Variables  {:s}\n'.format('  '.join(values)))
 
     def rules_are_ok(self, values):
         value_mapping = dict((v.name, value) for v, value in zip(self.variables, values))
@@ -119,27 +115,26 @@ class State(object):
 
     def write_steps_to(self, output):
         for step in self.steps:
-            output.write(step+'\n')
+            output.write(step + '\n')
 
     def write_to(self, output):
         if self.steps:
-            output.write('  %s\n' % self.name)
+            output.write('  {:s}\n'.format(self.name))
 
 
 class Action(object):
 
     def __init__(self, name, next_state, condition=None):
         self.name = name
-        self._parent_state = None
         self._next_state_name = next_state
         self.condition = condition
+        self._machine = None
 
     def set_machine(self, machine):
         self._machine = machine
         if not self.next_state:
-            raise AssertionError('Invalid end state "%s" in '\
-                                 'action "%s"!' %
-                                 (self._next_state_name, self.name))
+            raise AssertionError('Invalid end state "{:s}" in '.format(self._next_state_name) +
+                                 'action "{:s}"!'.format(self.name))
 
     @property
     def next_state(self):
@@ -154,7 +149,7 @@ class Action(object):
 
     def write_to(self, output):
         if self.name:
-            output.write('  %s\n' % self.name)
+            output.write('  {:s}\n'.format(self.name))
         self.next_state.write_to(output)
 
 
@@ -167,6 +162,7 @@ class Variable(object):
         self.name = name
         self.values = values
         self._current_value = Variable._NO_VALUE
+        self._machine = None
 
     def set_machine(self, machine):
         self._machine = machine

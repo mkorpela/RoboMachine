@@ -26,7 +26,8 @@ setup(name='RoboMachine',
       author_email=address,
       url='https://github.com/mkorpela/RoboMachine',
       packages=find_packages(),
-      scripts = [os.path.join('scripts','robomachine'),
-                 os.path.join('scripts','robomachine.bat')],
-      install_requires = ['pyparsing', 'argparse', 'robotframework', 'allpairspy']
+      scripts=[os.path.join('scripts','robomachine'),
+               os.path.join('scripts','robomachine.bat')],
+      install_requires = ['pyparsing', 'argparse', 'robotframework', 'allpairspy'],
+      test_suite='robomachine.test'
      )
