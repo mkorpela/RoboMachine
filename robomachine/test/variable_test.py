@@ -40,7 +40,7 @@ class VariableParsingTestCases(unittest.TestCase):
     def _invalid_var(self, var_name):
         try:
             parsing.variable.parseString(var_name)
-            self.fail('Should not parse invalid variable name "%s"' % var_name)
+            self.fail('Should not parse invalid variable name "{:s}"'.format(var_name))
         except pyparsing.ParseException as e:
             pass
 
