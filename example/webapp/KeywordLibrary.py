@@ -1,15 +1,38 @@
 """
-This is the keyword library for the webapp sample application
+This is the keyword library for the webapp sample application,
+a mock for a proper System Under Test.
 """
 from robot.api import logger
 from random import random
 
 from robot.libraries.BuiltIn import BuiltIn
 
-# Error-inducing decorators
-def fail_every_nth_time(count):
+
+# ---------------------------------------------
+#  Error-inducing decorators
+#
+#  Indended usage:
+#  Decorate a function in the keyword library
+#  with one of the supplied decorators and try
+#  to find the failure(s) with your tests.
+#  The idea is to learn what types of tests
+#  that are required to find certain types
+#  of failures.
+# ---------------------------------------------
+class SimulatedFailureException(Exception):
     """
-    This decorator will skip the decorated function every n-th time it is called.
+    Raise this exception in the supplied
+    decorators when a function is supposed
+    to fail
+    """
+
+
+def fail_every_nth_time(count, hard=True):
+    """
+    This decorator will skip the decorated function every
+    n-th time it is called. A hard failure (hard=True) will
+    raise an exception. A soft failure (hard=False) will stop
+    the decorated function from doing what it was supposed to.
 
     *Usage example:*
 
@@ -17,88 +40,119 @@ def fail_every_nth_time(count):
         def my_func(*args):
             ...
 
+    This example will cause my_func to return an unexpected
+    value every 12:th time it is called
     """
-    def decorator(fn):
+    def decorator(func):
         def inner(*args, **kwargs):
-            inner._count += 1
-            if inner._count % count == 0:
-                logger.warn('`%s` failed on call count' % fn.__name__)
-                inner._count = 0
+            inner.count += 1
+            if inner.count % count == 0:
+                if hard is True:
+                    raise SimulatedFailureException(
+                        '\n  Fail in method `{:s}` (call count)'.format(
+                            func.__name__))
+                else:
+                    logger.warn('Skipping method `{:s}` (call count)'.format(
+                        func.__name__))
             else:
-                fn(*args, **kwargs)
+                func(*args, **kwargs)
             return inner
-        inner._count = 0
-        inner.__name__= fn.__name__
+        inner.count = 0
+        inner.__name__ = func.__name__
         return inner
     return decorator
 
 
-def failure_probability(prob):
+def fail_with_probability(prob, hard=True):
     """
     This decorator will skip the decorated function based on the supplied
-    probability of failure [0..1]
+    probability of failure [0..1]. A hard failure (hard=True) will
+    raise an exception. A soft failure (hard=False) will stop
+    the decorated function from doing what it was supposed to.
 
     *Usage example:*
 
-        @failure_probability(0.25)
+        @fail_with_probability(0.25)
         def my_func(*args):
             ...
 
-    Will skip the function on average 25% of the times it is called
+    This example will cause my_func to return an unexpected
+    value on average 25% of the times it is called
     """
-    def decorator(fn):
+    def decorator(func):
         def inner(*args, **kwargs):
             if random() <= prob:
-                logger.warn('`%s` random failure' % fn.__name__)
+                if hard is True:
+                    raise SimulatedFailureException(
+                        '\n  Fail in method `{:s}` (probability)'.format(
+                            func.__name__))
+                else:
+                    logger.warn('Skipping method `{:s}` (probability)'.format(
+                        func.__name__))
             else:
-                fn(*args, **kwargs)
+                func(*args, **kwargs)
             return inner
-        inner.__name__= fn.__name__
+        inner.__name__ = func.__name__
         return inner
     return decorator
 
-def fail_on_config(bad_configs):
+
+def fail_in_config(bad_configs, hard=True):
     """
-    This decorator will skip the decorated function if the supplied dictionary is a subset
-    of the available RobotFramework variables.
+    This decorator will skip the decorated function if the supplied
+    dictionary is a subset of the available RobotFramework variables.
+    A hard failure (hard=True) will raise an exception. A soft failure
+    (hard=False) will stop the decorated function from doing what it
+    was supposed to.
 
     *Usage example:*
 
-        @fail_on_config('${USERNAME}', 'monkey')
-        @fail_on_config('${CITY}', 'New York')
+        @fail_in_config({'${USER}': 'monkey'})
+        @fail_in_config({'${CITY}': 'Boston'})
         def my_func(*args):
             ...
 
-    Will skip the function if ${USERNAME} is 'monkey' or if ${CITY} is 'New York'
+    This example will cause my_func to return an unexpected
+    value if ${USER} is 'monkey' or if ${CITY} is 'Boston'
     """
-    def decorator(fn):
+    def decorator(func):
         def inner(*args, **kwargs):
-            vars = BuiltIn().get_variables()
-            if dict(vars, **bad_configs) == dict(vars):
-                logger.warn('`%s` configuration specific failure' % fn.__name__)
+            variables = BuiltIn().get_variables()
+            if dict(variables, **bad_configs) == dict(variables):
+                if hard is True:
+                    raise SimulatedFailureException(
+                        '\n  Fail in method `{:s}` '.format(func.__name__) +
+                        '(configuration: {:s})'.format(str(bad_configs)))
+                else:
+                    logger.warn(
+                        'Skipping method `{:s}` '.format(func.__name__) +
+                        '(configuration: {:s})'.format(str(bad_configs)))
             else:
-                fn(*args, **kwargs)
+                func(*args, **kwargs)
             return inner
-        inner.__name__= fn.__name__
+        inner.__name__ = func.__name__
         return inner
     return decorator
 
 
-# The actual keyword library
+# ----------------------------
+#  The actual keyword library
+# ----------------------------
 class KeywordLibrary(object):
     """
     This is the implementation of the keywords used in the robomachine test.
 
-    The keywords mimic the behavior of a real application and is intended to
-    be used for educational purposes. Insert errors and re-run the tests
-    to see what happens!
+    This class mimics the observable behavior of a real application and
+    is intended to be used for educational purposes. Insert errors, re-run
+    your tests and try to find them!
     """
     def __init__(self):
         self._browser = None
         self._state = None
         self._name = None
         self._password = None
-        self.change_state('Login Page')
+        self._page_title = ''
+        self._change_state('Login Page')
 
     #
     # ASSERTS
@@ -106,32 +160,38 @@ class KeywordLibrary(object):
     def assert_state_is(self, state):
         """Asserts the page title"""
         if state != self._state:
-            raise Exception('Wrong state! The state is `%s`, expected `%s`.' % \
-                (self._state, state))
+            raise Exception(
+                'Wrong state! The state is ' +
+                '`{:s}`, expected `{:s}`.'.format(self._state, state))
         else:
             logger.info('State: `%s`' % self._state)
 
     def assert_page_title_is(self, title):
         """Asserts the page title"""
         if title != self._page_title:
-            raise Exception('Wrong page! The title at page `%s` was `%s`, expected `%s`.' % \
-                (self._state, self._page_title, title))
+            raise Exception(
+                'Wrong page! The title at page `{:s}` '.format(self._state) +
+                'was `{:s}`, expected `{:s}`.'.format(self._page_title, title))
         else:
             logger.info('Page title: `%s`' % self._page_title)
 
     #
     # USER ACTIONS
     #
+    # In a live situation, we would call functions
+    # that invokes functionality in the System Under
+    # Test instead of our simple SUT mock
+    # (the self._change_state() method)
     def click_login_button(self):
         """Execute the login"""
         if self._name == 'My Name' and self._password == 'mypassword':
-            self.change_state('Welcome Page')
+            self._change_state('Welcome Page')
         else:
-            self.change_state('Error Page')
+            self._change_state('Error Page')
 
     def click_log_out_button(self):
         """Log out and go to the login page"""
-        self.change_state('Login Page')
+        self._change_state('Login Page')
 
     def enter_password(self, password):
         """Enter the password"""
@@ -150,7 +210,22 @@ class KeywordLibrary(object):
     #
     # APPLICATION FLOW ACTIONS
     #
-    def change_state(self, new_state):
+    def exit_page(self):
+        """Exit current page and change state"""
+        if self._state == 'Error Page':
+            self._change_state('Login Page')
+
+        elif self._state == 'Profile Page':
+            self._change_state('Welcome Page')
+
+    def go_to(self, state):
+        """Change state"""
+        self._change_state(state)
+
+    #
+    #  PRIVATE MEMBERS
+    #
+    def _change_state(self, new_state):
         """Set page titles according to current page"""
         if new_state == 'Login Page':
             self._name = ''
@@ -168,15 +243,3 @@ class KeywordLibrary(object):
 
         self._state = new_state
         logger.info('Changed state to `%s`' % new_state)
-
-    def exit_page(self):
-        """Exit current page and change state"""
-        if self._state == 'Error Page':
-            self.change_state('Login Page')
-
-        elif self._state == 'Profile Page':
-            self.change_state('Welcome Page')
-
-    def go_to(self, state):
-        """Change state"""
-        self.change_state(state)
