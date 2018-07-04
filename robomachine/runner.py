@@ -186,7 +186,8 @@ def main():
     # Run tests:
     if not args.do_not_execute:
         print('\nRunning generated tests with pybot:')
-        retcode = subprocess.call(['pybot', output_test_file])
+        runner = 'robot.bat' if os.name == 'nt' else 'robot'
+        retcode = subprocess.call([runner, output_test_file])
         sys.exit(retcode)
 
 
