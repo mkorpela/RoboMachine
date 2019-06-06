@@ -5,3 +5,6 @@ output.xml
 report.html
 env/
 .idea
+build
+dist
+*.egg-info
