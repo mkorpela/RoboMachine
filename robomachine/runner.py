@@ -1,4 +1,4 @@
-#  Copyright 2011-2012 Mikko Korpela
+#  Copyright 2011-2019 Mikko Korpela
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -185,8 +185,8 @@ def main():
 
     # Run tests:
     if not args.do_not_execute:
-        print('\nRunning generated tests with pybot:')
-        retcode = subprocess.call(['pybot', output_test_file])
+        print('\nRunning generated tests with robot:')
+        retcode = subprocess.call(['robot', output_test_file])
         sys.exit(retcode)
 
 
