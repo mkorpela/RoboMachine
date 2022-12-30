@@ -1,5 +1,5 @@
 *.pyc
-atest/*.txt
+atest/*.robot
 log.html
 output.xml
 report.html
