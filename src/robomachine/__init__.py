@@ -17,13 +17,10 @@ try:
 except:
     from io import StringIO
 
+__version__ = "0.10.0"
 from .parsing import parse
 
-from .version import VERSION
 from .generator import Generator, DepthFirstSearchStrategy
-
-
-__version__ = VERSION
 
 def generate(machine, max_tests=1000, max_actions=None, to_state=None, output=None,
     strategy=DepthFirstSearchStrategy):

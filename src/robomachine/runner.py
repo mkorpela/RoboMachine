@@ -20,7 +20,7 @@ import subprocess
 import sys
 from .parsing import RoboMachineParsingException, parse
 
-from .version import VERSION
+from . import __version__
 import argparse
 
 from .generator import Generator
@@ -29,7 +29,7 @@ from .strategies import DepthFirstSearchStrategy, RandomStrategy
 if sys.version_info.major == 3:
     unicode = str
 
-parser = argparse.ArgumentParser(description='RoboMachine {:s} - '.format(VERSION) +
+parser = argparse.ArgumentParser(description='RoboMachine {:s} - '.format(__version__) +
                                  'a test data generator for Robot Framework',
                                  formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('input', type=str, help='input file')
