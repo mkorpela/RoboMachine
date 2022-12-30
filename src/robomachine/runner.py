@@ -18,19 +18,18 @@ import os
 import re
 import subprocess
 import sys
-from src.robomachine.parsing import RoboMachineParsingException
-from src.robomachine.parsing import parse
+from .parsing import RoboMachineParsingException, parse
 
-from src import robomachine
+from .version import VERSION
 import argparse
 
-from src.robomachine.generator import Generator
-from src.robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
+from .generator import Generator
+from .strategies import DepthFirstSearchStrategy, RandomStrategy
 
 if sys.version_info.major == 3:
     unicode = str
 
-parser = argparse.ArgumentParser(description='RoboMachine {:s} - '.format(robomachine.__version__) +
+parser = argparse.ArgumentParser(description='RoboMachine {:s} - '.format(VERSION) +
                                  'a test data generator for Robot Framework',
                                  formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('input', type=str, help='input file')

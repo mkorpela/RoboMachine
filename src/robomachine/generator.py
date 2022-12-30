@@ -15,8 +15,8 @@
 
 from __future__ import print_function
 
-from src.robomachine.parsing import parse
-from src.robomachine.strategies import DepthFirstSearchStrategy
+from .parsing import parse
+from .strategies import DepthFirstSearchStrategy
 
 try:
     from StringIO import StringIO

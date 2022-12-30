@@ -18,8 +18,8 @@ from pyparsing import (CharsNotIn, Forward, Literal, LineEnd, OneOrMore, Optiona
                        Regex, StringEnd, White, Word, ZeroOrMore,
                        delimitedList, printables,
                        ParseBaseException)
-from src.robomachine.model import RoboMachine, State, Action, Variable
-from src.robomachine.rules import (AndRule, Condition, EquivalenceRule, OrRule,
+from .model import RoboMachine, State, Action, Variable
+from .rules import (AndRule, Condition, EquivalenceRule, OrRule,
                                    NotRule, ImplicationRule, UnequalCondition,
                                    GreaterThanCondition, GreaterThanOrEqualCondition,
                                    LessThanCondition, LessThanOrEqualCondition,

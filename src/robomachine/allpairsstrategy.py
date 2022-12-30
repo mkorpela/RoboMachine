@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from allpairspy import AllPairs
-from src.robomachine.strategies import RandomStrategy
+from .strategies import RandomStrategy
 
 
 class AllPairsRandomStrategy(RandomStrategy):
