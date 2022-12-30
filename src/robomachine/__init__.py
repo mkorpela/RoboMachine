@@ -17,10 +17,10 @@ try:
 except:
     from io import StringIO
 
-from robomachine.parsing import parse
+from src.robomachine.parsing import parse
 
-from robomachine.version import VERSION
-from robomachine.generator import Generator, DepthFirstSearchStrategy
+from src.robomachine.version import VERSION
+from src.robomachine.generator import Generator, DepthFirstSearchStrategy
 
 
 __version__ = VERSION

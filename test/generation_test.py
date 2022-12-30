@@ -23,8 +23,8 @@ except:
     from io import StringIO
 
 import unittest
-from robomachine.model import RoboMachine, State, Action
-import robomachine
+from src.robomachine.model import RoboMachine, State, Action
+from src import robomachine
 
 
 class GenerationTestCase(unittest.TestCase):

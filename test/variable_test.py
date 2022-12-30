@@ -18,8 +18,8 @@ except:
     from io import StringIO
 
 import unittest
-from robomachine import parsing
-import robomachine
+from src.robomachine import parsing
+from src import robomachine
 import pyparsing
 
 class VariableParsingTestCases(unittest.TestCase):

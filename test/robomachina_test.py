@@ -18,10 +18,10 @@ except:
     from io import StringIO
 
 import unittest
-from robomachine import parsing
-import robomachine
-from robomachine.parsing import comment, RoboMachineParsingException
-from robomachine.strategies import RandomStrategy
+from src.robomachine import parsing
+from src import robomachine
+from src.robomachine.parsing import comment, RoboMachineParsingException
+from src.robomachine.strategies import RandomStrategy
 
 
 _MACHINA = """\

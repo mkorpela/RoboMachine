@@ -11,14 +11,13 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-import random
 
 import unittest
-from robomachine.rules import (Condition, AndRule, EquivalenceRule, OrRule,
-                               NotRule, ImplicationRule, UnequalCondition,
-                               GreaterThanCondition, GreaterThanOrEqualCondition,
-                               LessThanCondition, LessThanOrEqualCondition,
-                               RegexCondition, RegexNegatedCondition)
+from src.robomachine.rules import (Condition, AndRule, EquivalenceRule, OrRule,
+                                   NotRule, ImplicationRule, UnequalCondition,
+                                   GreaterThanCondition, GreaterThanOrEqualCondition,
+                                   LessThanCondition, LessThanOrEqualCondition,
+                                   RegexCondition, RegexNegatedCondition)
 
 
 class RulesTestCases(unittest.TestCase):

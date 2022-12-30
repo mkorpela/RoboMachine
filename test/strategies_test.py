@@ -13,10 +13,10 @@
 #  limitations under the License.
 
 import unittest
-from robomachine.model import RoboMachine, State, Action, Variable
-from robomachine.rules import *
-from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
-from robomachine.allpairsstrategy import AllPairsRandomStrategy
+from src.robomachine.model import RoboMachine, State, Action, Variable
+from src.robomachine.rules import *
+from src.robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
+from src.robomachine.allpairsstrategy import AllPairsRandomStrategy
 
 class StrategyTestCase(object):
 

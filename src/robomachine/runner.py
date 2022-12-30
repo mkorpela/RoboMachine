@@ -18,14 +18,14 @@ import os
 import re
 import subprocess
 import sys
-from robomachine.parsing import RoboMachineParsingException
-from robomachine.parsing import parse
+from src.robomachine.parsing import RoboMachineParsingException
+from src.robomachine.parsing import parse
 
-import robomachine
+from src import robomachine
 import argparse
 
-from robomachine.generator import Generator
-from robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
+from src.robomachine.generator import Generator
+from src.robomachine.strategies import DepthFirstSearchStrategy, RandomStrategy
 
 if sys.version_info.major == 3:
     unicode = str
@@ -197,7 +197,7 @@ def _select_strategy(strategy):
         return DepthFirstSearchStrategy
     if strategy == 'allpairs-random':
         try:
-            from robomachine.allpairsstrategy import AllPairsRandomStrategy
+            from src.robomachine.allpairsstrategy import AllPairsRandomStrategy
             return AllPairsRandomStrategy
         except ImportError:
             print('ERROR! allpairs-random strategy needs the AllPairs module')
